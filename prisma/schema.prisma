@@ -57,6 +57,7 @@ model Session {
 }
 
 model User {
+  //t3 attributes
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
@@ -64,6 +65,11 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  //extensions
+  password      String?
+  createdDate   DateTime  @default(now()) @map(name: "created")
+  // identityProvider     IdentityProvider        @default(CAL)
+  // identityProviderId   String?
 }
 
 model VerificationToken {
