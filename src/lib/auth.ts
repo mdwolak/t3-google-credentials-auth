@@ -1,4 +1,6 @@
-// import { compare, hash } from "bcryptjs";
+import { prisma } from "@/src/server/db/client";
+import bcrypt from "bcryptjs";
+
 import type { NextApiRequest } from "next";
 import type { Session } from "next-auth";
 import { getSession, GetSessionParams } from "next-auth/react";
@@ -8,11 +10,6 @@ import { getSession, GetSessionParams } from "next-auth/react";
 // export async function hashPassword(password: string) {
 //   const hashedPassword = await hash(password, 12);
 //   return hashedPassword;
-// }
-
-// export async function verifyPassword(password: string, hashedPassword: string) {
-//   const isValid = await compare(password, hashedPassword);
-//   return isValid;
 // }
 
 // export function validPassword(password: string) {
@@ -73,4 +70,62 @@ export enum ErrorCode {
   ThirdPartyIdentityProviderEnabled = "third-party-identity-provider-enabled",
   RateLimitExceeded = "rate-limit-exceeded",
   SocialIdentityProviderRequired = "social-identity-provider-required",
+}
+
+export async function authorize(credentials: {
+  email: string;
+  password: string;
+}) {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: credentials.email.toLowerCase(),
+    },
+    select: {
+      id: true,
+      // username: true,
+      name: true,
+      email: true,
+      // identityProvider: true,
+      //image: true,
+      password: true,
+      //createdDate: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error(ErrorCode.UserNotFound);
+  }
+
+  if (!user.password) {
+    //TODO: how can this happen?
+    throw new Error(ErrorCode.UserMissingPassword);
+  }
+
+  const isCorrectPassword = await comparePasswords(
+    credentials.password,
+    user.password
+  );
+  if (!isCorrectPassword) throw new Error(ErrorCode.IncorrectPassword);
+
+  // const limiter = rateLimit({
+  //   intervalInMs: 60 * 1000, // 1 minute
+  // });
+  // await limiter.check(10, user.email); // 10 requests per minute
+  //TODO: check password requirements
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+  };
+}
+
+/*
+  Helper functions
+*/
+export async function comparePasswords(
+  plainPassword: string,
+  hashedPassword: string
+) {
+  const isValid = await bcrypt.compare(plainPassword, hashedPassword);
+  return isValid;
 }
