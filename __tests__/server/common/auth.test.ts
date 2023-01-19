@@ -1,6 +1,7 @@
-import { USER } from "../helpers/constants";
-import { prismaMock } from "../helpers/prismaMock";
-import { authorize, ErrorCode } from "@/src/lib/auth";
+import { USER } from "../../helpers/constants";
+import { prismaMock } from "../../helpers/prismaMock";
+import { authorize } from "@/src/server/common/auth";
+import { ErrorCode } from "@/src/lib/errorCodes";
 
 jest.mock("bcryptjs", () => ({
   compare: jest

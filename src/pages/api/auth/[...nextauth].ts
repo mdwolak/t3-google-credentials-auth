@@ -7,7 +7,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { env } from "@/src/env/server.mjs";
 import { prisma } from "@/src/server/db/client";
-import { authorize, ErrorCode } from "@/src/lib/auth";
+import { authorize } from "@/src/server/common/auth";
+import { ErrorCode } from "@/src/lib/errorCodes";
 
 const providers: Provider[] = [
   DiscordProvider({
@@ -18,6 +19,8 @@ const providers: Provider[] = [
   GoogleProvider({
     clientId: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
+    //TODO:https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
+    //allowDangerousEmailAccountLinking: true
   }),
   CredentialsProvider({
     name: "credentials",
@@ -26,15 +29,19 @@ const providers: Provider[] = [
       password: { label: "Password", type: "password" },
     },
 
+    //Validates credentials and returns user object or null
     async authorize(credentials) {
-      if (!credentials || credentials.email || credentials.password) {
+      if (!credentials?.email || !credentials?.password) {
         console.error("E-mail and password are required.");
         throw new Error(ErrorCode.InternalServerError);
       }
+
+      //Return user object which will be stored in JWT token
       return await authorize({
         email: credentials?.email,
         password: credentials?.password,
       });
+      //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
     },
   }),
 ];
@@ -48,18 +55,28 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    //Signin with etherum example
+    // async session({ session, token }: { session: any; token: any }) {
+    //   session.address = token.sub
+    //   session.user.name = token.sub
+    //   session.user.image = "https://www.fillmurray.com/128/128"
+    //   return session
+    // },
     //https://next-auth.js.org/configuration/callbacks#jwt-callback
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/auth/signin",
-    // signOut: "/auth/logout",
-    // error: "/auth/error", //@ Error code passed in query string as ?error=
-    // verifyRequest: "/auth/verify",
-    // newUser: "/auth/new", //@ New users will be directed here on first sign in (leave the property out if not of interest)
+    // signOut: "/auth/signout",
+    // error: "/auth/error", // Error code passed in query string as ?error=
+    // verifyRequest: "/auth/verify-request", // (used for check email message)
+    // newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   providers,
+  session: {
+    strategy: "jwt",
+  },
   // secret: "XH6bp/TkLvnUkQiPDEZNyHc0CV+VV5RL/n+HdVHoHN0=",
   debug: process.env.NODE_ENV === "development",
 };

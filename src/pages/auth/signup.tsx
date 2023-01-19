@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState, useCallback } from "react";
 import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
 
-import type { ServerSideProps } from "../../lib/types/ServerSideProps"
+import type { inferServerSideProps } from "../../server/common/inferServerSideProps"
 
 import { prisma } from "../../server/db/client";
 

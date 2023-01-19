@@ -2,27 +2,23 @@ import type { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
 import Image from 'next/image'
 import Link from "next/link";
-import { getSession, getCsrfToken, signIn } from "next-auth/react";
+import { getCsrfToken, signIn } from "next-auth/react";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { ErrorCode } from "../../lib/errorCodes";
 
-import { ErrorCode } from "../../lib/auth";
-import type { ServerSideProps } from "../../lib/types/ServerSideProps"
+import type { inferServerSideProps } from "../../server/common/inferServerSideProps"
 
 import AuthPanel from "../../components/auth/AuthPanel";
-
-// import { ssrInit } from "@server/lib/ssr";
-
-const callbackUrl = "http://localhost:3000"; //router.query.callbackUrl;
-
+import { getServerAuthSession } from "@/src/server/common/getServerAuthSession";
 interface IFormInputs {
   email: string;
   password: string;
   csrfToken: string;
 }
 
-export default function SignIn({ csrfToken }: ServerSideProps<typeof getServerSideProps>) {
+export default function SignIn({ csrfToken }: inferServerSideProps<typeof getServerSideProps>) {
   const t = (message: string) => message;
   const router = useRouter();
   const methods = useForm<IFormInputs>();
@@ -45,15 +41,20 @@ export default function SignIn({ csrfToken }: ServerSideProps<typeof getServerSi
     setErrorMessage(null);
     const res = await signIn<"credentials">("credentials", {
       ...values,
-      callbackUrl,
       redirect: false,
     });
 
-    if (!res) setErrorMessage(errorMessages[ErrorCode.InternalServerError] as string);
+    if (res?.ok)  //successful login
+      router.push(res.url as string);
+    else if (res?.error && errorMessages[res?.error])
+      setErrorMessage(errorMessages[res.error] as string)
+    else {
+      setErrorMessage(t("something_went_wrong"));
+      console.error(!res
+        ? "SignIn returned empty response"
+        : `Unknown signIn error: {res.error}. Status: {res.status}`)
+    }
 
-    else if (!res.error) router.push(callbackUrl); //successful login
-
-    else setErrorMessage(errorMessages[res.error] || t("something_went_wrong"));
   };
 
   return (
@@ -116,8 +117,7 @@ export default function SignIn({ csrfToken }: ServerSideProps<typeof getServerSi
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { req } = context;
-  const session = await getSession({ req });
+  const session = await getServerAuthSession(context);
 
   if (session) {
     return {
@@ -127,17 +127,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-
-  // const userCount = await prisma.user.count();
-  // if (userCount === 0) {
-  //   // Proceed to new onboarding to create first admin user
-  //   return {
-  //     redirect: {
-  //       destination: "/auth/setup",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
 
   return {
     props: {
