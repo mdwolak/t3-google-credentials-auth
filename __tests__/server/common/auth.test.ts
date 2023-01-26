@@ -1,26 +1,27 @@
+import { ErrorCode } from "~/lib/errorCodes";
+import { authorize } from "~/server/common/auth";
+
 import { USER } from "../../helpers/constants";
 import { prismaMock } from "../../helpers/prismaMock";
-import { authorize } from "@/src/server/common/auth";
-import { ErrorCode } from "@/src/lib/errorCodes";
 
 jest.mock("bcryptjs", () => ({
-  compare: jest
-    .fn()
-    .mockImplementation((plain, hashed) => Promise.resolve(plain == hashed)),
+  compare: jest.fn().mockImplementation((plain, hashed) => Promise.resolve(plain == hashed)),
 }));
 
 test("should authorize with valid credentials", async () => {
   prismaMock.user.findUnique.mockResolvedValue(USER);
 
-  await expect(
-    authorize({ email: USER.email, password: USER.password })
-  ).resolves.toEqual({ id: USER.id, name: USER.name, email: USER.email });
+  await expect(authorize({ email: USER.email, password: USER.password })).resolves.toEqual({
+    id: USER.id,
+    name: USER.name,
+    email: USER.email,
+  });
 });
 
 test("should fail if e-mail not found", async () => {
   prismaMock.user.findUnique.mockResolvedValue(null);
 
-  await expect(
-    authorize({ email: "fake@mail.com", password: USER.password })
-  ).rejects.toEqual(new Error(ErrorCode.UserNotFound));
+  await expect(authorize({ email: "fake@mail.com", password: USER.password })).rejects.toEqual(
+    new Error(ErrorCode.UserNotFound)
+  );
 });

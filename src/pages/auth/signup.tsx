@@ -4,9 +4,9 @@ import { signIn } from "next-auth/react";
 import { useState, useCallback } from "react";
 import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
 
-import type { inferServerSideProps } from "../../server/common/inferServerSideProps"
+import type { inferServerSideProps } from "~/server/common/inferServerSideProps"
 
-import { prisma } from "../../server/db/client";
+import { prisma } from "~/server/db/client";
 
 interface IFormInputs {
   username: string;

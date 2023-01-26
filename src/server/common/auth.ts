@@ -1,12 +1,10 @@
 import bcrypt from "bcryptjs";
 
-import { prisma } from "@/src/server/db/client";
-import { ErrorCode } from "@/src/lib/errorCodes";
+import { ErrorCode } from "~/lib/errorCodes";
 
-export async function authorize(credentials: {
-  email: string;
-  password: string;
-}) {
+import { prisma } from "~/server/db/client";
+
+export async function authorize(credentials: { email: string; password: string }) {
   const user = await prisma.user.findUnique({
     where: {
       email: credentials.email.toLowerCase(),
@@ -38,10 +36,7 @@ export async function authorize(credentials: {
     throw new Error(ErrorCode.UserMissingPassword);
   }
 
-  const isCorrectPassword = await comparePasswords(
-    credentials.password,
-    user.password
-  );
+  const isCorrectPassword = await comparePasswords(credentials.password, user.password);
   //FIXME: Helpful, but is it safe?
   if (!isCorrectPassword) throw new Error(ErrorCode.IncorrectPassword);
 
@@ -61,10 +56,7 @@ export async function authorize(credentials: {
 /*
   Helper functions
 */
-export async function comparePasswords(
-  plainPassword: string,
-  hashedPassword: string
-) {
+export async function comparePasswords(plainPassword: string, hashedPassword: string) {
   const isValid = await bcrypt.compare(plainPassword, hashedPassword);
   return isValid;
 }

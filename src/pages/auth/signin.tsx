@@ -6,12 +6,12 @@ import { getCsrfToken, signIn } from "next-auth/react";
 
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import { ErrorCode } from "../../lib/errorCodes";
+import { ErrorCode } from "~/lib/errorCodes";
 
-import type { inferServerSideProps } from "../../server/common/inferServerSideProps"
+import type { inferServerSideProps } from "~/server/common/inferServerSideProps"
 
-import AuthPanel from "../../components/auth/AuthPanel";
-import { getServerAuthSession } from "@/src/server/common/getServerAuthSession";
+import AuthPanel from "~/components/auth/AuthPanel";
+import { getServerAuthSession } from "~/server/common/getServerAuthSession";
 interface IFormInputs {
   email: string;
   password: string;

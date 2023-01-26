@@ -1,14 +1,16 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import type { Provider } from "next-auth/providers";
+import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
 
-import { env } from "@/src/env/server.mjs";
-import { prisma } from "@/src/server/db/client";
-import { authorize } from "@/src/server/common/auth";
-import { ErrorCode } from "@/src/lib/errorCodes";
+import { env } from "~/env/server.mjs";
+
+import { ErrorCode } from "~/lib/errorCodes";
+
+import { authorize } from "~/server/common/auth";
+import { prisma } from "~/server/db/client";
 
 const providers: Provider[] = [
   DiscordProvider({
