@@ -3,8 +3,8 @@ import { type Session } from "next-auth";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
-import { getServerAuthSession } from "~/server/common/getServerAuthSession";
-import { prisma } from "~/server/db/client";
+import { prisma } from "~/server/db";
+import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 
 type CreateContextOptions = {
   session: Session | null;

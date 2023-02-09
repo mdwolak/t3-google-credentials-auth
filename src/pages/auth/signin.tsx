@@ -8,10 +8,10 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { ErrorCode } from "~/lib/errorCodes";
 
-import type { inferServerSideProps } from "~/server/common/inferServerSideProps"
+import type { inferServerSideProps } from "~/server/lib/inferServerSideProps"
 
 import AuthPanel from "~/components/auth/AuthPanel";
-import { getServerAuthSession } from "~/server/common/getServerAuthSession";
+import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 interface IFormInputs {
   email: string;
   password: string;

@@ -1,6 +1,6 @@
 import { ErrorCode } from "~/lib/errorCodes";
 
-import { authorize } from "~/server/common/auth";
+import { authorize } from "~/server/services/auth";
 
 import { CompletetUser } from "../../factories/user";
 import { prismaMock } from "../../helpers/prismaMock";

@@ -1,7 +1,7 @@
 import { type Session } from "next-auth";
 
-import { createContextInner } from "~/server/trpc/context";
-import { appRouter } from "~/server/trpc/router/_app";
+import { createContextInner } from "~/server/api/context";
+import { appRouter } from "~/server/api/routers/_app";
 
 /** A convenience method to call tRPC queries */
 /**
@@ -13,7 +13,7 @@ export const trpcRequest = async (user?: Session["user"]) => {
   const ctx = await createContextInner({
     session: {
       user,
-      expires: "",
+      expires: new Date().toISOString(),
     },
   });
   return appRouter.createCaller(ctx);

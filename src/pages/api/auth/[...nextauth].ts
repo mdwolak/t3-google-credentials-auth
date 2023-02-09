@@ -9,8 +9,8 @@ import { env } from "~/env/server.mjs";
 
 import { ErrorCode } from "~/lib/errorCodes";
 
-import { authorize } from "~/server/common/auth";
-import { prisma } from "~/server/db/client";
+import { prisma } from "~/server/db";
+import { authorize } from "~/server/services/auth";
 
 const providers: Provider[] = [
   DiscordProvider({

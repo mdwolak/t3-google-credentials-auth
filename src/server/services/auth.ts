@@ -2,9 +2,10 @@ import bcrypt from "bcryptjs";
 
 import { ErrorCode } from "~/lib/errorCodes";
 
-import { prisma } from "~/server/db/client";
+import { prisma } from "~/server/db";
 
 export async function authorize(credentials: { email: string; password: string }) {
+  //TODO: user user.service. Compare loginHandler
   const user = await prisma.user.findUnique({
     where: {
       email: credentials.email.toLowerCase(),
