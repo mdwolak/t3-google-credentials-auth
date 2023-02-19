@@ -15,19 +15,22 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
   loading = false,
 }) => {
   return (
-    <button
-      type='submit'
-      className={`w-full py-3 font-semibold ${btnColor} rounded-lg outline-none border-none flex justify-center ${loading ? 'bg-[#ccc]' : ''
-        }`}
-    >
-      {loading ? (
-        <div className='flex items-center gap-3'>
-          <Spinner />
-          <span className='text-slate-500 inline-block'>Loading...</span>
-        </div>
-      ) : (
-        <span className={`${textColor}`}>{children}</span>
-      )}
-    </button>
+
+    <div>
+      <button
+        type='submit'
+        className={`relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${btnColor} ${loading ? 'bg-[#ccc]' : ''}`}
+      >
+        {loading ? (
+          <div className='flex items-center gap-3'>
+            <Spinner />
+            <span className='text-slate-500 inline-block'>Loading...</span>
+          </div>
+        ) : (
+          <span className={`${textColor}`}>{children}</span>
+        )}
+      </button>
+    </div>
+
   );
 };

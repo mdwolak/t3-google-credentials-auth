@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { twMerge } from 'tailwind-merge';
+import classNames from "classnames";
+
 
 type TextInputProps = {
   label: string;
@@ -23,7 +24,7 @@ const TextInput: React.FC<TextInputProps> = ({
         {label}
       </label>
       <input
-        className={twMerge(
+        className={classNames(
           `appearance-none border border-ct-dark-200 rounded w-full py-3 px-3 text-gray-700 mb-2 leading-tight focus:outline-none`,
           `${errors[name] && 'border-red-500'}`
         )}
@@ -31,7 +32,7 @@ const TextInput: React.FC<TextInputProps> = ({
         {...register(name)}
       />
       <p
-        className={twMerge(
+        className={classNames(
           `text-red-500 text-xs italic mb-2 invisible`,
           `${errors[name] && 'visible'}`
         )}

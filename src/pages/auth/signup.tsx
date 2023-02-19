@@ -1,121 +1,150 @@
 import type { GetServerSidePropsContext } from "next";
 import { signIn } from "next-auth/react";
+import type { inferServerSideProps } from "~/server/lib/inferServerSideProps"
+import type { GetServerSideProps, NextPage } from "next";
+import { object, string, type TypeOf } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, useForm } from '~/components/forms/Form';
+import { useEffect } from "react";
+import { InputField } from "~/components/forms/InputField";
+import Link from "next/link";
+import { LoadingButton } from "~/components/LoadingButton";
+import AuthPanel from "~/components/auth/AuthPanel";
+import { useRouter } from "next/router";
+import { trpc } from "~/utils/trpc";
+import toast, { Toaster } from 'react-hot-toast';
 
-import { useState, useCallback } from "react";
-import { FormProvider, useForm, type SubmitHandler } from "react-hook-form";
+const registerUserSchema = object({
+  name: string().min(1, "Full name is required").max(100),
+  email: string()
+    .min(1, "Email address is required")
+    .email("Email Address is invalid"),
+  password: string()
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+  passwordConfirm: string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ["passwordConfirm"],
+  message: "Passwords do not match",
+});
+export type RegisterUserInput = TypeOf<typeof registerUserSchema>;
 
-import type { inferServerSideProps } from "~/server/common/inferServerSideProps"
+const RegisterPage: NextPage = () => {
+  const t = (message: string) => message;
+  const register = () => null;
+  const router = useRouter();
+  const { mutate: SignUpUser, isLoading } = trpc.auth.registerUser.useMutation({
+    onSuccess(data) {
+      toast.success(`Welcome ${data.data.user.name}!`);
+      router.push("/login");
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
 
-import { prisma } from "~/server/db/client";
+  /** Form */
+  const form = useForm({ schema: registerUserSchema });
 
-interface IFormInputs {
-  username: string;
-  email: string;
-  password: string;
-  passwordcheck: string;
-  apiError: string;
-}
+  const {
+    reset,
+    formState: { isSubmitSuccessful },
+  } = form;
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitSuccessful]);
+
+  const handleSubmit = (values: RegisterUserInput) => {
+    // 👇 Execute the Mutation
+    SignUpUser(values);
+  };
+  return (
+    <>
+      <AuthPanel
+        title="Signup Page"
+        description="Sign Up To Get Started"
+        showLogo
+        heading="Sign Up To Get Started!"
+      >
+        <Form form={form} handleSubmit={handleSubmit}></Form>
+        <div className="space-y-6">
+          <InputField label="Email" type="email"
+            defaultValue={router.query.email as string}
+            placeholder="john.doe@example.com"
+            required
+            {...form.register('email')} />
+          <InputField label="Password" type="password" {...form.register('password')} />
+          <InputField
+            label="Confirm Password"
+            type="password"
+            {...form.register('passwordConfirm')}
+          />
+
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <LoadingButton loading={isLoading}>Sign Up</LoadingButton>
+
+          {/* <Button
+                type="submit"
+                color="primary"
+                disabled={formState.isSubmitting}
+                className="w-full justify-center">
+                {twoFactorRequired ? t("submit") : t("sign_in")}
+              </Button> */}
+
+          {/* 
+
+            <span className="block">
+              Already have an account?{" "}
+              <Link href="/login" className="text-ct-blue-600">Login Here</Link>
+            </span>
+            */}
+        </div>
+      </AuthPanel>
+      <Toaster position="bottom-right" />
+    </>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {
+      requireAuth: false,
+      enableAuth: false,
+    },
+  };
+};
+
+export default RegisterPage;
+
+
+
 
 // export default function SignUp({ prepopulateFormValues }: ServerSideProps<typeof getServerSideProps>) {
-export default function SignUp() {
-  const t = (message: string) => message;
-
-  const methods = useForm<IFormInputs>(); //{ defaultValues: prepopulateFormValues }
-  const { register, formState: { errors } } = methods;
-
-  const handleErrors = useCallback(async (resp: Response) => {
-    if (!resp.ok) {
-      const err = await resp.json();
-      throw new Error(err.message);
-    }
-  }, []);
-
-  const onSubmit: SubmitHandler<IFormInputs> = async (data) => {
-    await fetch("/api/auth/signup", {
-      body: JSON.stringify({ ...data }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    })
-      .then(handleErrors)
-      .then(async () => {
-        await signIn("custom");
-      })
-      .catch((err) => {
-        methods.setError("apiError", { message: err.message });
-      });
-  };
-
-  return (
-    <div
-      className="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="font-cal text-center text-3xl font-extrabold text-gray-900">
-          {t("create_your_account")}
-        </h2>
-      </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="mx-2 bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
-          <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6 bg-white">
-              Api:{errors.apiError && <div>{errors.apiError.message}</div>}
-              {/* {errors.apiError && <Alert severity="error" message={errors.apiError?.message} />} */}
-              <div className="space-y-2">
-                Username
-                <input type="text"
-                  {...register("username")}
-                  required
-                  defaultValue={"mrwolak"}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-                />
-                Email
-                <input id="email" {...register("email")}
-                  type="email"
-                  required
-                  defaultValue={"mrwolak@hotmail.com"}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-                />
-                Password
-                <input type="password"
-                  // className="block text-sm font-medium tsext-gray-700"
-                  {...register("password")}
-                  required
-                  defaultValue={"mrwolak"}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-                />
-                {t("confirm_password")}
-                <input type="password"
-                  {...register("passwordcheck", {
-                    validate: (value) =>
-                      value === methods.watch("password") || (t("error_password_mismatch") as string),
-                  })}
-                  required
-                  defaultValue={"mrwolak"}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-black focus:outline-none focus:ring-black sm:text-sm"
-                />
-              </div>
-              <div className="flex space-x-2 rtl:space-x-reverse">
-                <button type="submit" className="w-7/12 justify-center">
-                  {t("create_account")}
-                </button>
-                <button
-                  color="secondary"
-                  className="w-5/12 justify-center"
-                  onClick={() =>
-                    signIn("Cal.com")
-                  }>
-                  {t("login_instead")}
-                </button>
-              </div>
-            </form>
-          </FormProvider>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 //   const token = asStringOrNull(ctx.query.token);
@@ -176,3 +205,5 @@ export default function SignUp() {
 //     },
 //   };
 // };
+
+
