@@ -1,36 +1,42 @@
-import React from 'react';
-import Spinner from './Spinner';
+import React from "react";
+
+import classNames from "classnames";
+
+import Spinner from "./Spinner";
 
 type LoadingButtonProps = {
-  loading: boolean;
-  btnColor?: string;
-  textColor?: string;
   children: React.ReactNode;
+  loading: boolean;
+  //color: "primary" | "secondary" | "tertiary";
 };
 
 export const LoadingButton: React.FC<LoadingButtonProps> = ({
-  textColor = 'text-white',
-  btnColor = 'bg-ct-yellow-600',
   children,
+  //className="w-full justify-center"
+  //color = "primary"
   loading = false,
 }) => {
-  return (
+  const textColor = "text-white";
+  const btnColor = "bg-ct-yellow-600";
 
+  return (
     <div>
       <button
-        type='submit'
-        className={`relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${btnColor} ${loading ? 'bg-[#ccc]' : ''}`}
-      >
+        type="submit"
+        className={classNames(
+          "relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+          btnColor,
+          loading && "bg-[#ccc]"
+        )}>
         {loading ? (
-          <div className='flex items-center gap-3'>
+          <div className="flex items-center gap-3">
             <Spinner />
-            <span className='text-slate-500 inline-block'>Loading...</span>
+            <span className="inline-block text-slate-500">Loading...</span>
           </div>
         ) : (
           <span className={`${textColor}`}>{children}</span>
         )}
       </button>
     </div>
-
   );
 };

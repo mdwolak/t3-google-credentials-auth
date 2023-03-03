@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 
 import { ErrorCode } from "~/lib/errorCodes";
-
 import { prisma } from "~/server/db";
 
 export async function authorize(credentials: { email: string; password: string }) {

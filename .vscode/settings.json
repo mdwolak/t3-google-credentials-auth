@@ -1,0 +1,10 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true //all auto-fixable ESLint errors from all plugins will be fixed on save
+  },
+  //"editor.formatOnSave": false,
+  //use prettier in tsx, jsx
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "todo-tree.tree.showBadges": true
+}

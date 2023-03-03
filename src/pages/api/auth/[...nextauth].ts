@@ -40,8 +40,8 @@ const providers: Provider[] = [
 
       //Return user object which will be stored in JWT token
       return await authorize({
-        email: credentials?.email,
-        password: credentials?.password,
+        email: credentials.email,
+        password: credentials.password,
       });
       //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
     },

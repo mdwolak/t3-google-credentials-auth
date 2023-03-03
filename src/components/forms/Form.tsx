@@ -1,97 +1,60 @@
-import React from 'react';
-// function to resolve zod schema we provide
-import { zodResolver } from '@hookform/resolvers/zod';
+/*
+ " @source: https://omkarkulkarni.vercel.app/blog/reusable-form-component-in-react-using-react-hook-form-and-zod
+ */
+import { type ComponentProps } from "react";
 
-// We will fully type `<Form />` component by providing component props and fwding // those
-import type { ComponentProps } from 'react';
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import classNames from "classnames";
 import type {
-    // typescript types of useHookForm props
-    UseFormProps as UseHookFormProps,
-    // return type of useHookForm hook
-    UseFormReturn,
-    // typescript type of form's field values
-    FieldValues,
-    // type of submit handler event
-    SubmitHandler
-} from 'react-hook-form';
-import {
-    // we import useForm hook as useHookForm
-    useForm as useHookForm,
-    // context provider for our form
-    FormProvider,
-    // hook that would return errors in current instance of form
-    useFormContext,
-} from 'react-hook-form';
+  FieldValues,
+  SubmitHandler,
+  UseFormReturn,
+  UseFormProps as UseHookFormProps,
+} from "react-hook-form";
+import { FormProvider, useForm as useHookForm } from "react-hook-form";
+import type { TypeOf, ZodSchema } from "zod";
 
-// Type of zod schema
-import type { ZodSchema, TypeOf } from 'zod';
-
-// We provide additional option that would be our zod schema.
-interface UseFormProps<T extends ZodSchema<any>>
-    extends UseHookFormProps<TypeOf<T>> {
-    schema: T;
+interface UseFormProps<T extends ZodSchema<any>> extends UseHookFormProps<TypeOf<T>> {
+  schema: T;
 }
 
-export const useForm = <T extends ZodSchema<any>>({
-    schema,
-    ...formConfig
-}: UseFormProps<T>) => {
-    return useHookForm({
-        ...formConfig,
-        resolver: zodResolver(schema),
-    });
+export const useForm = <T extends ZodSchema<any>>({ schema, ...formConfig }: UseFormProps<T>) => {
+  return useHookForm({
+    ...formConfig,
+    resolver: zodResolver(schema),
+  });
 };
 
-// we omit the native `onSubmit` event in favor of `SubmitHandler` event
-// the beauty of this is, the values returned by the submit handler are fully typed
-
-interface FormProps<T extends FieldValues = any>
-    extends Omit<ComponentProps<'form'>, 'onSubmit'> {
-    form: UseFormReturn<T>;
-    handleSubmit: SubmitHandler<T>;
+interface FormProps<T extends FieldValues = any> extends Omit<ComponentProps<"form">, "onSubmit"> {
+  form: UseFormReturn<T>;
+  handleSubmit: SubmitHandler<T>;
 }
 
-export const Form = <T extends FieldValues>({
-    form,
-    handleSubmit,
-    children,
-    ...props
-}: FormProps<T>) => {
-    return (
-        <FormProvider {...form}>
-            {/* the `form` passed here is return value of useForm() hook */}
-            <form onSubmit={form.handleSubmit(handleSubmit)} {...props}>
-                <fieldset disabled={form.formState.isSubmitting}>{children}</fieldset>
-            </form>
-        </FormProvider>
-    );
+export const Form = <T extends FieldValues>(props: FormProps<T>) => {
+  const { form, handleSubmit, children, ...rest } = props;
+  return (
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} {...rest}>
+        {children}
+      </form>
+    </FormProvider>
+  );
 };
-{/* <form
-        ref={ref}
-        onSubmit={(event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            form
-                .handleSubmit(handleSubmit)(event)
-                .catch((err) => {
-                    showToast(`${getErrorFromUnknown(err).message}`, "error");
-                });
-        }}
-        {...passThrough}>
-        {props.children}
-    </form> */}
-export function FieldError({ name }: { name?: string }) {
-    // the useFormContext hook returns the current state of hook form.
-    const {
-        formState: { errors },
-    } = useFormContext();
 
-    if (!name) return null;
+export function Label(props: ComponentProps<"label">) {
+  return (
+    <label
+      className={classNames("block text-sm font-medium text-gray-700", props.className)}
+      {...props}>
+      {props.children}
+    </label>
+  );
+}
 
-    const error = errors[name];
-
-    if (!error) return null;
-
-    return <span>{error.message as string}</span>;
+export function FieldError({ error }: { error: string }) {
+  return (
+    <span role="alert" aria-label={error} className="text-sm text-red-500">
+      {error}
+    </span>
+  );
 }

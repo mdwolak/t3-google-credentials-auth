@@ -21,14 +21,8 @@ module.exports = {
   plugins: [mixedPlugin],
 
   importOrder: [
-    "(^react$|^react/(.*)$)",
-    "(^next$|^next/(.*)$|^@?next-auth/?(.*)$)",
+    "(^react$|^react/(.*)$|^next$|^next/(.*)$|^@?next-auth/?(.*)$)",
     "<THIRD_PARTY_MODULES>",
-    "^~/env/(.*)$",
-    "^~/lib/(.*)$",
-    "^~/server/(.*)$",
-    "^~/(.*)$",
-
     "^~/(.*)$",
     "^[./]",
   ],

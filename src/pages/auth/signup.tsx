@@ -1,24 +1,22 @@
-import type { GetServerSidePropsContext } from "next";
-import { signIn } from "next-auth/react";
-import type { inferServerSideProps } from "~/server/lib/inferServerSideProps"
 import type { GetServerSideProps, NextPage } from "next";
-import { object, string, type TypeOf } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from '~/components/forms/Form';
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { InputField } from "~/components/forms/InputField";
-import Link from "next/link";
+
+import toast, { Toaster } from "react-hot-toast";
+import { type TypeOf, object, string } from "zod";
+
 import { LoadingButton } from "~/components/LoadingButton";
 import AuthPanel from "~/components/auth/AuthPanel";
-import { useRouter } from "next/router";
+import { Form, useForm } from "~/components/forms/Form";
+import { Input, InputEmail, InputPassword } from "~/components/forms/Input";
 import { trpc } from "~/utils/trpc";
-import toast, { Toaster } from 'react-hot-toast';
 
 const registerUserSchema = object({
-  name: string().min(1, "Full name is required").max(100),
-  email: string()
-    .min(1, "Email address is required")
-    .email("Email Address is invalid"),
+  //TODO: uncomment and try to display error above the form using errors collection
+  name: string()
+    .min(3, "Username must be at least 3 characters long!")
+    .max(10, "Consider using shorter username."),
+  email: string().min(1, "Email address is required").email("Email Address is invalid"),
   password: string()
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
@@ -32,7 +30,6 @@ export type RegisterUserInput = TypeOf<typeof registerUserSchema>;
 
 const RegisterPage: NextPage = () => {
   const t = (message: string) => message;
-  const register = () => null;
   const router = useRouter();
   const { mutate: SignUpUser, isLoading } = trpc.auth.registerUser.useMutation({
     onSuccess(data) {
@@ -69,61 +66,50 @@ const RegisterPage: NextPage = () => {
         title="Signup Page"
         description="Sign Up To Get Started"
         showLogo
-        heading="Sign Up To Get Started!"
-      >
-        <Form form={form} handleSubmit={handleSubmit}></Form>
-        <div className="space-y-6">
-          <InputField label="Email" type="email"
-            defaultValue={router.query.email as string}
-            placeholder="john.doe@example.com"
-            required
-            {...form.register('email')} />
-          <InputField label="Password" type="password" {...form.register('password')} />
-          <InputField
-            label="Confirm Password"
-            type="password"
-            {...form.register('passwordConfirm')}
-          />
+        heading="Sign Up To Get Started!">
+        <Form form={form} handleSubmit={handleSubmit}>
+          <fieldset className="space-y-6" disabled={form.formState.isSubmitting}>
+            <Input label="Username" placeholder="john doe" required {...form.register("name")} />
+            <InputEmail
+              label="Email"
+              defaultValue={router.query.email as string}
+              placeholder="john.doe@example.com"
+              required
+              {...form.register("email")}
+            />
+            <InputPassword label="Password" {...form.register("password")} />
+            <InputPassword label="Confirm Password" {...form.register("passwordConfirm")} />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <input
+                  id="remember-me"
+                  name="remember-me"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                  Remember me
+                </label>
+              </div>
 
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
+              <div className="text-sm">
+                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Forgot your password?
+                </a>
+              </div>
             </div>
 
-            <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
+            <LoadingButton loading={isLoading}>Sign Up</LoadingButton>
 
-          <LoadingButton loading={isLoading}>Sign Up</LoadingButton>
-
-          {/* <Button
-                type="submit"
-                color="primary"
-                disabled={formState.isSubmitting}
-                className="w-full justify-center">
-                {twoFactorRequired ? t("submit") : t("sign_in")}
-              </Button> */}
-
-          {/* 
+            {/* 
 
             <span className="block">
               Already have an account?{" "}
               <Link href="/login" className="text-ct-blue-600">Login Here</Link>
             </span>
             */}
-        </div>
+          </fieldset>
+        </Form>
       </AuthPanel>
       <Toaster position="bottom-right" />
     </>
@@ -140,9 +126,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default RegisterPage;
-
-
-
 
 // export default function SignUp({ prepopulateFormValues }: ServerSideProps<typeof getServerSideProps>) {
 
@@ -205,5 +188,3 @@ export default RegisterPage;
 //     },
 //   };
 // };
-
-
