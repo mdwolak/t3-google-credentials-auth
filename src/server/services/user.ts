@@ -2,17 +2,17 @@ import type { Prisma, User } from "@prisma/client";
 
 import { prisma } from "~/server/db";
 
-export const excludedFields = ["password", "verified", "verificationCode"];
+const excludedFields = ["password"];
 
-export const createUser = async (input: Prisma.UserCreateInput) => {
+export const create = async (input: Prisma.UserCreateInput) => {
   //IMPROVE: do not return sensitive data post-creation
   return (await prisma.user.create({
     data: input,
   })) as User;
 };
 
-export const findUser = async (
-  where: Partial<Prisma.UserCreateInput>,
+export const findFirst = async (
+  where: Partial<Prisma.UserWhereInput>,
   select?: Prisma.UserSelect
 ) => {
   return (await prisma.user.findFirst({
@@ -21,7 +21,7 @@ export const findUser = async (
   })) as User;
 };
 
-export const findUniqueUser = async (
+export const findUnique = async (
   where: Prisma.UserWhereUniqueInput,
   select?: Prisma.UserSelect
 ) => {
@@ -31,7 +31,7 @@ export const findUniqueUser = async (
   })) as User;
 };
 
-export const updateUser = async (
+export const update = async (
   where: Partial<Prisma.UserWhereUniqueInput>,
   data: Prisma.UserUpdateInput,
   select?: Prisma.UserSelect

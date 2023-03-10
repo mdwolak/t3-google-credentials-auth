@@ -12,6 +12,7 @@ import type {
   UseFormProps as UseHookFormProps,
 } from "react-hook-form";
 import { FormProvider, useForm as useHookForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import type { TypeOf, ZodSchema } from "zod";
 
 interface UseFormProps<T extends ZodSchema<any>> extends UseHookFormProps<TypeOf<T>> {
@@ -34,7 +35,17 @@ export const Form = <T extends FieldValues>(props: FormProps<T>) => {
   const { form, handleSubmit, children, ...rest } = props;
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} {...rest}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          form
+            .handleSubmit(handleSubmit)(event)
+            .catch((err) => {
+              toast.error("An error occurred: " + err.message);
+            });
+        }}
+        {...rest}>
         {children}
       </form>
     </FormProvider>

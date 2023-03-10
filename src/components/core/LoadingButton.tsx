@@ -2,20 +2,20 @@ import React from "react";
 
 import classNames from "classnames";
 
-import Spinner from "./Spinner";
+import { Spinner } from "~/components/core/Spinner";
 
 type LoadingButtonProps = {
   children: React.ReactNode;
-  loading: boolean;
+  isLoading: boolean;
   //color: "primary" | "secondary" | "tertiary";
 };
 
-export const LoadingButton: React.FC<LoadingButtonProps> = ({
+export const LoadingButton = ({
   children,
   //className="w-full justify-center"
   //color = "primary"
-  loading = false,
-}) => {
+  isLoading = false,
+}: LoadingButtonProps) => {
   const textColor = "text-white";
   const btnColor = "bg-ct-yellow-600";
 
@@ -26,9 +26,9 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
         className={classNames(
           "relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
           btnColor,
-          loading && "bg-[#ccc]"
+          isLoading && "bg-[#ccc]"
         )}>
-        {loading ? (
+        {isLoading ? (
           <div className="flex items-center gap-3">
             <Spinner />
             <span className="inline-block text-slate-500">Loading...</span>

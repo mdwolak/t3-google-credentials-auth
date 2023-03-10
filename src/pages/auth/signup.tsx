@@ -1,37 +1,25 @@
 import type { GetServerSideProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 import toast, { Toaster } from "react-hot-toast";
-import { type TypeOf, object, string } from "zod";
 
-import { LoadingButton } from "~/components/LoadingButton";
 import AuthPanel from "~/components/auth/AuthPanel";
+import { Alert, LoadingButton, SEOHead } from "~/components/core";
 import { Form, useForm } from "~/components/forms/Form";
 import { Input, InputEmail, InputPassword } from "~/components/forms/Input";
+import { type UserCreateInput, userCreateSchema } from "~/lib/schemas/user";
 import { trpc } from "~/utils/trpc";
 
-const registerUserSchema = object({
-  //TODO: uncomment and try to display error above the form using errors collection
-  name: string()
-    .min(3, "Username must be at least 3 characters long!")
-    .max(10, "Consider using shorter username."),
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
-  password: string()
-    .min(1, "Password is required")
-    .min(8, "Password must be more than 8 characters")
-    .max(32, "Password must be less than 32 characters"),
-  passwordConfirm: string().min(1, "Please confirm your password"),
-}).refine((data) => data.password === data.passwordConfirm, {
-  path: ["passwordConfirm"],
-  message: "Passwords do not match",
-});
-export type RegisterUserInput = TypeOf<typeof registerUserSchema>;
-
-const RegisterPage: NextPage = () => {
-  const t = (message: string) => message;
+const SignUpPage: NextPage = () => {
   const router = useRouter();
-  const { mutate: SignUpUser, isLoading } = trpc.auth.registerUser.useMutation({
+  const form = useForm({ schema: userCreateSchema });
+
+  const {
+    mutate: userCreateApi,
+    isLoading,
+    error,
+  } = trpc.user.create.useMutation({
     onSuccess(data) {
       toast.success(`Welcome ${data.data.user.name}!`);
       router.push("/login");
@@ -41,40 +29,23 @@ const RegisterPage: NextPage = () => {
     },
   });
 
-  /** Form */
-  const form = useForm({ schema: registerUserSchema });
-
-  const {
-    reset,
-    formState: { isSubmitSuccessful },
-  } = form;
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitSuccessful]);
-
-  const handleSubmit = (values: RegisterUserInput) => {
-    // 👇 Execute the Mutation
-    SignUpUser(values);
+  const handleSubmit = (values: UserCreateInput) => {
+    userCreateApi(values);
   };
+
+  //@ remove default values
   return (
     <>
-      <AuthPanel
-        title="Signup Page"
-        description="Sign Up To Get Started"
-        showLogo
-        heading="Sign Up To Get Started!">
+      <SEOHead title="Sign up" description="Create your account" />
+      <AuthPanel showLogo heading="Sign Up">
+        {error && <Alert severity="error">Something went wrong! {error.message}</Alert>}
         <Form form={form} handleSubmit={handleSubmit}>
-          <fieldset className="space-y-6" disabled={form.formState.isSubmitting}>
-            <Input label="Username" placeholder="john doe" required {...form.register("name")} />
+          <fieldset className="space-y-6" disabled={isLoading}>
+            <Input label="Username" {...form.register("name")} />
             <InputEmail
               label="Email"
-              defaultValue={router.query.email as string}
-              placeholder="john.doe@example.com"
-              required
+              // defaultValue2={router.query.email as string}
+              placeholder="me@example.com"
               {...form.register("email")}
             />
             <InputPassword label="Password" {...form.register("password")} />
@@ -99,15 +70,14 @@ const RegisterPage: NextPage = () => {
               </div>
             </div>
 
-            <LoadingButton loading={isLoading}>Sign Up</LoadingButton>
-
-            {/* 
+            <LoadingButton isLoading={isLoading}>Sign up</LoadingButton>
 
             <span className="block">
               Already have an account?{" "}
-              <Link href="/login" className="text-ct-blue-600">Login Here</Link>
+              <Link href="/login" className="text-ct-blue-600">
+                Login Here
+              </Link>
             </span>
-            */}
           </fieldset>
         </Form>
       </AuthPanel>
@@ -125,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default RegisterPage;
+export default SignUpPage;
 
 // export default function SignUp({ prepopulateFormValues }: ServerSideProps<typeof getServerSideProps>) {
 

@@ -1,15 +1,14 @@
 import bcrypt from "bcryptjs";
 
 import { ErrorCode } from "~/lib/errorCodes";
-import { prisma } from "~/server/db";
+import * as userService from "~/server/services/user";
 
 export async function authorize(credentials: { email: string; password: string }) {
-  //TODO: user user.service. Compare loginHandler
-  const user = await prisma.user.findUnique({
-    where: {
+  const user = await userService.findUnique(
+    {
       email: credentials.email.toLowerCase(),
     },
-    select: {
+    {
       id: true,
       // username: true,
       name: true,
@@ -18,27 +17,23 @@ export async function authorize(credentials: { email: string; password: string }
       //image: true,
       password: true,
       //createdDate: true,
-    },
-  });
+    }
+  );
 
   //FIXME: Helpful, but is it safe to tell if a user with the given e-mail has been regeistered
-  if (!user) {
-    throw new Error(ErrorCode.UserNotFound);
-  }
+  if (!user) throw new Error(ErrorCode.UserNotFound);
 
   //TODO: if e-mail associated with 3rd party provider, credentials cannot be used
   // if (user.identityProvider !== IdentityProvider.CAL) {
   //   throw new Error(ErrorCode.ThirdPartyIdentityProviderEnabled);
   // }
 
-  if (!user.password) {
-    //TODO: how can this happen?
-    throw new Error(ErrorCode.UserMissingPassword);
-  }
+  //TODO: how can this happen?
+  if (!user.password) throw new Error(ErrorCode.UserMissingPassword);
 
-  const isCorrectPassword = await comparePasswords(credentials.password, user.password);
   //FIXME: Helpful, but is it safe?
-  if (!isCorrectPassword) throw new Error(ErrorCode.IncorrectPassword);
+  if (!(await bcrypt.compare(credentials.password, user.password)))
+    throw new Error(ErrorCode.IncorrectPassword);
 
   //TODO: enable rate limiter
   // const limiter = rateLimit({
@@ -56,11 +51,7 @@ export async function authorize(credentials: { email: string; password: string }
 /*
   Helper functions
 */
-export async function comparePasswords(plainPassword: string, hashedPassword: string) {
-  const isValid = await bcrypt.compare(plainPassword, hashedPassword);
-  return isValid;
-}
-
+//CLEANUP
 // import { HttpError } from "@calcom/lib/http-error";
 // export async function hashPassword(password: string) {
 //   const hashedPassword = await hash(password, 12);

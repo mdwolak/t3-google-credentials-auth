@@ -1,20 +1,20 @@
 import type { User } from "@prisma/client";
 
-import { CompletetUser } from "../../../factories/user";
+import { CompleteUser } from "../../../factories/user";
 import { type RouterInputs, RouterOutputs, prismaMock, trpcRequest } from "../../../helpers";
 
 //trpcRequest(UserFactory.create());
 describe("User signs up", () => {
   it("Using existing e-mail", async () => {
-    const { name, email, password } = CompletetUser;
+    const { name, email, password } = CompleteUser;
 
-    type Input = RouterInputs["auth"]["registerUser"];
+    type Input = RouterInputs["user"]["create"];
     const input: Input = { name, email, password, passwordConfirm: password };
 
-    prismaMock.user.findFirst.mockResolvedValue({ name, email, password } as User);
+    prismaMock.user.findUnique.mockResolvedValue({ name, email, password } as User);
 
     const caller = await trpcRequest();
-    await expect(caller.auth.registerUser(input)).rejects.toThrowError(/Email/);
+    await expect(caller.user.create(input)).rejects.toThrowError(/Email/);
     //).rejects.toEqual(new Error(ErrorCode.UserNotFound));
   });
   //  describe("trying to pass role", () => {
@@ -47,15 +47,15 @@ describe("User signs up", () => {
   //     });
   //   });
   test("Sending valid credentials creates the user", async () => {
-    const { name, email, password } = CompletetUser;
+    const { name, email, password } = CompleteUser;
 
-    type Input = RouterInputs["auth"]["registerUser"];
+    type Input = RouterInputs["user"]["create"];
     const input: Input = { name, email, password, passwordConfirm: password };
 
     prismaMock.user.create.mockResolvedValue({ name, email, password } as User);
 
     const caller = await trpcRequest();
-    const response = await caller.auth.registerUser(input);
+    const response = await caller.user.create(input);
 
     expect(response.status).toEqual("success");
     expect(response.data.user).toMatchObject({ name, email });

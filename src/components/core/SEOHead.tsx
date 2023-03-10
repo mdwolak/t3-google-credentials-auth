@@ -13,11 +13,11 @@ type SEOHeadProps = {
   children?: React.ReactNode;
 };
 
-const SEOHead: React.FC<SEOHeadProps> = ({
+export const SEOHead = ({
   title = globalMeta.siteName,
   description = globalMeta.description,
   children,
-}) => {
+}: SEOHeadProps) => {
   return (
     <Head>
       <title>{title}</title>
@@ -28,4 +28,3 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     </Head>
   );
 };
-export default SEOHead;

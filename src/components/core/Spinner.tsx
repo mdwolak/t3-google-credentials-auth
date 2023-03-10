@@ -8,7 +8,7 @@ type SpinnerProps = {
   color?: string;
   bgColor?: string;
 };
-const Spinner: React.FC<SpinnerProps> = ({ width = 5, height = 5, color, bgColor }) => {
+export const Spinner = ({ width = 5, height = 5, color, bgColor }: SpinnerProps) => {
   return (
     <svg
       role="status"
@@ -30,5 +30,3 @@ const Spinner: React.FC<SpinnerProps> = ({ width = 5, height = 5, color, bgColor
     </svg>
   );
 };
-
-export default Spinner;

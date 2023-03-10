@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 
-export const CompletetUser = {
+export const CompleteUser = {
   id: "1",
   name: "Joe Bloggs",
   email: "joe@bloggs.com",
@@ -13,7 +13,7 @@ export const CompletetUser = {
 const UserFactory = {
   create: (args: Partial<User> = {}): User => {
     return {
-      ...CompletetUser,
+      ...CompleteUser,
       ...args,
     };
   },
