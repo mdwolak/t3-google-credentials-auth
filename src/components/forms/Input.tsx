@@ -1,5 +1,4 @@
 import React, {
-  type ComponentProps,
   type ComponentPropsWithRef,
   type ReactNode,
   type Ref,
@@ -54,6 +53,7 @@ export const InputEmail = forwardRef(function InputEmail(
   props: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
+  //use autocomplete="username" if email is used as username
   return (
     <Input
       autoCapitalize="none"
@@ -71,6 +71,8 @@ export const InputPassword = forwardRef(function InputPassword(
   props: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
+  //Use autocomplete="new-password" and id="new-password" for a new password
+  //Use autocomplete="current-password" and id="current-password" for an existing password
   const { className, placeholder, ...rest } = props;
   return (
     <Input className={className} placeholder={placeholder} ref={ref} type="password" {...rest} />
