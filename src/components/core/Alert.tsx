@@ -26,7 +26,10 @@ export const Alert = ({ severity, children }: AlertProps) => {
           clip-rule="evenodd"></path>
       </svg>
       <span className="sr-only">{severity}</span>
-      <div>{children}</div>
+      <div>
+        {severity === "error" && <strong className="font-medium">Something went wrong! </strong>}
+        {children}
+      </div>
     </div>
   );
 };

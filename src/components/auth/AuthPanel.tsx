@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface Props {
@@ -14,9 +15,17 @@ const AuthPanel = (props: Props) => {
       <div className="w-full max-w-md space-y-8">
         <div>
           {props.showLogo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="mx-auto h-24 w-auto" src="/logo.svg" alt="Your Company" />
+            <div className="relative h-24">
+              <Image src="/logo.svg" alt="Company name" fill sizes="100vw" />
+            </div>
           )}
+          {/* <Image
+              src="/logo.svg"
+              alt="Your Company"
+              width={500}
+              height={500}
+              className="mx-auto h-12 w-auto"
+            /> */}
 
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
             {props.heading}
