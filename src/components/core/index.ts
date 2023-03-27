@@ -1,4 +1,4 @@
 export * from "./Alert";
 export * from "./Link";
-export * from "./LoadingButton";
+export * from "./Button";
 export * from "./SEOHead";
