@@ -302,12 +302,12 @@
     "core-js-pure" "^3.25.1"
     "regenerator-runtime" "^0.13.10"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.9":
-  "integrity" "sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg=="
-  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.20.1.tgz"
-  "version" "7.20.1"
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.18.9", "@babel/runtime@^7.20.13":
+  "integrity" "sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.21.0.tgz"
+  "version" "7.21.0"
   dependencies:
-    "regenerator-runtime" "^0.13.10"
+    "regenerator-runtime" "^0.13.11"
 
 "@babel/template@^7.16.7", "@babel/template@^7.18.10", "@babel/template@^7.20.7", "@babel/template@^7.3.3":
   "integrity" "sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw=="
@@ -722,7 +722,7 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
-"@panva/hkdf@^1.0.1":
+"@panva/hkdf@^1.0.2":
   "integrity" "sha512-MSAs9t3Go7GUkMhpKC44T58DJ5KGk2vBo+h1cqQeqlMfdGkxaVB78ZWpv9gYi/g2fa4sopag9gJsNvS8XGgWJA=="
   "resolved" "https://registry.npmjs.org/@panva/hkdf/-/hkdf-1.0.2.tgz"
   "version" "1.0.2"
@@ -3020,10 +3020,10 @@
     "import-local" "^3.0.2"
     "jest-cli" "^29.3.1"
 
-"jose@^4.10.0", "jose@^4.9.3":
-  "integrity" "sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q=="
-  "resolved" "https://registry.npmjs.org/jose/-/jose-4.11.1.tgz"
-  "version" "4.11.1"
+"jose@^4.10.0", "jose@^4.11.4":
+  "integrity" "sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ=="
+  "resolved" "https://registry.npmjs.org/jose/-/jose-4.13.1.tgz"
+  "version" "4.13.1"
 
 "js-sdsl@^4.1.4":
   "integrity" "sha512-dyBIzQBDkCqCu+0upx25Y2jGdbTGxE9fshMsCdK0ViOongpV+n5tXRcZY9v7CaVQ79AGS9KA1KHtojxiM7aXSQ=="
@@ -3282,16 +3282,16 @@
   "version" "1.4.0"
 
 "next-auth@^4", "next-auth@^4.15.1":
-  "integrity" "sha512-aN2tdnjS0MDeUpB2tBDOaWnegkgeMWrsccujbXRGMJ607b+EwRcy63MFGSr0OAboDJEe0902piXQkt94GqF8Qw=="
-  "resolved" "https://registry.npmjs.org/next-auth/-/next-auth-4.17.0.tgz"
-  "version" "4.17.0"
+  "integrity" "sha512-ZcTUN4qzzZ/zJYgOW0hMXccpheWtAol8QOMdMts+LYRcsPGsqf2hEityyaKyECQVw1cWInb9dF3wYwI5GZdEmQ=="
+  "resolved" "https://registry.npmjs.org/next-auth/-/next-auth-4.20.1.tgz"
+  "version" "4.20.1"
   dependencies:
-    "@babel/runtime" "^7.16.3"
-    "@panva/hkdf" "^1.0.1"
+    "@babel/runtime" "^7.20.13"
+    "@panva/hkdf" "^1.0.2"
     "cookie" "^0.5.0"
-    "jose" "^4.9.3"
+    "jose" "^4.11.4"
     "oauth" "^0.9.15"
-    "openid-client" "^5.1.0"
+    "openid-client" "^5.4.0"
     "preact" "^10.6.3"
     "preact-render-to-string" "^5.1.19"
     "uuid" "^8.3.2"
@@ -3443,10 +3443,10 @@
   dependencies:
     "mimic-fn" "^2.1.0"
 
-"openid-client@^5.1.0":
-  "integrity" "sha512-SykPCeZBZ/SxiBH5AWynvFUIDX3//2pgwc/3265alUmGHeCN03+X8uP+pHOVnCXCKfX/XOhO90qttAQ76XcGxA=="
-  "resolved" "https://registry.npmjs.org/openid-client/-/openid-client-5.3.0.tgz"
-  "version" "5.3.0"
+"openid-client@^5.4.0":
+  "integrity" "sha512-hgJa2aQKcM2hn3eyVtN12tEA45ECjTJPXCgUh5YzTzy9qwapCvmDTVPWOcWVL0d34zeQoQ/hbG9lJhl3AYxJlQ=="
+  "resolved" "https://registry.npmjs.org/openid-client/-/openid-client-5.4.0.tgz"
+  "version" "5.4.0"
   dependencies:
     "jose" "^4.10.0"
     "lru-cache" "^6.0.0"
@@ -3774,7 +3774,7 @@
   dependencies:
     "picomatch" "^2.2.1"
 
-"regenerator-runtime@^0.13.10":
+"regenerator-runtime@^0.13.10", "regenerator-runtime@^0.13.11":
   "integrity" "sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg=="
   "resolved" "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz"
   "version" "0.13.11"

@@ -1,0 +1,27 @@
+/**
+ * 
+ *               <Button variant="primary">Sign in</Button>
+              <Button variant="primary" disabled>
+                Sign in
+              </Button>
+              <Button variant="primary" isLoading={true}>
+                Sign in
+              </Button>
+
+              <Button variant="secondary">Sign in</Button>
+              <Button variant="secondary" disabled>
+                Sign in
+              </Button>
+              <Button variant="secondary" isLoading={true}>
+                Sign in
+              </Button>
+
+              <Button variant="destructive">Sign in</Button>
+              <Button variant="destructive" disabled>
+                Sign in
+              </Button>
+              <Button variant="destructive" isLoading={true}>
+                Sign in
+              </Button>
+
+ */
