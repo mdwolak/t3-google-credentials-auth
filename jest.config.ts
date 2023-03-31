@@ -10,7 +10,7 @@ const customJestConfig = {
   preset: "ts-jest",
   verbose: true,
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/$1",
+    "^~/(.*)$": "<rootDir>/src/$1",
   },
   setupFilesAfterEnv: ["<rootDir>/__tests__/helpers/prismaMock.ts"],
   testEnvironment: "node", //jsdom when using test-react library
