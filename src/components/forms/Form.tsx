@@ -5,7 +5,9 @@ import { type ComponentProps } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import classNames from "classnames";
+import get from "lodash.get";
 import type {
+  FieldErrors,
   FieldValues,
   SubmitErrorHandler,
   SubmitHandler,
@@ -15,6 +17,8 @@ import type {
 import { FormProvider, useForm as useHookForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import type { TypeOf, ZodSchema } from "zod";
+
+import { Alert } from "~/components/core/Alert";
 
 export { type FieldErrors } from "react-hook-form";
 
@@ -29,7 +33,8 @@ export const useForm = <T extends ZodSchema<any>>({ schema, ...formConfig }: Use
   });
 };
 
-interface FormProps<T extends FieldValues = any> extends Omit<ComponentProps<"form">, "onSubmit"> {
+interface FormProps<T extends FieldValues = FieldValues>
+  extends Omit<ComponentProps<"form">, "onSubmit"> {
   form: UseFormReturn<T>;
   handleSubmit: SubmitHandler<T>;
   handleError?: SubmitErrorHandler<T>;
@@ -84,3 +89,36 @@ export function FieldError({ error }: { error: string }) {
     </span>
   );
 }
+
+export const ValidationSummary = <T extends FieldValues = FieldValues>({
+  header = "Please correct entries below",
+  errors,
+}: {
+  header?: string;
+  errors: FieldErrors<T>;
+}) => {
+  //TODO: Possibility to accept formstate and display error if a required schema attribute has no matching field in the form
+  if (Object.keys(errors).length > 0) {
+    Object.keys(errors).forEach((fieldName) => {
+      const error = getFieldError(errors, fieldName)?.message;
+      console.log(`${fieldName}: ${error}`);
+    });
+
+    return (
+      <Alert severity="error">
+        {header}
+        {/* <ul className="list-inside list-disc">
+                  {Object.keys(errors).map((fieldName) => (
+                    <ErrorMessage errors={errors} name={fieldName as any} as="div" key={fieldName} />
+                  ))}
+                </ul> */}
+      </Alert>
+    );
+  }
+
+  return null;
+};
+
+export const getFieldError = (errors: FieldErrors, fieldName: string) => {
+  return get(errors, fieldName);
+};

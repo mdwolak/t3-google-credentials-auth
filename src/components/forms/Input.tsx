@@ -7,10 +7,9 @@ import React, {
 } from "react";
 
 import classNames from "classnames";
-import get from "lodash.get";
 import { useFormContext } from "react-hook-form";
 
-import { FieldError, Label } from "./Form";
+import { FieldError, Label, getFieldError } from "./Form";
 
 interface InputProps extends ComponentPropsWithRef<"input"> {
   label?: ReactNode;
@@ -25,7 +24,7 @@ export const Input = forwardRef(function Input(
   const {
     formState: { errors },
   } = useFormContext();
-  const error = get(errors, props.name as string)?.message as string;
+  const error = getFieldError(errors, props.name as string)?.message;
 
   const uniqueInputId = useId();
   const targetId = id || uniqueInputId;
@@ -36,8 +35,8 @@ export const Input = forwardRef(function Input(
       <input
         className={classNames(
           "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 sm:text-sm",
-          { "border-red-500": error },
-          className
+          className,
+          { "border-red-500": error }
         )}
         id={targetId}
         ref={ref}

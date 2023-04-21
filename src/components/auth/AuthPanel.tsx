@@ -11,12 +11,12 @@ interface Props {
 
 const AuthPanel = (props: Props) => {
   return (
-    <div className="flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
           {props.showLogo && (
             <div className="relative h-24">
-              <Image src="/logo.svg" alt="Company name" fill sizes="100vw" />
+              <Image src="/logo.svg" alt="Company name" fill sizes="100vw" priority={true} />
             </div>
           )}
           {/* <Image
