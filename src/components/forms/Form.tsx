@@ -91,7 +91,7 @@ export function FieldError({ error }: { error: string }) {
 }
 
 export const ValidationSummary = <T extends FieldValues = FieldValues>({
-  header = "Please correct entries below",
+  header = "Please fix the errors below before continuing.",
   errors,
 }: {
   header?: string;
