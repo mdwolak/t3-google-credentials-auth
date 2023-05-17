@@ -18,7 +18,7 @@ const variants = {
   destructive: "bg-red-600 text-white border-transparent",
 };
 
-type ButtonProps = Omit<ComponentPropsWithRef<"button">, "onClick"> & {
+type ButtonProps = ComponentPropsWithRef<"button"> & {
   isLoading?: boolean;
   variant?: keyof typeof variants;
   icon?: React.ReactNode;
@@ -47,9 +47,9 @@ export const Button = forwardRef(function Button(
       type={type}
       className={classNames(
         "relative flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium focus:outline-none",
+        variants[variant],
         className,
-        disabled ? "cursor-not-allowed opacity-60" : "hover:opacity-80",
-        variants[variant]
+        disabled ? "cursor-not-allowed opacity-60" : "hover:opacity-80"
       )}
       {...props}>
       {isLoading ? (
