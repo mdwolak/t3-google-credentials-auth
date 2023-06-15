@@ -20,26 +20,8 @@ export async function authorize(credentials: { email: string; password: string }
     }
   );
 
-  //FIXME: Helpful, but is it safe to tell if a user with the given e-mail has been regeistered
-  if (!user) throw new Error(ErrorCode.UserNotFound);
-
-  //TODO: if e-mail associated with 3rd party provider, credentials cannot be used
-  // if (user.identityProvider !== IdentityProvider.CAL) {
-  //   throw new Error(ErrorCode.ThirdPartyIdentityProviderEnabled);
-  // }
-
-  //TODO: how can this happen?
-  if (!user.password) throw new Error(ErrorCode.UserMissingPassword);
-
-  //FIXME: Helpful, but is it safe?
-  if (!(await bcrypt.compare(credentials.password, user.password)))
-    throw new Error(ErrorCode.IncorrectPassword);
-
-  //TODO: enable rate limiter
-  // const limiter = rateLimit({
-  //   intervalInMs: 60 * 1000, // 1 minute
-  // });
-  // await limiter.check(10, user.email); // 10 requests per minute
+  if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password)))
+    throw new Error(ErrorCode.InvalidEmailOrPassword);
 
   return {
     id: user.id,

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 
-import { type UserCreateInput, userCreateSchema } from "~/lib/schemas/user";
+import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import * as userService from "~/server/services/user";
 
@@ -12,10 +12,10 @@ export const userRouter = router({
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
-  create: publicProcedure.input(userCreateSchema).mutation(({ input }) => createHandler({ input })),
+  create: publicProcedure.input(createUserSchema).mutation(({ input }) => createHandler({ input })),
 });
 
-const createHandler = async ({ input }: { input: UserCreateInput }) => {
+const createHandler = async ({ input }: { input: CreateUserInput }) => {
   let user = await userService.findUnique({ email: input.email.toLowerCase() });
   if (user) {
     throw new TRPCError({ code: "CONFLICT", message: "Email already taken" });

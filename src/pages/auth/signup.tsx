@@ -10,13 +10,13 @@ import {
   ValidationSummary,
   useForm,
 } from "~/components/forms";
-import { type UserCreateInput, userCreateSchema } from "~/lib/schemas/user";
-import { trpc } from "~/utils/trpc";
+import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
+import { api } from "~/utils/api";
 
 const SignUp = () => {
   const router = useRouter();
   const form = useForm({
-    schema: userCreateSchema,
+    schema: createUserSchema,
     //@ remove default values
     defaultValues: {
       email: "me@example.com", //router.query.email
@@ -30,13 +30,13 @@ const SignUp = () => {
     mutate: apiUserCreate,
     isLoading,
     error: apiError,
-  } = trpc.user.create.useMutation({
+  } = api.user.create.useMutation({
     onSuccess() {
       router.push("signin");
     },
   });
 
-  const handleSubmit = (values: UserCreateInput) => {
+  const handleSubmit = (values: CreateUserInput) => {
     apiUserCreate(values);
   };
 

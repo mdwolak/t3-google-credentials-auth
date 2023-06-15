@@ -3,8 +3,6 @@ import { getCsrfToken, signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
-import { Toaster } from "react-hot-toast";
 import { type TypeOf, object, string } from "zod";
 
 import AuthPanel from "~/components/auth/AuthPanel";
@@ -23,42 +21,40 @@ const userLoginSchema = object({
 export type UserLoginInput = TypeOf<typeof userLoginSchema>;
 
 const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const t = (message: string) => message; //@
   const router = useRouter();
   const form = useForm({ schema: userLoginSchema });
-
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const t = (message: string) => message; //@
   const errorMessages: { [key: string]: string } = {
-    [ErrorCode.IncorrectPassword]: `${t("incorrect_password")} ${t("please_try_again")}`,
-    [ErrorCode.UserNotFound]: t("no_account_exists"),
+    [ErrorCode.InvalidEmailOrPassword]: "Invalid email or password",
+    [ErrorCode.EmailAndPasswordAreRequired]: "E-mail and password are required",
     [ErrorCode.InternalServerError]: `${t("something_went_wrong")} ${t(
       "please_try_again_and_contact_us"
     )}`,
   };
 
-  const handleSubmit = async (values: UserLoginInput) => {
-    setErrorMessage(null); //@ is this needed?
+  const callbackUrl = (router.query.callbackUrl as string) || "/";
 
+  const handleSubmit = async (values: UserLoginInput) => {
     const res = await signIn<"credentials">("credentials", {
       ...values,
       redirect: false,
+      callbackUrl,
     });
 
     if (res?.ok) {
       //successful login
-      form.resetField("password");
+      //form.resetField("password");
       router.push(res.url as string);
-    }
-    //@ return error message in a useMutation and remove hooks
-    else if (res?.error && errorMessages[res.error])
+    } else if (res?.error && errorMessages[res.error])
       setErrorMessage(errorMessages[res.error] as string);
     else {
-      setErrorMessage(t("something_went_wrong"));
+      setErrorMessage(errorMessages[ErrorCode.InternalServerError] as string);
       console.error(
         !res
           ? "SignIn returned empty response"
-          : `Unknown signIn error: {res.error}. Status: {res.status}`
+          : `Unknown signIn error: ${res.error}. Status: ${res.status}`
       );
     }
   };
@@ -70,7 +66,7 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
         <div className="space-y-6">
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           <Button
-            onClick={() => signIn("google")}
+            onClick={() => signIn("google", { callbackUrl })}
             variant="secondary"
             icon={<Image src={GoogleIcon} alt="Google" />}>
             Continue with Google{" "}
@@ -119,7 +115,9 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
                 </span>
               </div>
 
-              <Button isLoading={form.formState.isSubmitting}>Sign in</Button>
+              <Button type="submit" isLoading={form.formState.isSubmitting}>
+                Sign in
+              </Button>
 
               <div className="text-sm">
                 {"Don't have an account?"} <Link href="/auth/signup">Sign up</Link>
@@ -128,7 +126,6 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
           </Form>
         </div>
       </AuthPanel>
-      <Toaster position="bottom-right" />
     </>
   );
 };

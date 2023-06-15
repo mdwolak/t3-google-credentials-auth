@@ -2,15 +2,6 @@ import type { Prisma, User } from "@prisma/client";
 
 import { prisma } from "~/server/db";
 
-const excludedFields = ["password"];
-
-export const create = async (input: Prisma.UserCreateInput) => {
-  //IMPROVE: do not return sensitive data post-creation
-  return (await prisma.user.create({
-    data: input,
-  })) as User;
-};
-
 export const findFirst = async (
   where: Partial<Prisma.UserWhereInput>,
   select?: Prisma.UserSelect
@@ -28,6 +19,13 @@ export const findUnique = async (
   return (await prisma.user.findUnique({
     where,
     select,
+  })) as User;
+};
+
+export const create = async (input: Prisma.UserCreateInput) => {
+  //IMPROVE: do not return sensitive data exemplar-creation
+  return (await prisma.user.create({
+    data: input,
   })) as User;
 };
 

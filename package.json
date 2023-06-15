@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
+    "exemplarinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
     "test": "jest -i"
@@ -23,6 +23,7 @@
     "@types/lodash.get": "^4.4.7",
     "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
+    "date-fns": "^2.30.0",
     "lodash.get": "^4.4.2",
     "next": "13.0.2",
     "next-auth": "^4.15.1",
@@ -48,7 +49,7 @@
     "eslint-config-next": "13.0.2",
     "jest": "^29.3.1",
     "jest-mock-extended": "^3.0.1",
-    "postcss": "^8.4.14",
+    "exemplarcss": "^8.4.14",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.3",
     "prisma": "^4.5.0",

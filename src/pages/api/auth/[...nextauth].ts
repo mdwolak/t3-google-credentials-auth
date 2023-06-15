@@ -6,9 +6,8 @@ import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env/server.mjs";
-
+import { isNumber } from "~/lib/common";
 import { ErrorCode } from "~/lib/errorCodes";
-
 import { prisma } from "~/server/db";
 import { authorize } from "~/server/services/auth";
 
@@ -21,8 +20,7 @@ const providers: Provider[] = [
   GoogleProvider({
     clientId: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
-    //TODO:https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
-    //allowDangerousEmailAccountLinking: true
+    //allowDangerousEmailAccountLinking: true //https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
   }),
   CredentialsProvider({
     name: "credentials",
@@ -33,40 +31,40 @@ const providers: Provider[] = [
 
     //Validates credentials and returns user object or null
     async authorize(credentials) {
-      if (!credentials?.email || !credentials?.password) {
-        console.error("E-mail and password are required.");
-        throw new Error(ErrorCode.InternalServerError);
+      if (!credentials?.email || !credentials.password) {
+        throw new Error(ErrorCode.EmailAndPasswordAreRequired);
       }
 
       //Return user object which will be stored in JWT token
-      return await authorize({
+      return (await authorize({
         email: credentials.email,
         password: credentials.password,
-      });
+      })) as never;
       //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
     },
   }),
 ];
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id in session
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+    session({ session, token }) {
+      if (session.user && isNumber(token.sub)) {
+        session.user.id = Number(token.sub);
+        session.user.image = session.user.image || null;
       }
       return session;
     },
-    //Signin with etherum example
-    // async session({ session, token }: { session: any; token: any }) {
-    //   session.address = token.sub
-    //   session.user.name = token.sub
-    //   session.user.image = "https://www.fillmurray.com/128/128"
-    //   return session
-    // },
+    jwt: ({ token, user }) => {
+      if (user) {
+        return {
+          ...token,
+          id: Number(user.id),
+        };
+      }
+      return token;
+    },
     //https://next-auth.js.org/configuration/callbacks#jwt-callback
   },
-  // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/auth/signin",
@@ -79,7 +77,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  // secret: "XH6bp/TkLvnUkQiPDEZNyHc0CV+VV5RL/n+HdVHoHN0=",
   debug: process.env.NODE_ENV === "development",
 };
 

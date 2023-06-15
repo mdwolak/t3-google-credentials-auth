@@ -1,15 +1,16 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Head, Html, Main, NextScript } from "next/document";
 
 function MyDocument() {
-    return (
-        <Html className="h-full bg-gray-50">
-            <Head />
-            <body className="h-full desktop-transparent bg-gray-50 antialiased">
-                <Main />
-                <NextScript />
-            </body>
-        </Html>
-    )
+  return (
+    <Html className="h-full bg-gray-50">
+      <Head />
+      <body className="desktop-transparent h-full bg-gray-50 antialiased">
+        <Main />
+        <NextScript />
+        <div id="main-modal"></div>
+      </body>
+    </Html>
+  );
 }
 
-export default MyDocument
+export default MyDocument;

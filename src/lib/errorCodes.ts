@@ -1,10 +1,5 @@
 export enum ErrorCode {
-  UserNotFound = "user-not-found",
-  IncorrectPassword = "incorrect-password",
-  UserMissingPassword = "missing-password",
-  InternalServerError = "internal-server-error",
-  NewPasswordMatchesOld = "new-password-matches-old",
-  ThirdPartyIdentityProviderEnabled = "third-party-identity-provider-enabled",
-  RateLimitExceeded = "rate-limit-exceeded",
-  SocialIdentityProviderRequired = "social-identity-provider-required",
+  InvalidEmailOrPassword = "invalid_email_or_password",
+  InternalServerError = "internal_server_error",
+  EmailAndPasswordAreRequired = "email_and_password_are_required",
 }

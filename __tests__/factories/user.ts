@@ -1,7 +1,7 @@
 import type { User } from "@prisma/client";
 
 export const CompleteUser = {
-  id: "1",
+  id: 1,
   name: "Joe Bloggs",
   email: "joe@bloggs.com",
   password: "youwouldnotguess!",

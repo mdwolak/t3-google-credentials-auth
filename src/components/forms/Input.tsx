@@ -24,7 +24,7 @@ export const Input = forwardRef(function Input(
   const {
     formState: { errors },
   } = useFormContext();
-  const error = getFieldError(errors, props.name as string)?.message;
+  const error = getFieldError(errors, props.name as string)?.message as string;
 
   const uniqueInputId = useId();
   const targetId = id || uniqueInputId;
@@ -43,7 +43,7 @@ export const Input = forwardRef(function Input(
         type={type}
         {...props}
       />
-      <FieldError error={error} />
+      {error && <FieldError error={error} />}
     </div>
   );
 });

@@ -9,6 +9,7 @@ import get from "lodash.get";
 import type {
   FieldErrors,
   FieldValues,
+  Path,
   SubmitErrorHandler,
   SubmitHandler,
   UseFormReturn,
@@ -16,11 +17,9 @@ import type {
 } from "react-hook-form";
 import { FormProvider, useForm as useHookForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import type { TypeOf, ZodSchema } from "zod";
+import type { TypeOf, ZodSchema, typeToFlattenedError } from "zod";
 
 import { Alert } from "~/components/core/Alert";
-
-export { type FieldErrors } from "react-hook-form";
 
 interface UseFormProps<T extends ZodSchema<any>> extends UseHookFormProps<TypeOf<T>> {
   schema: T;
@@ -93,27 +92,29 @@ export function FieldError({ error }: { error: string }) {
 export const ValidationSummary = <T extends FieldValues = FieldValues>({
   header = "Please fix the errors below before continuing.",
   errors,
+  visible = true,
 }: {
   header?: string;
   errors: FieldErrors<T>;
+  visible: boolean;
 }) => {
-  //TODO: Possibility to accept formstate and display error if a required schema attribute has no matching field in the form
   if (Object.keys(errors).length > 0) {
     Object.keys(errors).forEach((fieldName) => {
       const error = getFieldError(errors, fieldName)?.message;
       console.log(`${fieldName}: ${error}`);
     });
 
-    return (
-      <Alert severity="error">
-        {header}
-        {/* <ul className="list-inside list-disc">
-                  {Object.keys(errors).map((fieldName) => (
-                    <ErrorMessage errors={errors} name={fieldName as any} as="div" key={fieldName} />
-                  ))}
-                </ul> */}
-      </Alert>
-    );
+    if (visible)
+      return (
+        <Alert severity="error">
+          {header}
+          {/* <ul className="list-inside list-disc">
+                    {Object.keys(errors).map((fieldName) => (
+                      <ErrorMessage errors={errors} name={fieldName as any} as="div" key={fieldName} />
+                    ))}
+                  </ul> */}
+        </Alert>
+      );
   }
 
   return null;
@@ -122,3 +123,26 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
 export const getFieldError = (errors: FieldErrors, fieldName: string) => {
   return get(errors, fieldName);
 };
+
+export function setFormErrors<T extends FieldValues = FieldValues>(
+  form: UseFormReturn<T>,
+  zodError: typeToFlattenedError<any, string>
+) {
+  //display field errors
+  const fieldErrors = zodError.fieldErrors;
+  if (fieldErrors) {
+    const formFields = Object.keys(form.getValues());
+    Object.keys(fieldErrors).forEach((key) => {
+      const message = fieldErrors[key]?.[0] as string;
+      if (formFields.includes(key))
+        form.setError(key as Path<T>, { type: "focus", message }, { shouldFocus: true });
+      else {
+        console.error(`The invalid field is not in the form: ${key}`);
+      }
+    });
+  }
+
+  //display form errors
+  if (zodError.formErrors?.[0])
+    form.setError("root.serverError", { message: zodError.formErrors?.[0] });
+}

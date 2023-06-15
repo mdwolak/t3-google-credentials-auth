@@ -1,6 +1,6 @@
 import { type TypeOf, object, string } from "zod";
 
-export const userCreateSchema = object({
+export const createUserSchema = object({
   name: string().trim().min(1, "Name is required"),
   email: string().min(1, "Email address is required").email("Email Address is invalid"),
   password: string()
@@ -13,4 +13,4 @@ export const userCreateSchema = object({
   message: "Passwords do not match",
 });
 
-export type UserCreateInput = TypeOf<typeof userCreateSchema>;
+export type CreateUserInput = TypeOf<typeof createUserSchema>;

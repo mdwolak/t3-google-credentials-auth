@@ -6,5 +6,7 @@
   //use prettier in tsx, jsx
   "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "todo-tree.tree.showBadges": true
+  "todo-tree.tree.showBadges": true,
+  "cSpell.words": ["toastify"],
+  "prettier.prettierPath": "./node_modules/prettier"
 }
