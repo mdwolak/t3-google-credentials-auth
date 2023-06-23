@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { publicProcedure, router } from "../trpc";
+import { adminProcedure, publicProcedure, router } from "../trpc";
 
 export const exampleRouter = router({
   hello: publicProcedure
@@ -8,6 +8,13 @@ export const exampleRouter = router({
     .query(({ input }) => {
       return {
         greeting: `Hello ${input?.text ?? "world"}`,
+      };
+    }),
+  helloAdmin: adminProcedure
+    .input(z.object({ text: z.string().nullish() }).nullish())
+    .query(({ input }) => {
+      return {
+        greeting: `Hello Admin"}`,
       };
     }),
   getAll: publicProcedure.query(({ ctx }) => {

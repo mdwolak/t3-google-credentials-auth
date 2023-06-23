@@ -1,4 +1,4 @@
-import { Button, type OpenModalProps, toast } from "~/components/core";
+import { ApiErrorMessage, Button, type OpenModalProps, toast } from "~/components/core";
 import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
 import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar";
 import { api } from "~/utils/api";
@@ -17,7 +17,11 @@ const CreateExemplarModal = ({ setOpenModal }: OpenModalProps) => {
     },
   });
 
-  const { isLoading, mutate: createExemplar } = api.exemplar.createExemplar.useMutation({
+  const {
+    mutate: createExemplar,
+    isLoading,
+    error: apiError,
+  } = api.exemplar.createExemplar.useMutation({
     onSuccess() {
       setOpenModal(false);
       apiContext.exemplar.invalidate();
@@ -38,8 +42,9 @@ const CreateExemplarModal = ({ setOpenModal }: OpenModalProps) => {
     <section>
       <h2 className="mb-4 text-2xl font-semibold">Create Exemplar</h2>
 
+      <ValidationSummary errors={form.formState.errors} />
+      <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
       <Form form={form} handleSubmit={handleSubmit} className="w-full">
-        <ValidationSummary errors={form.formState.errors} />
         <fieldset className="space-y-6" disabled={isLoading}>
           <Input label="Title" {...form.register("title")} />
           <Input label="Category" {...form.register("category")} />

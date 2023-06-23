@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import { Button, type OpenModalProps, toast } from "~/components/core";
-import { Form, Input, setFormErrors, useForm } from "~/components/forms";
+import { ApiErrorMessage, Button, type OpenModalProps, toast } from "~/components/core";
+import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
 import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { type RouterOutputs, api } from "~/utils/api";
 
@@ -12,7 +12,11 @@ type UpdateExemplarProps = OpenModalProps & {
 const UpdateExemplarModal = ({ exemplar, setOpenModal }: UpdateExemplarProps) => {
   const apiContext = api.useContext();
 
-  const { isLoading, mutate: updateExemplar } = api.exemplar.updateExemplar.useMutation({
+  const {
+    mutate: updateExemplar,
+    isLoading,
+    error: apiError,
+  } = api.exemplar.updateExemplar.useMutation({
     onSuccess() {
       setOpenModal(false);
       apiContext.exemplar.invalidate();
@@ -41,6 +45,8 @@ const UpdateExemplarModal = ({ exemplar, setOpenModal }: UpdateExemplarProps) =>
   return (
     <section>
       <h2 className="mb-4 text-2xl font-semibold">Update Exemplar</h2>
+      <ValidationSummary errors={form.formState.errors} />
+      <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
       <Form form={form} handleSubmit={handleSubmit} className="w-full">
         <fieldset className="space-y-6" disabled={isLoading}>
           <Input label="Title" {...form.register("title")} />

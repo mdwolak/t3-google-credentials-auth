@@ -2,6 +2,8 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
+import { httpForbidden, httpUnauthorized } from "~/server/api/trpcHelper";
+
 import { type Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
@@ -20,20 +22,27 @@ const t = initTRPC.context<Context>().create({
 export const router = t.router;
 
 /**
- * Unprotected procedure
- **/
-export const publicProcedure = t.procedure;
-
-/**
- * Reusable middleware to ensure
- * users are logged in
+ * Reusable middlewares
+ * @see https://trpc.io/docs/server/middlewares
  */
+const loggerMiddleware = t.middleware(async (opts) => {
+  const start = Date.now();
+
+  const result = await opts.next();
+
+  const durationMs = Date.now() - start;
+  const meta = { path: opts.path, type: opts.type, durationMs };
+
+  result.ok
+    ? console.log("OK request timing:", meta)
+    : console.error("Non-OK request timing", meta);
+
+  return result;
+});
+
 const isAuthed = t.middleware(({ ctx, next }) => {
   if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "You must be logged in to access this resource",
-    });
+    throw httpUnauthorized();
   }
   return next({
     ctx: {
@@ -43,7 +52,21 @@ const isAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
+const isAdmin = isAuthed.unstable_pipe(async ({ ctx, next }) => {
+  if (ctx.session.user.role !== "ADMIN") {
+    throw httpForbidden();
+  }
+  return next({ ctx });
+});
+
 /**
- * Protected procedure
+ * Unprotected procedure
  **/
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const publicProcedure = t.procedure.use(loggerMiddleware);
+
+/**
+ * Protected procedures
+ **/
+export const protectedProcedure = publicProcedure.use(isAuthed);
+
+export const adminProcedure = publicProcedure.use(isAdmin);

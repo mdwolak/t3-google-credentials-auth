@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "Example" (
     "id" SERIAL NOT NULL,
@@ -39,11 +42,14 @@ CREATE TABLE "Session" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "name" TEXT,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "password" TEXT,
-    "created" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "provider" TEXT,
+    "createdDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -56,7 +62,7 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateTable
-CREATE TABLE "exemplars" (
+CREATE TABLE "Exemplar" (
     "id" SERIAL NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "content" TEXT NOT NULL,
@@ -66,7 +72,7 @@ CREATE TABLE "exemplars" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "exemplars_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Exemplar_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -85,7 +91,7 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "exemplars_title_key" ON "exemplars"("title");
+CREATE UNIQUE INDEX "Exemplar_title_key" ON "Exemplar"("title");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -94,4 +100,4 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "exemplars" ADD CONSTRAINT "exemplars_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Exemplar" ADD CONSTRAINT "Exemplar_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

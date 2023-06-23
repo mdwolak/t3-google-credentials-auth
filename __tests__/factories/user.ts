@@ -1,13 +1,16 @@
-import type { User } from "@prisma/client";
+import { type User, UserRole } from "@prisma/client";
 
-export const CompleteUser = {
+export const CompleteUser: User = {
   id: 1,
   name: "Joe Bloggs",
   email: "joe@bloggs.com",
-  password: "youwouldnotguess!",
+  password: "you_would_not_guess!",
   emailVerified: null,
   image: "",
   createdDate: new Date(),
+  updatedAt: new Date(),
+  role: UserRole.USER,
+  provider: null,
 };
 
 const UserFactory = {

@@ -2,33 +2,23 @@ import { filterQuery, numericId } from "~/lib/schemas/common";
 import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { publicProcedure, router } from "~/server/api/trpc";
 import {
+  type ErrorHandlerOptions,
+  getErrorFromUnknown,
   getPrismaUserFromContext,
-  throwConflictWithZodError,
-  throwNotFound,
+  handleRequest,
 } from "~/server/api/trpcHelper";
-import { IsNotFoundError, IsUniqueConstraintViolation } from "~/server/db";
 import * as exemplarService from "~/server/services/exemplar";
 
-const entityName = "Exemplar";
-
 const errorHandler = (error: unknown) => {
-  if (IsNotFoundError(error)) {
-    throwNotFound(entityName);
-  }
+  const errorHandlerOptions: ErrorHandlerOptions = {
+    entityName: "Exemplar",
+    dbFieldMappings: {
+      content: "Content Label",
+      category: "Category Label",
+    },
+  };
 
-  if (IsUniqueConstraintViolation(error, ["title"])) {
-    throwConflictWithZodError(entityName, ["title"]);
-  }
-};
-
-const handleRequest = async <T>(handler: () => Promise<T>) => {
-  try {
-    return await handler();
-  } catch (error) {
-    errorHandler(error);
-
-    throw error;
-  }
+  throw getErrorFromUnknown(error, errorHandlerOptions);
 };
 
 export const exemplarRouter = router({
@@ -40,29 +30,29 @@ export const exemplarRouter = router({
       });
 
       return { exemplar };
-    })
+    }, errorHandler)
   ),
   updateExemplar: publicProcedure.input(updateExemplarSchema).mutation(({ input }) =>
     handleRequest(async () => {
       const exemplar = await exemplarService.update({ id: input.id }, input.data);
       return { exemplar };
-    })
+    }, errorHandler)
   ),
   deleteExemplar: publicProcedure.input(numericId).mutation(({ input }) =>
     handleRequest(async () => {
       await exemplarService.remove({ id: input });
-    })
+    }, errorHandler)
   ),
   getExemplar: publicProcedure.input(numericId).query(({ input }) =>
     handleRequest(async () => {
       const exemplar = await exemplarService.findUniqueOrThrow({ id: input });
       return { exemplar };
-    })
+    }, errorHandler)
   ),
   getExemplars: publicProcedure.input(filterQuery).query(({ input }) =>
     handleRequest(async () => {
       const exemplars = await exemplarService.findAll(input.page, input.limit);
       return { results: exemplars.length, exemplars };
-    })
+    }, errorHandler)
   ),
 });

@@ -1,5 +1,4 @@
 import { ErrorCode } from "~/lib/errorCodes";
-
 import { authorize } from "~/server/services/auth";
 
 import { CompleteUser } from "../../factories/user";
@@ -13,11 +12,13 @@ test("should authorize with valid credentials", async () => {
   prismaMock.user.findUnique.mockResolvedValue(CompleteUser);
 
   await expect(
-    authorize({ email: CompleteUser.email, password: CompleteUser.password })
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    authorize({ email: CompleteUser.email, password: CompleteUser.password! })
   ).resolves.toEqual({
     id: CompleteUser.id,
     name: CompleteUser.name,
     email: CompleteUser.email,
+    role: CompleteUser.role,
   });
 });
 
@@ -25,6 +26,7 @@ test("should fail if e-mail not found", async () => {
   prismaMock.user.findUnique.mockResolvedValue(null);
 
   await expect(
-    authorize({ email: "fake@mail.com", password: CompleteUser.password })
-  ).rejects.toEqual(new Error(ErrorCode.UserNotFound));
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    authorize({ email: "fake@mail.com", password: CompleteUser.password! })
+  ).rejects.toEqual(new Error(ErrorCode.InvalidEmailOrPassword));
 });

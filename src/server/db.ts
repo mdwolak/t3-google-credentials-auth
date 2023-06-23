@@ -22,16 +22,17 @@ if (env.NODE_ENV !== "production") {
   Check type of prisma error.
   Error codes: https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes    
 */
-export function IsUniqueConstraintViolation(error: unknown, attributes: Array<string>) {
-  return (
+export function getConstraintViolationFields(error: unknown) {
+  if (
     error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2002" && //"Unique constraint failed on the {constraint}"
-    Array.isArray(error.meta?.target) &&
-    error.meta?.target.sort().join(",") === attributes.sort().join(",")
-  );
+    error.code === "P2002" //"Unique constraint failed on the {constraint}"
+  )
+    return error.meta?.target as string[];
+
+  return [];
 }
 
-export function IsNotFoundError(error: unknown) {
+export function isNotFoundError(error: unknown) {
   return (
     error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025" //An operation failed because it depends on one or more records that were required but not found. {cause}
   );

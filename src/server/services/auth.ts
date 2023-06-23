@@ -17,6 +17,7 @@ export async function authorize(credentials: { email: string; password: string }
       //image: true,
       password: true,
       //createdDate: true,
+      role: true,
     }
   );
 
@@ -27,6 +28,7 @@ export async function authorize(credentials: { email: string; password: string }
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role,
   };
 }
 

@@ -96,7 +96,7 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
 }: {
   header?: string;
   errors: FieldErrors<T>;
-  visible: boolean;
+  visible?: boolean;
 }) => {
   if (Object.keys(errors).length > 0) {
     Object.keys(errors).forEach((fieldName) => {

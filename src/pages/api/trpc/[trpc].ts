@@ -8,9 +8,12 @@ import { appRouter } from "~/server/api/routers/_app";
 export default createNextApiHandler({
   router: appRouter,
   createContext,
+  //Here you can handle or change errors
+  // @see https://trpc.io/docs/server/error-handling#handling-errors
   onError:
     env.NODE_ENV === "development"
-      ? ({ path, error }) => {
+      ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ({ error, path, input, ctx, type, req }) => {
           console.error(`❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`);
         }
       : undefined,
