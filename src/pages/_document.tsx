@@ -4,7 +4,7 @@ function MyDocument() {
   return (
     <Html className="h-full bg-gray-50">
       <Head />
-      <body className="desktop-transparent h-full bg-gray-50 antialiased">
+      <body className="desktop-transparent h-full antialiased">
         <Main />
         <NextScript />
         <div id="main-modal"></div>

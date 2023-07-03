@@ -21,10 +21,10 @@ export async function middleware(req: NextRequest) {
       url.searchParams.set("callbackUrl", encodeURI(req.url));
       return NextResponse.redirect(url);
     }
-    if (token.role !== "ADMIN") {
-      const url = new URL("/403", req.url);
-      return NextResponse.rewrite(url, { status: 403 });
-    }
+    // if (token.role !== "ADMIN") {
+    //   const url = new URL("/403", req.url);
+    //   return NextResponse.rewrite(url, { status: 403 });
+    // }
   }
   return NextResponse.next();
 }

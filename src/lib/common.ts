@@ -10,3 +10,7 @@ export function camelCaseToSpacedOut(camelCase: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export function classNames(...classes: unknown[]) {
+  return classes.filter(Boolean).join(" ");
+}

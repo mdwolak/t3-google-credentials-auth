@@ -9,5 +9,5 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "todo-tree.tree.showBadges": true,
   "cSpell.words": ["toastify"],
-  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.prettierPath": "./node_modules/prettier"
 }

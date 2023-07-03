@@ -5,24 +5,46 @@ import classNames from "classnames";
 
 import { Spinner } from "~/components/core/Spinner";
 
-const sizes = {
-  sm: "h-4 w-4",
-  md: "h-8 w-8",
-  lg: "h-16 w-16",
-  xl: "h-24 w-24",
+const variants = {
+  primary:
+    "bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500",
+  secondary: "bg-white text-gray-900 ring-1 ring-inset ring-gray-300 enabled:hover:bg-gray-50",
+  destructive: "bg-red-600 text-white border-transparent enabled:hover:opacity-80",
 };
 
-const variants = {
-  primary: "bg-indigo-600 text-white border-transparent", //
-  secondary: "bg-white text-black border-gray-300 shadow",
-  destructive: "bg-red-600 text-white border-transparent",
+/**
+ * Size-sensitive classes
+ */
+const textWithOptionalIconClasses = {
+  xs: "px-2 py-1 text-xs", //fits compact table, inline text, bulleted lists
+  sm: "px-2.5 py-1.5 text-sm", //fits standard table
+  default: "px-3 py-2 text-sm", //default action button
+  lg: "px-4 py-3 text-md", //big conspicuous button
 };
+
+const iconOnlyClasses = {
+  xs: "p-1",
+  sm: "p-1.5",
+  default: "p-2",
+  lg: "p-3.5",
+};
+
+const iconSizes = {
+  xs: "h-2.5 w-2.5",
+  sm: "h-4 w-4",
+  default: "h-4 w-4",
+  lg: "h-5 w-5",
+};
+
+type SVGComponent = React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
 type ButtonProps = ComponentPropsWithRef<"button"> & {
   isLoading?: boolean;
   variant?: keyof typeof variants;
-  icon?: React.ReactNode;
-  size?: keyof typeof sizes;
+  Icon?: SVGComponent | React.ElementType; //accept lucid-react icons | heroicons
+  size?: keyof typeof textWithOptionalIconClasses;
+  fullWidth?: boolean;
+  rounded?: boolean;
 };
 
 export const Button = forwardRef(function Button(
@@ -33,36 +55,45 @@ export const Button = forwardRef(function Button(
     isLoading,
     disabled,
     variant = "primary",
-    icon,
-    size = "sm",
+    Icon,
+    size = "lg",
+    fullWidth = false,
+    rounded = false,
     ...props
   }: ButtonProps,
   ref: Ref<HTMLButtonElement>
 ) {
   disabled = disabled || isLoading;
+  const iconClass = `${children && "mr-2"} ${iconSizes[size]}`
 
   return (
     <button
       ref={ref}
       type={type}
       className={classNames(
-        "relative flex w-full items-center justify-center rounded-md border px-4 py-2 text-sm font-medium focus:outline-none",
+        fullWidth && "flex w-full justify-center", //items-center centers icon horizontally
+        (Icon || isLoading) && "inline-flex items-center",
+        rounded ? "rounded-full" : "rounded-md",
+        "font-medium shadow-sm disabled:cursor-not-allowed disabled:opacity-60", //font-semibold border
+        children ? textWithOptionalIconClasses[size] : iconOnlyClasses[size],
         variants[variant],
-        className,
-        disabled ? "cursor-not-allowed opacity-60" : "hover:opacity-80"
+        className
       )}
+      disabled={disabled}
       {...props}>
       {isLoading ? (
         <>
-          <Spinner className={`mr-2 ${sizes[size]}`} />
-          <span>Loading...</span>
+          <Spinner className={iconClass} aria-hidden="true" />
+          <span>Processing...</span>
         </>
       ) : (
         <>
-          {icon && <span className={`mr-2 ${sizes[size]}`}>{icon}</span>}
+          { /* <span >{icon}</span> */}
+          { Icon && <Icon className={iconClass} aria-hidden="true" />}
           {children}
         </>
-      )}
+      )
+      }
     </button>
   );
 });

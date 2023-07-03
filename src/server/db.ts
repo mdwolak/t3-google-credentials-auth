@@ -29,7 +29,7 @@ export function getConstraintViolationFields(error: unknown) {
   )
     return error.meta?.target as string[];
 
-  return [];
+  return null;
 }
 
 export function isNotFoundError(error: unknown) {
