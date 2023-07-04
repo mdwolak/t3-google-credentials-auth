@@ -104,9 +104,18 @@ exports[`Button Primary text and icon 1`] = `
 </button>
 `;
 
+exports[`secondary fullWidth 1`] = `
+<button
+  class="flex w-full justify-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  type="button"
+>
+  Click
+</button>
+`;
+
 exports[`secondary rounded 1`] = `
 <button
-  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="rounded-full font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   Click

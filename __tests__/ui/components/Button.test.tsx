@@ -69,7 +69,14 @@ describe("secondary", () => {
   });
 
   it("rounded", () => {
-    render(<Button>Click</Button>);
+    render(<Button rounded>Click</Button>);
+    const button = screen.getByRole("button", { name: "Click" });
+    expect(button).toBeInTheDocument();
+    expect(button).toMatchSnapshot();
+  });
+
+  it("fullWidth", () => {
+    render(<Button fullWidth>Click</Button>);
     const button = screen.getByRole("button", { name: "Click" });
     expect(button).toBeInTheDocument();
     expect(button).toMatchSnapshot();
