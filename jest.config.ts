@@ -12,8 +12,8 @@ const customJestConfig = {
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/src/$1",
   },
-  setupFilesAfterEnv: ["<rootDir>/__tests__/helpers/prismaMock.ts"],
-  testEnvironment: "node", //jsdom when using test-react library
+  setupFilesAfterEnv: ["<rootDir>/__tests__/helpers/prismaMock.ts","<rootDir>/jest.setup.ts"],
+  testEnvironment: "jest-environment-jsdom",
   clearMocks: true,
   //globalSetup: '<rootDir>/__tests__/jest.setup.ts',
   testMatch: ["**/?(*.)+(test).[jt]s?(x)"],

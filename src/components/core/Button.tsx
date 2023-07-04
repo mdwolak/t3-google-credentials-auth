@@ -64,17 +64,17 @@ export const Button = forwardRef(function Button(
   ref: Ref<HTMLButtonElement>
 ) {
   disabled = disabled || isLoading;
-  const iconClass = `${children && "mr-2"} ${iconSizes[size]}`
+  const iconClass = `${children ? "mr-2 " : ""}${iconSizes[size]}`
 
   return (
     <button
       ref={ref}
       type={type}
       className={classNames(
-        fullWidth && "flex w-full justify-center", //items-center centers icon horizontally
-        (Icon || isLoading) && "inline-flex items-center",
+        fullWidth && "flex w-full justify-center",
+        (Icon || isLoading) && "inline-flex items-center", //items-center centers icon horizontally
         rounded ? "rounded-full" : "rounded-md",
-        "font-medium shadow-sm disabled:cursor-not-allowed disabled:opacity-60", //font-semibold border
+        "font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60", //font-semibold border
         children ? textWithOptionalIconClasses[size] : iconOnlyClasses[size],
         variants[variant],
         className
