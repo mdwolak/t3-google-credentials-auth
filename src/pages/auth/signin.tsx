@@ -65,13 +65,13 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
       <AuthPanel showLogo heading="Sign in">
         <div className="space-y-6">
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+          {/* GoogleIcon would need to be converted to a functional component */}
           <Button
-            onClick={() => signIn("google", { callbackUrl })}
-            variant="secondary"
-            icon={<Image src={GoogleIcon} alt="Google" />}>
-            Continue with Google{" "}
+            onClick={() => signIn("google", { callbackUrl })} fullWidth variant="secondary">
+            <Image src={'/assets/google.svg'} width="20" height={20} alt={""} className="mr-2" />  Continue with Google{" "}
           </Button>
-          <Button variant="secondary" className="text-blue-500" icon={<FacebookIcon />}>
+
+          <Button className="bg-[#3b5998] enabled:hover:bg-[#3b5998] hover:opacity-80" Icon={FacebookIcon} fullWidth>
             Continue with Facebook
           </Button>
           <div className="relative">
