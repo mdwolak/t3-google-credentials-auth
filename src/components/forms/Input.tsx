@@ -1,5 +1,6 @@
 import React, {
   type ComponentPropsWithRef,
+  FC,
   type ReactNode,
   type Ref,
   forwardRef,
@@ -13,12 +14,43 @@ import { FieldError, Label, getFieldError } from "./Form";
 
 interface InputProps extends ComponentPropsWithRef<"input"> {
   label?: ReactNode;
+  Wrapper?: FC<FieldWrapperProps>;
   // name: Path<TFormValues>;
   // register?: UseFormRegister<TFormValues>;
 }
 
+/* Field wrapper for input elements */
+type FieldWrapperProps = {
+  label: React.ReactNode;
+  control: React.ReactNode;
+  error: React.ReactNode;
+};
+export const DefaultWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
+  return (
+    <>
+      <div>
+        {label}
+        <div className="mt-2">
+          {control}
+          {error}
+        </div>
+      </div>
+    </>
+  );
+};
+
+const NoWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
+  return (
+    <>
+      {label}
+      {control}
+      {error}
+    </>
+  );
+};
+
 export const Input = forwardRef(function Input(
-  { className, id, label, type = "text", ...props }: InputProps,
+  { className, id, label, type = "text", Wrapper = DefaultWrap, ...props }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
   const {
@@ -30,21 +62,23 @@ export const Input = forwardRef(function Input(
   const targetId = id || uniqueInputId;
 
   return (
-    <div className="space-y-2">
-      {label && <Label htmlFor={id}>{label}</Label>}
-      <input
-        className={classNames(
-          "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 sm:text-sm",
-          className,
-          { "border-red-500": error }
-        )}
-        id={targetId}
-        ref={ref}
-        type={type}
-        {...props}
-      />
-      {error && <FieldError error={error} />}
-    </div>
+    <Wrapper
+      label={label && <Label htmlFor={id}>{label}</Label>}
+      control={
+        <input
+          className={classNames(
+            "block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 sm:text-sm",
+            className,
+            { "border-red-500": error }
+          )}
+          id={targetId}
+          ref={ref}
+          type={type}
+          {...props}
+        />
+      }
+      error={error && <FieldError error={error} />}
+    />
   );
 });
 

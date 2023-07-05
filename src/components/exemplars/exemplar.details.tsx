@@ -3,8 +3,8 @@ import { useState } from "react";
 import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
-import UpdateExemplarModal from "~/components/exemplars/update.exemplar.modal";
-import Modal from "~/components/modals/modal";
+import { SlideOver } from "~/components/dialogs/SlideOver";
+import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { type RouterOutputs } from "~/utils/api";
 import { api } from "~/utils/api";
 
@@ -16,7 +16,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
   const apiContext = api.useContext();
 
   const [openMenu, setOpenMenu] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
     onSuccess() {
@@ -58,7 +58,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
             <a
               className="flex h-7 w-24 cursor-pointer items-center gap-2 px-2 py-3 transition duration-300 ease-in hover:bg-[#f5f5f5]"
               onClick={() => {
-                setOpenModal(true);
+                setOpenDialog(true);
                 toggleMenu();
               }}>
               <i className="bx bx-edit-alt"></i> <span>Edit</span>
@@ -71,9 +71,9 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
           </div>
         </div>
       </div>
-      <Modal openModal={openModal} setOpenModal={setOpenModal}>
-        <UpdateExemplarModal exemplar={exemplar} setOpenModal={setOpenModal} />
-      </Modal>
+      <SlideOver open={openDialog} setOpen={setOpenDialog}>
+        <UpdateExemplarDialog exemplar={exemplar} setOpen={setOpenDialog} />
+      </SlideOver>
     </>
   );
 };

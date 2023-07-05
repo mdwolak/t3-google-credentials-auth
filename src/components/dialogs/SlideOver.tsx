@@ -4,18 +4,18 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export type OpenDialogProps = {
-  open: boolean;
   setOpen: (open: boolean) => void;
 };
 
 export type SlideOverProps = OpenDialogProps & {
+  open: boolean;
   children: ReactNode;
 };
 
 export function SlideOver({ open, setOpen, children }: SlideOverProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setOpen}>
+      <Dialog as="div" className="relative z-50" onClose={setOpen}>
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">

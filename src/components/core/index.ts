@@ -4,7 +4,3 @@ export * from "./Button";
 export * from "./SEOHead";
 export * from "./ApiErrorMessage";
 export * from "react-hot-toast";
-
-export type OpenModalProps = {
-    setOpenModal: (openModal: boolean) => void;
-};

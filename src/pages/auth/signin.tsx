@@ -3,6 +3,7 @@ import { getCsrfToken, signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
+
 import { type TypeOf, object, string } from "zod";
 
 import AuthPanel from "~/components/auth/AuthPanel";
@@ -66,12 +67,14 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
         <div className="space-y-6">
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           {/* GoogleIcon would need to be converted to a functional component */}
-          <Button
-            onClick={() => signIn("google", { callbackUrl })} fullWidth variant="secondary">
-            <Image src={'/assets/google.svg'} width="20" height={20} alt={""} className="mr-2" />  Continue with Google{" "}
+          <Button onClick={() => signIn("google", { callbackUrl })} fullWidth variant="secondary">
+            <Image src={"/assets/google.svg"} width="20" height={20} alt={""} className="mr-2" />{" "}
+            Continue with Google{" "}
           </Button>
-
-          <Button className="bg-[#3b5998] enabled:hover:bg-[#3b5998] hover:opacity-80" Icon={FacebookIcon} fullWidth>
+          <Button
+            className="bg-[#3b5998] hover:opacity-80 enabled:hover:bg-[#3b5998]"
+            Icon={FacebookIcon}
+            fullWidth>
             Continue with Facebook
           </Button>
           <div className="relative">
@@ -115,7 +118,7 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
                 </span>
               </div>
 
-              <Button type="submit" isLoading={form.formState.isSubmitting}>
+              <Button type="submit" isLoading={form.formState.isSubmitting} fullWidth>
                 Sign in
               </Button>
 

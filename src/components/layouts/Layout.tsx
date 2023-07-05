@@ -1,3 +1,5 @@
+import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import type { ReactElement, ReactNode } from "react";
 import { Fragment, useState } from "react";
 
@@ -155,6 +157,9 @@ const DesktopSidebar = () => {
 };
 
 const SidebarNav = () => {
+  //TODO: makes 2 calls to the server (1 per SidebarNav)
+  const { data: sessionData } = useSession();
+
   return (
     <>
       <div className="flex h-16 shrink-0 items-center">
@@ -193,7 +198,10 @@ const SidebarNav = () => {
               ))}
             </ul>
           </li>
-
+          {/* Adapt */}
+          <li className="cursor-pointer" onClick={sessionData ? () => signOut() : () => signIn()}>
+            {sessionData ? "Sign out" : "Sign in"}
+          </li>
           <li className="-mx-6 mt-auto">
             <a
               href="#"

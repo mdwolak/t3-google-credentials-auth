@@ -1,20 +1,14 @@
-import type { ReactNode } from "react";
 import { useState } from "react";
 
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import AuthPanel from "~/components/auth/AuthPanel";
 import { Button } from "~/components/core";
-import { type OpenDialogProps, SlideOver, SlideOverHeader } from "~/components/dialogs/SlideOver";
+import { SlideOver, SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
+import { getLayout } from "~/components/layouts/Layout";
 
-// const HelloAdmin = () => {
-//   return <h1>Hello, admin!</h1>;
-// };
-// HelloAdmin.getLayout = getLayout;
-// export default HelloAdmin;
-
-export default function Example() {
+const AdminPage = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -116,4 +110,6 @@ export default function Example() {
       </SlideOver>
     </>
   );
-}
+};
+AdminPage.getLayout = getLayout;
+export default AdminPage;
