@@ -2,6 +2,9 @@ import type { Exemplar, Prisma } from "@prisma/client";
 
 import { prisma } from "~/server/db";
 
+/**
+ * READ
+ */
 export const findFirst = async (
   where: Partial<Prisma.ExemplarWhereInput>,
   select?: Prisma.ExemplarSelect
@@ -32,6 +35,9 @@ export const findAll = async (page: number, limit: number) => {
   })) as Exemplar[];
 };
 
+/**
+ * WRITE
+ */
 export const create = async (input: Prisma.ExemplarCreateInput) => {
   return (await prisma.exemplar.create({
     data: input,

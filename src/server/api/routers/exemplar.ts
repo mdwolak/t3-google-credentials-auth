@@ -22,6 +22,25 @@ const errorHandler = (error: unknown) => {
 };
 
 export const exemplarRouter = router({
+  /**
+   * READ
+   */
+  getExemplar: publicProcedure.input(numericId).query(({ input }) =>
+    handleRequest(async () => {
+      const exemplar = await exemplarService.findUniqueOrThrow({ id: input });
+      return { exemplar };
+    }, errorHandler)
+  ),
+  getExemplars: publicProcedure.input(filterQuery).query(({ input }) =>
+    handleRequest(async () => {
+      const exemplars = await exemplarService.findAll(input.page, input.limit);
+      return { results: exemplars.length, exemplars };
+    }, errorHandler)
+  ),
+
+  /**
+   * WRITE
+   */
   createExemplar: publicProcedure.input(createExemplarSchema).mutation(({ input, ctx }) =>
     handleRequest(async () => {
       const exemplar = await exemplarService.create({
@@ -41,18 +60,6 @@ export const exemplarRouter = router({
   deleteExemplar: publicProcedure.input(numericId).mutation(({ input }) =>
     handleRequest(async () => {
       await exemplarService.remove({ id: input });
-    }, errorHandler)
-  ),
-  getExemplar: publicProcedure.input(numericId).query(({ input }) =>
-    handleRequest(async () => {
-      const exemplar = await exemplarService.findUniqueOrThrow({ id: input });
-      return { exemplar };
-    }, errorHandler)
-  ),
-  getExemplars: publicProcedure.input(filterQuery).query(({ input }) =>
-    handleRequest(async () => {
-      const exemplars = await exemplarService.findAll(input.page, input.limit);
-      return { results: exemplars.length, exemplars };
     }, errorHandler)
   ),
 });
