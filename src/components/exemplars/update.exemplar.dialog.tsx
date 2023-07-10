@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { type HandleCloseProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
@@ -15,6 +15,12 @@ type UpdateExemplarDialogProps = HandleCloseProps<
 };
 
 const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   const apiContext = api.useContext();
 
   const {
@@ -35,11 +41,6 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
   });
 
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
-
-  useEffect(() => {
-    //put post-mount code here
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleSubmit = (data: UpdateExemplarInput["data"]) => {
     updateExemplar({ id: exemplar.id, data });

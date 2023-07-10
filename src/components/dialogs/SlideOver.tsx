@@ -10,13 +10,12 @@ export type HandleCloseProps<T = any> = {
 
 export type SlideOverProps = {
   open: boolean;
-  onClose: () => void;
+  onClose: () => void; //(false) => void. Called when the user clicks outside the dialog or presses the Escape key.
   children: ReactNode;
 };
 
 export function SlideOver({ open, onClose, children }: SlideOverProps) {
   return (
-    //onClose: (false) => void. Called when the user clicks outside the dialog or presses the Escape key.
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
         <div className="fixed inset-0" />

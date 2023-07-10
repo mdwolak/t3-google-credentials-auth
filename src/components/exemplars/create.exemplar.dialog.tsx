@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { type HandleCloseProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
@@ -8,18 +10,13 @@ import { type RouterOutputs, api } from "~/utils/api";
 const CreateExemplarDialog = ({
   handleClose,
 }: HandleCloseProps<RouterOutputs["exemplar"]["createExemplar"]["exemplar"]>) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   const apiContext = api.useContext();
-
-  const form = useForm({
-    schema: createExemplarSchema,
-
-    defaultValues: {
-      title: "title", //router.query.email
-      category: "category",
-      content: "content",
-      published: true,
-    },
-  });
 
   const {
     mutate: createExemplar,
@@ -35,6 +32,17 @@ const CreateExemplarDialog = ({
       const zodError = error.data?.zodError;
       if (zodError) setFormErrors(form, zodError);
       else toast.error(error.message);
+    },
+  });
+
+  const form = useForm({
+    schema: createExemplarSchema,
+
+    defaultValues: {
+      title: "title", //router.query.email
+      category: "category",
+      content: "content",
+      published: true,
     },
   });
 
@@ -59,7 +67,7 @@ const CreateExemplarDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Title" {...form.register("title")} />
+            <Input label="Title" {...form.register("title")} ref={inputRef} />
             <Input label="Category" {...form.register("category")} />
             <Input label="Content" {...form.register("content")} />
           </fieldset>
