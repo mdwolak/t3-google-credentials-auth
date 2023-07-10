@@ -1,9 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-  font-family: Poppins, sans-serif;
+@layer base {
+  @font-face {
+    font-family: "Inter var";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("/fonts/Inter-roman.var.woff2") format("woff2");
+    font-named-instance: "Regular";
+  }
 }
