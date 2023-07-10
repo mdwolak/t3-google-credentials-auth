@@ -1,16 +1,18 @@
 import { ApiErrorMessage, Button, toast } from "~/components/core";
-import { OpenDialogProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
+import { type HandleCloseProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
 import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 
-const CreateExemplarDialog = ({ setOpen }: OpenDialogProps) => {
+const CreateExemplarDialog = ({
+  handleClose,
+}: HandleCloseProps<RouterOutputs["exemplar"]["createExemplar"]["exemplar"]>) => {
   const apiContext = api.useContext();
 
   const form = useForm({
     schema: createExemplarSchema,
-    //TODO: remove
+
     defaultValues: {
       title: "title", //router.query.email
       category: "category",
@@ -24,8 +26,8 @@ const CreateExemplarDialog = ({ setOpen }: OpenDialogProps) => {
     isLoading,
     error: apiError,
   } = api.exemplar.createExemplar.useMutation({
-    onSuccess() {
-      setOpen(false);
+    onSuccess(data) {
+      handleClose(data.exemplar);
       apiContext.exemplar.invalidate();
       toast.success("Exemplar created successfully");
     },
@@ -50,7 +52,7 @@ const CreateExemplarDialog = ({ setOpen }: OpenDialogProps) => {
           <SlideOverHeader
             title="Create Exemplar"
             subtitle="Get started by filling in the information below to create your new exemplar."
-            setOpen={setOpen}
+            handleClose={handleClose}
           />
           {/* Content */}
           <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading}>
@@ -65,10 +67,14 @@ const CreateExemplarDialog = ({ setOpen }: OpenDialogProps) => {
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={() => setOpen(false)} variant="secondary" className="flex-1">
+          <Button onClick={() => handleClose()} variant="secondary" className="flex-1">
             Cancel
           </Button>
-          <Button type="submit" className="ml-3 flex-1" isLoading={isLoading}>
+          <Button
+            type="submit"
+            className="ml-3 flex-1"
+            isLoading={isLoading}
+            disabled={!form.formState.isDirty}>
             Create
           </Button>
         </div>

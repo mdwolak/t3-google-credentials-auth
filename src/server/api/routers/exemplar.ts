@@ -8,6 +8,7 @@ import {
   handleRequest,
 } from "~/server/api/trpcHelper";
 import * as exemplarService from "~/server/services/exemplar";
+import type { RouterOutputs } from "~/utils/api";
 
 const errorHandler = (error: unknown) => {
   const errorHandlerOptions: ErrorHandlerOptions = {
@@ -63,3 +64,5 @@ export const exemplarRouter = router({
     }, errorHandler)
   ),
 });
+
+export type ExemplarInfo = RouterOutputs["exemplar"]["getExemplars"]["exemplars"][0];

@@ -5,18 +5,18 @@ import toast from "react-hot-toast";
 
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
-import { type RouterOutputs } from "~/utils/api";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar";
 import { api } from "~/utils/api";
 
 type ExemplarItemProps = {
-  exemplar: RouterOutputs["exemplar"]["getExemplars"]["exemplars"][number];
+  exemplar: ExemplarInfo;
 };
 
 const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
   const apiContext = api.useContext();
+  const [selectedExemplar, setSelectedExemplar] = useState<ExemplarInfo | null>(null);
 
   const [openMenu, setOpenMenu] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
 
   const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
     onSuccess() {
@@ -58,7 +58,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
             <a
               className="flex h-7 w-24 cursor-pointer items-center gap-2 px-2 py-3 transition duration-300 ease-in hover:bg-[#f5f5f5]"
               onClick={() => {
-                setOpenDialog(true);
+                setSelectedExemplar(exemplar);
                 toggleMenu();
               }}>
               <i className="bx bx-edit-alt"></i> <span>Edit</span>
@@ -71,9 +71,14 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
           </div>
         </div>
       </div>
-      <SlideOver open={openDialog} setOpen={setOpenDialog}>
-        <UpdateExemplarDialog exemplar={exemplar} setOpen={setOpenDialog} />
-      </SlideOver>
+      {selectedExemplar && (
+        <SlideOver open={true} onClose={() => setSelectedExemplar(null)}>
+          <UpdateExemplarDialog
+            exemplar={selectedExemplar}
+            handleClose={() => setSelectedExemplar(null)}
+          />
+        </SlideOver>
+      )}
     </>
   );
 };

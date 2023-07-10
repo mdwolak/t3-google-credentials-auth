@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
-import { OpenDialogProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
+import { type HandleCloseProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
 import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar";
 import { type RouterOutputs, api } from "~/utils/api";
 
-type UpdateExemplarProps = OpenDialogProps & {
-  exemplar: RouterOutputs["exemplar"]["getExemplars"]["exemplars"][0];
+type UpdateExemplarDialogProps = HandleCloseProps<
+  RouterOutputs["exemplar"]["updateExemplar"]["exemplar"]
+> & {
+  exemplar: ExemplarInfo;
 };
 
-const UpdateExemplarDialog = ({ exemplar, setOpen }: UpdateExemplarProps) => {
+const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
   const apiContext = api.useContext();
 
   const {
@@ -19,8 +22,8 @@ const UpdateExemplarDialog = ({ exemplar, setOpen }: UpdateExemplarProps) => {
     isLoading,
     error: apiError,
   } = api.exemplar.updateExemplar.useMutation({
-    onSuccess() {
-      setOpen(false);
+    onSuccess(data) {
+      handleClose(data.exemplar);
       apiContext.exemplar.invalidate();
       toast.success("Exemplar updated successfully");
     },
@@ -31,12 +34,10 @@ const UpdateExemplarDialog = ({ exemplar, setOpen }: UpdateExemplarProps) => {
     },
   });
 
-  const form = useForm({ schema: updateExemplarSchema.shape.data });
+  const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
 
   useEffect(() => {
-    if (exemplar) {
-      form.reset(exemplar);
-    }
+    //put post-mount code here
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,7 +55,7 @@ const UpdateExemplarDialog = ({ exemplar, setOpen }: UpdateExemplarProps) => {
           <SlideOverHeader
             title="Update Exemplar"
             subtitle="Get started by filling in the information below to create your new exemplar."
-            setOpen={setOpen}
+            handleClose={handleClose}
           />
           {/* Content */}
           <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading}>
@@ -69,10 +70,14 @@ const UpdateExemplarDialog = ({ exemplar, setOpen }: UpdateExemplarProps) => {
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={() => setOpen(false)} variant="secondary" className="flex-1">
+          <Button onClick={() => handleClose()} variant="secondary" className="flex-1">
             Cancel
           </Button>
-          <Button type="submit" className="ml-3 flex-1" isLoading={isLoading}>
+          <Button
+            type="submit"
+            className="ml-3 flex-1"
+            isLoading={isLoading}
+            disabled={!form.formState.isDirty}>
             Update
           </Button>
         </div>

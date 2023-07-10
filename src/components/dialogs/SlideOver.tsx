@@ -3,19 +3,22 @@ import { Fragment, type ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export type OpenDialogProps = {
-  setOpen: (open: boolean) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HandleCloseProps<T = any> = {
+  handleClose: (data?: T) => void;
 };
 
-export type SlideOverProps = OpenDialogProps & {
+export type SlideOverProps = {
   open: boolean;
+  onClose: () => void;
   children: ReactNode;
 };
 
-export function SlideOver({ open, setOpen, children }: SlideOverProps) {
+export function SlideOver({ open, onClose, children }: SlideOverProps) {
   return (
+    //onClose: (false) => void. Called when the user clicks outside the dialog or presses the Escape key.
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
@@ -40,12 +43,12 @@ export function SlideOver({ open, setOpen, children }: SlideOverProps) {
   );
 }
 
-export type SlideOverHeaderProps = Pick<OpenDialogProps, "setOpen"> & {
+export type SlideOverHeaderProps = HandleCloseProps & {
   title: string;
   subtitle: string;
 };
 
-export function SlideOverHeader({ title, subtitle, setOpen }: SlideOverHeaderProps) {
+export function SlideOverHeader({ title, subtitle, handleClose }: SlideOverHeaderProps) {
   return (
     <div className="bg-gray-50 px-4 py-6 sm:px-6">
       <div className="flex items-start justify-between space-x-3">
@@ -53,13 +56,13 @@ export function SlideOverHeader({ title, subtitle, setOpen }: SlideOverHeaderPro
           <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
             {title}
           </Dialog.Title>
-          <p className="text-sm text-gray-500">{subtitle}</p>
+          <Dialog.Description className="text-sm text-gray-500">{subtitle}</Dialog.Description>
         </div>
         <div className="flex h-7 items-center">
           <button
             type="button"
             className="text-gray-400 hover:text-gray-500"
-            onClick={() => setOpen(false)}>
+            onClick={() => handleClose()}>
             <span className="sr-only">Close panel</span>
             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
           </button>

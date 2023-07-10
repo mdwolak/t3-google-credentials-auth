@@ -7,11 +7,14 @@ import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
+import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { getLayout } from "~/components/layouts/Layout";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar";
 import { api } from "~/utils/api";
 
 const ExemplarList = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedExemplar, setSelectedExemplar] = useState<ExemplarInfo | null>(null);
 
   const { data: exemplars } = api.exemplar.getExemplars.useQuery(
     { limit: 10, page: 1 },
@@ -51,7 +54,7 @@ const ExemplarList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {exemplars?.map((exemplar, rownum) => (
+                {exemplars?.map((exemplar) => (
                   <tr key={exemplar.id}>
                     <TCell first>
                       {exemplar.title}
@@ -69,7 +72,10 @@ const ExemplarList = () => {
                   <div className="hidden sm:block">{exemplar.price}/month</div>
                 </TCell> */}
                     <TCell last>
-                      <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                      <a
+                        href="#"
+                        className="text-indigo-600 hover:text-indigo-900"
+                        onClick={() => setSelectedExemplar(exemplar)}>
                         Edit<span className="sr-only">, {exemplar.title}</span>
                       </a>
                     </TCell>
@@ -80,8 +86,18 @@ const ExemplarList = () => {
           </div>
         )}
       </div>
-      <SlideOver open={openDialog} setOpen={setOpenDialog}>
-        <CreateExemplarDialog setOpen={setOpenDialog} />
+
+      {selectedExemplar && (
+        <SlideOver open={true} onClose={() => setSelectedExemplar(null)}>
+          <UpdateExemplarDialog
+            exemplar={selectedExemplar}
+            handleClose={() => setSelectedExemplar(null)}
+          />
+        </SlideOver>
+      )}
+
+      <SlideOver open={openDialog} onClose={() => setOpenDialog(true)}>
+        <CreateExemplarDialog handleClose={() => setOpenDialog(false)} />
       </SlideOver>
     </div>
   );
