@@ -3,10 +3,7 @@ import { Fragment, type ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type HandleCloseProps<T = any> = {
-  handleClose: (data?: T) => void;
-};
+import { type HandleCloseProps } from "~/lib/common";
 
 export type SlideOverProps = {
   open: boolean;

@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import React from "react";
 
 import { classNames } from "~/lib/common";
@@ -28,18 +29,20 @@ export const TableCaption = ({ title, children, buttonText, onButtonClick }: Tab
   );
 };
 
-interface TableCellProps {
+type TableCellProps = ComponentProps<"td"> & {
   screen?: "all" | "sm" | "md" | "lg";
   first?: boolean;
   last?: boolean;
   children: React.ReactNode;
-}
+};
 
 export const THeader = ({
   screen = "all",
   first = false,
   last = false,
   children,
+  className,
+  ...props
 }: TableCellProps) => {
   return (
     <th
@@ -49,8 +52,10 @@ export const THeader = ({
         first ? "pl-4 pr-3 sm:pl-0" : last ? "relative pl-3 pr-4 sm:pr-0" : "px-3",
         screen == "sm" && "hidden sm:table-cell",
         screen == "md" && "hidden md:table-cell",
-        screen == "lg" && "hidden lg:table-cell"
-      )}>
+        screen == "lg" && "hidden lg:table-cell",
+        className
+      )}
+      {...props}>
       {children}
     </th>
   );
@@ -61,6 +66,8 @@ export const TCell = ({
   first = false,
   last = false,
   children,
+  className,
+  ...props
 }: TableCellProps) => {
   return (
     <td
@@ -72,8 +79,10 @@ export const TCell = ({
           ? "pl-3 pr-4 text-right font-medium  sm:pr-0"
           : "px-3 text-gray-500",
         screen == "sm" && "hidden sm:table-cell",
-        screen == "lg" && "hidden lg:table-cell"
-      )}>
+        screen == "lg" && "hidden lg:table-cell",
+        className
+      )}
+      {...props}>
       {children}
     </td>
   );

@@ -14,3 +14,8 @@ export function camelCaseToSpacedOut(camelCase: string): string {
 export function classNames(...classes: unknown[]) {
   return classes.filter(Boolean).join(" ");
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HandleCloseProps<T = any> = {
+  handleClose: (data?: T) => void;
+};
