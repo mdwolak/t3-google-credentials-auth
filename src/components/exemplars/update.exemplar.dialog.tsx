@@ -1,5 +1,3 @@
-import { useEffect, useRef } from "react";
-
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
@@ -16,12 +14,6 @@ type UpdateExemplarDialogProps = HandleCloseProps<
 };
 
 const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   const apiContext = api.useContext();
 
   const {

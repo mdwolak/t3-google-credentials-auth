@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
-import { type HandleCloseProps, SlideOverHeader } from "~/components/dialogs/SlideOver";
+import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
+import { type HandleCloseProps } from "~/lib/common";
 import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar";
 import { type RouterOutputs, api } from "~/utils/api";
 
