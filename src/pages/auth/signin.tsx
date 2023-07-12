@@ -71,10 +71,7 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
             <Image src={"/assets/google.svg"} width="20" height={20} alt={""} className="mr-2" />{" "}
             Continue with Google{" "}
           </Button>
-          <Button
-            className="bg-[#3b5998] hover:opacity-80 enabled:hover:bg-[#3b5998]"
-            Icon={FacebookIcon}
-            fullWidth>
+          <Button className="!bg-[#1778f2] hover:opacity-80" Icon={FacebookIcon} fullWidth>
             Continue with Facebook
           </Button>
           <div className="relative">
@@ -134,21 +131,21 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
 };
 export default SignIn;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(context);
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   const session = await getServerAuthSession(context);
 
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+//   if (session) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {
-      csrfToken: await getCsrfToken(context),
-    },
-  };
-}
+//   return {
+//     props: {
+//       csrfToken: await getCsrfToken(context),
+//     },
+//   };
+// }
