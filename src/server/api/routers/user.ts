@@ -4,7 +4,7 @@ import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
-  genericErrorHandler,
+  getErrorFromUnknown,
   handleRequest,
   httpConflict,
 } from "~/server/api/trpcHelper";
@@ -13,13 +13,9 @@ import * as userService from "~/server/services/user";
 const errorHandler = (error: unknown) => {
   const errorHandlerOptions: ErrorHandlerOptions = {
     entityName: "User",
-    // dbFieldMappings: {
-    //   content: "Content Label",
-    //   category: "Category Label",
-    // },
   };
 
-  genericErrorHandler(error, errorHandlerOptions);
+  throw getErrorFromUnknown(error, errorHandlerOptions);
 };
 
 export const userRouter = router({
