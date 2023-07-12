@@ -11,12 +11,6 @@ import { type RouterOutputs, api } from "~/utils/api";
 const CreateExemplarDialog = ({
   handleClose,
 }: HandleCloseProps<RouterOutputs["exemplar"]["createExemplar"]["exemplar"]>) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
   const apiContext = api.useContext();
 
   const {
@@ -46,6 +40,11 @@ const CreateExemplarDialog = ({
       published: true,
     },
   });
+  const { setFocus } = form;
+
+  useEffect(() => {
+    setFocus("title");
+  }, [setFocus]);
 
   const handleSubmit = (data: CreateExemplarInput) => {
     createExemplar(data);
@@ -68,7 +67,7 @@ const CreateExemplarDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Title" {...form.register("title")} ref={inputRef} />
+            <Input label="Title" {...form.register("title")} />
             <Input label="Category" {...form.register("category")} />
             <Input label="Content" {...form.register("content")} />
           </fieldset>
