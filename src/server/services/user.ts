@@ -26,6 +26,11 @@ export const create = async (input: Prisma.UserCreateInput) => {
   //IMPROVE: do not return sensitive data exemplar-creation
   return (await prisma.user.create({
     data: input,
+    select: {
+      email: true,
+      name: true,
+      image: true,
+    },
   })) as User;
 };
 

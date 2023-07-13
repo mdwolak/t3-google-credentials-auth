@@ -14,7 +14,9 @@ describe("User signs up", () => {
     prismaMock.user.findUnique.mockResolvedValue({ name, email, password } as User);
 
     const caller = await trpcRequest();
-    await expect(caller.user.create(input)).rejects.toThrowError(/Email/);
+    await expect(caller.user.create(input)).rejects.toThrowError(/Email already taken/);
+
+    //await expect(caller.user.create(input)).rejects.toThrowError(/Email/);
     //).rejects.toEqual(new Error(ErrorCode.UserNotFound));
   });
   //  describe("trying to pass role", () => {
@@ -52,13 +54,12 @@ describe("User signs up", () => {
     type Input = RouterInputs["user"]["create"];
     const input: Input = { name, email, password, passwordConfirm: password };
 
-    prismaMock.user.create.mockResolvedValue({ name, email, password } as User);
+    prismaMock.user.create.mockResolvedValue({ name, email } as User);
 
     const caller = await trpcRequest();
     const response = await caller.user.create(input);
 
-    expect(response.status).toEqual("success");
-    expect(response.data.user).toMatchObject({ name, email });
+    expect(response.user).toMatchObject({ name, email });
     //IMPROVE: should not contain excluded sensitive fields
   });
 });

@@ -25,23 +25,23 @@ export const userRouter = router({
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
-  create: publicProcedure.input(createUserSchema).mutation(({ input }) => createHandler({ input })),
+  create: publicProcedure.input(createUserSchema).mutation(({ input }) =>
+    handleRequest(async () => {
+      let user = await userService.findUnique({ email: input.email.toLowerCase() });
+      if (user) {
+        throw httpConflict("Email already taken");
+      }
+
+      const hashedPassword = await bcrypt.hash(input.password, 12);
+      user = await userService.create({
+        email: input.email.toLocaleLowerCase(),
+        name: input.name.toLocaleLowerCase(),
+        password: hashedPassword,
+        //TODO: introduce provider enum
+        //provider: "local",
+      });
+
+      return { user };
+    }, errorHandler)
+  ),
 });
-
-const createHandler = async ({ input }: { input: CreateUserInput }) => {
-  handleRequest(async () => {
-    let user = await userService.findUnique({ email: input.email.toLowerCase() });
-    if (user) {
-      throw httpConflict("Email already taken");
-    }
-
-    const hashedPassword = await bcrypt.hash(input.password, 12);
-    user = await userService.create({
-      email: input.email.toLocaleLowerCase(),
-      name: input.name.toLocaleLowerCase(),
-      password: hashedPassword,
-      //TODO: introduce provider enum
-      //provider: "local",
-    });
-  }, errorHandler);
-};
