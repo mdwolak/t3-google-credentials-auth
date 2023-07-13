@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { render, screen } from "@testing-library/react";
 
@@ -42,7 +45,7 @@ describe("Button", () => {
       expect(button).toBeInTheDocument();
       expect(button).toMatchSnapshot();
 
-      const spinner = screen.getByTestId('spinner')
+      const spinner = screen.getByTestId("spinner");
       expect(button).toContainElement(spinner);
       expect(spinner).toHaveClass("animate-spin mr-2 h-5 w-5", { exact: true });
     });

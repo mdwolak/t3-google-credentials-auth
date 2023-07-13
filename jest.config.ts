@@ -12,8 +12,10 @@ const customJestConfig = {
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/src/$1",
   },
-  setupFilesAfterEnv: ["<rootDir>/__tests__/helpers/prismaMock.ts","<rootDir>/jest.setup.ts"],
-  testEnvironment: "jest-environment-jsdom",
+  setupFilesAfterEnv: ["<rootDir>/__tests__/helpers/prismaMock.ts", "<rootDir>/jest.setup.ts"],
+  //Due to this issue, https://github.com/nextauthjs/next-auth/issues/4866,
+  //set test environment in test file e.g. https://jestjs.io/docs/configuration#testenvironment-string
+  testEnvironment: "node",
   clearMocks: true,
   //globalSetup: '<rootDir>/__tests__/jest.setup.ts',
   testMatch: ["**/?(*.)+(test).[jt]s?(x)"],
