@@ -6,8 +6,9 @@ import {
   type ErrorHandlerOptions,
   getErrorFromUnknown,
   handleRequest,
-  httpConflict,
+  httpConflictWithZod,
 } from "~/server/api/trpcHelper";
+import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as userService from "~/server/services/user";
 
 const errorHandler = (error: unknown) => {
@@ -29,7 +30,7 @@ export const userRouter = router({
     handleRequest(async () => {
       const existingUser = await userService.findUnique({ email: input.email.toLowerCase() });
       if (existingUser) {
-        throw httpConflict("Email already taken");
+        throw httpConflictWithZod(getZodErrorWithCustomIssue("Email already taken", ["email"]));
       }
 
       const hashedPassword = await bcrypt.hash(input.password, 12);

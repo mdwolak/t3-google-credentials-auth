@@ -115,7 +115,11 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
                 </span>
               </div>
 
-              <Button type="submit" isLoading={form.formState.isSubmitting} fullWidth>
+              <Button
+                type="submit"
+                isLoading={form.formState.isSubmitting}
+                disabled={!form.formState.isDirty || !form.formState.isValid}
+                fullWidth>
                 Sign in
               </Button>
 

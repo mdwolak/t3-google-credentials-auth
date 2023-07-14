@@ -21,7 +21,9 @@ describe("User signs up", () => {
 
     prismaMock.user.findUnique.mockResolvedValue({ name } as User);
 
-    await expect(caller.user.create(input)).rejects.toThrowError(/Email already taken/);
+    await expect(caller.user.create(input)).rejects.toThrowError(
+      /Some attributes are already in use/
+    );
     expect(prismaMock.user.create).not.toHaveBeenCalled();
   });
 

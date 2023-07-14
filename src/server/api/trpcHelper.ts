@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { ZodError } from "zod";
 
 import { camelCaseToSpacedOut } from "~/lib/common";
 import { type Context } from "~/server/api/context";
@@ -87,6 +88,14 @@ export function httpConflict(message: string, cause?: unknown) {
   return new TRPCError({
     code: "CONFLICT",
     message,
+    cause,
+  });
+}
+
+export function httpConflictWithZod(cause: ZodError) {
+  return new TRPCError({
+    code: "CONFLICT",
+    message: "Some attributes are already in use.",
     cause,
   });
 }

@@ -82,7 +82,7 @@ const CreateExemplarDialog = ({
             type="submit"
             className="ml-3 flex-1"
             isLoading={isLoading}
-            disabled={!form.formState.isDirty}>
+            disabled={!form.formState.isDirty || !form.formState.isValid}>
             Create
           </Button>
         </div>
