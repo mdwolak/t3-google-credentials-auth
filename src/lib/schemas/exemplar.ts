@@ -4,7 +4,7 @@ import { boolean, number, object } from "zod";
 import { nonEmptyString } from "./common";
 
 export const createExemplarSchema = object({
-  title: nonEmptyString,
+  name: nonEmptyString,
   category: nonEmptyString,
   content: nonEmptyString,
   published: boolean({

@@ -43,7 +43,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
       <div className="rounded-md bg-white shadow-md">
         <div className="p-4">
           <h5 className="mb-4 text-xl font-semibold text-[#4d4d4d]">
-            {exemplar.title.length > 25 ? exemplar.title.substring(0, 25) + "..." : exemplar.title}
+            {exemplar.name.length > 25 ? exemplar.name.substring(0, 25) + "..." : exemplar.name}
           </h5>
           <div className="mt-4 flex items-center">
             <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{exemplar.category}</p>

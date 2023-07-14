@@ -86,7 +86,7 @@ enum UserRole {
 
 model Exemplar {
   id        Int      @id @default(autoincrement())
-  title     String   @unique @db.VarChar(255)
+  name     String   @unique @db.VarChar(255)
   content   String
   category  String
   published Boolean  @default(false)

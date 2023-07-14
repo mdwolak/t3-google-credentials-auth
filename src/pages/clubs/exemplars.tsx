@@ -72,7 +72,7 @@ const ExemplarList = () => {
                 {exemplars?.map((exemplar) => (
                   <tr key={exemplar.id}>
                     <TCell first>
-                      {exemplar.title}
+                      {exemplar.name}
                       {exemplar.published && (
                         <span className="ml-1 text-indigo-600">(published)</span>
                       )}
@@ -88,7 +88,7 @@ const ExemplarList = () => {
                 </TCell> */}
                     <TCell last className="space-x-2">
                       <Link href="#" onClick={() => setSelectedExemplar(exemplar)}>
-                        Edit<span className="sr-only">, {exemplar.title}</span>
+                        Edit<span className="sr-only">, {exemplar.name}</span>
                       </Link>
                       <span>|</span>
 
@@ -96,7 +96,7 @@ const ExemplarList = () => {
                         href="#"
                         variant="secondary"
                         onClick={() => setDeleteExemplarId(exemplar.id)}>
-                        Delete<span className="sr-only">, {exemplar.title}</span>
+                        Delete<span className="sr-only">, {exemplar.name}</span>
                       </Link>
                     </TCell>
                   </tr>

@@ -4,7 +4,7 @@ import { prisma } from "~/server/db";
 
 export const defaultExemplarSelect = Prisma.validator<Prisma.ExemplarSelect>()({
   id: true,
-  title: true,
+  name: true,
 });
 
 /**
@@ -36,7 +36,10 @@ export const findAll = async (page: number, limit: number) => {
   return await prisma.exemplar.findMany({
     select: {
       id: true,
-      title: true,
+      name: true,
+      category: true,
+      content: true,
+      createdAt: true,
       user: {
         select: {
           id: true,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
@@ -34,7 +34,7 @@ const CreateExemplarDialog = ({
     schema: createExemplarSchema,
 
     defaultValues: {
-      title: "title", //router.query.email
+      name: "name", //router.query.email
       category: "category",
       content: "content",
       published: true,
@@ -43,7 +43,7 @@ const CreateExemplarDialog = ({
   const { setFocus } = form;
 
   useEffect(() => {
-    setFocus("title");
+    setFocus("name");
   }, [setFocus]);
 
   const handleSubmit = (data: CreateExemplarInput) => {
@@ -67,7 +67,7 @@ const CreateExemplarDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Title" {...form.register("title")} />
+            <Input label="Name" {...form.register("name")} />
             <Input label="Category" {...form.register("category")} />
             <Input label="Content" {...form.register("content")} />
           </fieldset>
