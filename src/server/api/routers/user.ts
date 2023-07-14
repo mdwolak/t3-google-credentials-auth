@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
+import { createUserSchema } from "~/lib/schemas/user";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
@@ -27,21 +27,19 @@ export const userRouter = router({
   }),
   create: publicProcedure.input(createUserSchema).mutation(({ input }) =>
     handleRequest(async () => {
-      let user = await userService.findUnique({ email: input.email.toLowerCase() });
-      if (user) {
+      const existingUser = await userService.findUnique({ email: input.email.toLowerCase() });
+      if (existingUser) {
         throw httpConflict("Email already taken");
       }
 
       const hashedPassword = await bcrypt.hash(input.password, 12);
-      user = await userService.create({
+      const newUser = await userService.create({
         email: input.email.toLocaleLowerCase(),
         name: input.name.toLocaleLowerCase(),
         password: hashedPassword,
-        //TODO: introduce provider enum
-        //provider: "local",
       });
 
-      return { user };
+      return { newUser };
     }, errorHandler)
   ),
 });
