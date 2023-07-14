@@ -33,13 +33,13 @@ export const userRouter = router({
       }
 
       const hashedPassword = await bcrypt.hash(input.password, 12);
-      const newUser = await userService.create({
+      const user = await userService.create({
         email: input.email.toLocaleLowerCase(),
         name: input.name.toLocaleLowerCase(),
         password: hashedPassword,
       });
 
-      return { newUser };
+      return { user };
     }, errorHandler)
   ),
 });

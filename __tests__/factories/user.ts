@@ -7,10 +7,10 @@ type NonNullableProps<T> = {
 export const CompleteUser: NonNullableProps<User> = {
   id: 1,
   name: "Joe Bloggs",
-  email: "joe@bloggs.com",
+  email: "Joe@Bloggs.com",
   password: "you_would_not_guess!",
   emailVerified: new Date(),
-  image: "",
+  image: "avatar.gif",
   createdDate: new Date(),
   updatedAt: new Date(),
   role: UserRole.USER,
