@@ -92,8 +92,10 @@ model Exemplar {
   published Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  createdBy   Int @default(1)
+  updatedAt   DateTime      @updatedAt
+  updatedBy   Int @default(1)
 
   //@@unique([content, category])
 }

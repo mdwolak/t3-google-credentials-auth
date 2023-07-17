@@ -20,11 +20,11 @@ export const findFirst = async (
   });
 };
 
-export const findUniqueOrThrow = async (
+export const findUnique = async (
   where: Prisma.ExemplarWhereUniqueInput,
   select: Prisma.ExemplarSelect = defaultExemplarSelect
 ) => {
-  return await prisma.exemplar.findUniqueOrThrow({
+  return await prisma.exemplar.findUnique({
     where,
     select,
   });

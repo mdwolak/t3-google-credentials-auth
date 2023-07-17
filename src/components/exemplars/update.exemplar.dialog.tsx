@@ -71,7 +71,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
             type="submit"
             className="ml-3 flex-1"
             isLoading={isLoading}
-            disabled={!form.formState.isDirty}>
+            disabled={!form.formState.isDirty || !form.formState.isValid}>
             Update
           </Button>
         </div>
