@@ -13,7 +13,7 @@ import { type ExemplarInfo } from "~/server/api/routers/exemplar";
 import { type RouterOutputs, api } from "~/utils/api";
 
 type UpdateExemplarDialogProps = HandleCloseProps<
-  RouterOutputs["exemplar"]["updateExemplar"]["exemplar"]
+  RouterOutputs["exemplar"]["update"]["exemplar"]
 > & {
   exemplar: ExemplarInfo;
 };
@@ -26,7 +26,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
     mutate: updateExemplar,
     isLoading,
     error: apiError,
-  } = api.exemplar.updateExemplar.useMutation({
+  } = api.exemplar.update.useMutation({
     onSuccess(data) {
       handleClose(data.exemplar);
       apiContext.exemplar.invalidate();
@@ -39,7 +39,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
     },
   });
 
-  const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
+  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
     onSuccess() {
       apiContext.exemplar.invalidate();
       toast.success("Exemplar deleted successfully");
@@ -52,6 +52,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
 
   const handleSubmit = (data: UpdateExemplarInput["data"]) => {
+    throw new Error("test");
     updateExemplar({ id: exemplar.id, data });
   };
 
@@ -78,15 +79,12 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={() => handleClose()} variant="secondary" className="flex-1">
-            Cancel
-          </Button>
           <Button
             type="submit"
-            className="ml-3 flex-1"
+            fullWidth
             isLoading={isLoading}
             disabled={!form.formState.isDirty || !form.formState.isValid}>
-            Update
+            Save
           </Button>
         </div>
       </Form>

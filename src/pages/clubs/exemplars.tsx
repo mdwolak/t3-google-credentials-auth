@@ -21,7 +21,7 @@ const ExemplarList = () => {
   const [updateExemplar, setUpdateExemplar] = useState<ExemplarInfo | null>(null);
   const [deleteExemplarId, setDeleteExemplarId] = useState<number>(0);
 
-  const { data: exemplars } = api.exemplar.getExemplars.useQuery(
+  const { data: exemplars } = api.exemplar.getFiltered.useQuery(
     { limit: 10, page: 1 },
     {
       select: (data) => data?.exemplars,
@@ -31,7 +31,7 @@ const ExemplarList = () => {
     }
   );
 
-  const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
+  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
     onSuccess() {
       apiContext.exemplar.invalidate();
       toast.success("Exemplar deleted successfully");

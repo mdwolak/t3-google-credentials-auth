@@ -19,10 +19,10 @@ export const exemplarRouter = router({
   /**
    * READ
    */
-  getExemplar: publicProcedure.input(numericId).query(async ({ input }) => {
+  getById: publicProcedure.input(numericId).query(async ({ input }) => {
     return await getByIdOrThrow(input);
   }),
-  getExemplars: publicProcedure.input(filterQuery).query(async ({ input }) => {
+  getFiltered: publicProcedure.input(filterQuery).query(async ({ input }) => {
     const exemplars = await exemplarService.findAll(input.page, input.limit);
 
     return { results: exemplars.length, exemplars };
@@ -31,29 +31,27 @@ export const exemplarRouter = router({
   /**
    * WRITE
    */
-  createExemplar: publicProcedure.input(createExemplarSchema).mutation(async ({ input, ctx }) => {
+  create: publicProcedure.input(createExemplarSchema).mutation(async ({ input, ctx }) => {
     await checkUniqueName(input.name);
 
     const exemplar = await exemplarService.create({ ...input, user: getUser(ctx) });
 
     return { exemplar };
   }),
-  updateExemplar: protectedProcedure
-    .input(updateExemplarSchema)
-    .mutation(async ({ input, ctx }) => {
-      const dbExemplar = await getByIdOrThrow(input.id);
+  update: protectedProcedure.input(updateExemplarSchema).mutation(async ({ input, ctx }) => {
+    const dbExemplar = await getByIdOrThrow(input.id);
 
-      if (!canUpdate(ctx, dbExemplar)) throw httpForbidden();
+    if (!canUpdate(ctx, dbExemplar)) throw httpForbidden();
 
-      if (input.data.name && input.data.name !== dbExemplar.name) {
-        await checkUniqueName(input.data.name);
-      }
+    if (input.data.name && input.data.name !== dbExemplar.name) {
+      await checkUniqueName(input.data.name);
+    }
 
-      const exemplar = await exemplarService.update({ id: input.id }, input.data);
+    const exemplar = await exemplarService.update({ id: input.id }, input.data);
 
-      return { exemplar };
-    }),
-  deleteExemplar: publicProcedure.input(numericId).mutation(async ({ input, ctx }) => {
+    return { exemplar };
+  }),
+  delete: publicProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input);
 
     if (!canUpdate(ctx, dbExemplar)) throw httpForbidden();
@@ -62,7 +60,7 @@ export const exemplarRouter = router({
   }),
 });
 
-export type ExemplarInfo = RouterOutputs["exemplar"]["getExemplars"]["exemplars"][0];
+export type ExemplarInfo = RouterOutputs["exemplar"]["getFiltered"]["exemplars"][0];
 
 async function checkUniqueName(name: string) {
   if (await exemplarService.findUnique({ name }))

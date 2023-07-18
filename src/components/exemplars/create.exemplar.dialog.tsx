@@ -10,14 +10,14 @@ import { type RouterOutputs, api } from "~/utils/api";
 
 const CreateExemplarDialog = ({
   handleClose,
-}: HandleCloseProps<RouterOutputs["exemplar"]["createExemplar"]["exemplar"]>) => {
+}: HandleCloseProps<RouterOutputs["exemplar"]["create"]["exemplar"]>) => {
   const apiContext = api.useContext();
 
   const {
     mutate: createExemplar,
     isLoading,
     error: apiError,
-  } = api.exemplar.createExemplar.useMutation({
+  } = api.exemplar.create.useMutation({
     onSuccess(data) {
       handleClose(data.exemplar);
       apiContext.exemplar.invalidate();
@@ -75,15 +75,12 @@ const CreateExemplarDialog = ({
         </div>
 
         <div className={styles.actions}>
-          <Button onClick={() => handleClose()} variant="secondary" className="flex-1">
-            Cancel
-          </Button>
           <Button
             type="submit"
-            className="ml-3 flex-1"
+            fullWidth
             isLoading={isLoading}
             disabled={!form.formState.isDirty || !form.formState.isValid}>
-            Create
+            Save
           </Button>
         </div>
       </Form>

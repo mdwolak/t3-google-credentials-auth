@@ -18,7 +18,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
 
   const [openMenu, setOpenMenu] = useState(false);
 
-  const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
+  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
     onSuccess() {
       apiContext.exemplar.invalidate();
       toast.success("Exemplar deleted successfully");
