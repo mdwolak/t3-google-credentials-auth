@@ -42,9 +42,10 @@ export function SlideOver({ open, onClose, children }: SlideOverProps) {
 export type SlideOverHeaderProps = HandleCloseProps & {
   title: string;
   subtitle?: string;
+  children?: ReactNode;
 };
 
-export function SlideOverHeader({ title, subtitle, handleClose }: SlideOverHeaderProps) {
+export function SlideOverHeader({ title, subtitle, handleClose, children }: SlideOverHeaderProps) {
   return (
     <div className="bg-gray-50 px-4 py-6 sm:px-6">
       <div className="flex items-center justify-between">
@@ -55,13 +56,13 @@ export function SlideOverHeader({ title, subtitle, handleClose }: SlideOverHeade
           <ArrowLeftIcon className="h-6 w-6" aria-hidden="true" />
           <span className="sr-only">Close panel</span>
         </button>
-        <div className="text-center">
+        <div className="flex-grow text-center">
           <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
             {title}
           </Dialog.Title>
           <Dialog.Description className="text-sm text-gray-500">{subtitle}</Dialog.Description>
         </div>
-        <div></div>
+        {children && <div>{children}</div>}
       </div>
     </div>
   );

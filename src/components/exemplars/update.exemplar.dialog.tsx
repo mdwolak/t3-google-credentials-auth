@@ -1,4 +1,9 @@
-import { ApiErrorMessage, Button, toast } from "~/components/core";
+import { useState } from "react";
+
+import { TrashIcon } from "@heroicons/react/24/outline";
+
+import { ApiErrorMessage, Button, IconButton, toast } from "~/components/core";
+import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
@@ -15,6 +20,7 @@ type UpdateExemplarDialogProps = HandleCloseProps<
 
 const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
   const apiContext = api.useContext();
+  const [openDelete, setOpenDelete] = useState(false);
 
   const {
     mutate: updateExemplar,
@@ -33,6 +39,16 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
     },
   });
 
+  const { mutate: deleteExemplar } = api.exemplar.deleteExemplar.useMutation({
+    onSuccess() {
+      apiContext.exemplar.invalidate();
+      toast.success("Exemplar deleted successfully");
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
+
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
 
   const handleSubmit = (data: UpdateExemplarInput["data"]) => {
@@ -46,11 +62,9 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
         handleSubmit={handleSubmit}
         className="flex h-full flex-col bg-white shadow-xl">
         <div className="h-0 flex-1 overflow-y-auto">
-          <SlideOverHeader
-            title="Update Exemplar"
-            subtitle="Get started by filling in the information below to create your new exemplar."
-            handleClose={handleClose}
-          />
+          <SlideOverHeader title="Update Exemplar" handleClose={handleClose}>
+            <IconButton Icon={TrashIcon} onClick={() => setOpenDelete(true)} srText="Delete" />
+          </SlideOverHeader>
           {/* Content */}
           <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading}>
             <ValidationSummary errors={form.formState.errors} />
@@ -76,6 +90,18 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
           </Button>
         </div>
       </Form>
+      <ConfirmDelete
+        open={openDelete}
+        handleClose={(confirm) => {
+          if (confirm) {
+            deleteExemplar(exemplar.id);
+            handleClose();
+          }
+          setOpenDelete(false);
+        }}
+        title="Delete exemplar"
+        description="Are you sure you want to delete this exemplar? This action cannot be undone."
+      />
     </>
   );
 };

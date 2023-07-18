@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ComponentPropsWithoutRef } from "react";
 import { type Ref, forwardRef } from "react";
 
 import classNames from "classnames";
@@ -64,7 +64,7 @@ export const Button = forwardRef(function Button(
   ref: Ref<HTMLButtonElement>
 ) {
   disabled = disabled || isLoading;
-  const iconClass = `${children ? "mr-2 " : ""}${iconSizes[size]}`
+  const iconClass = `${children ? "mr-2 " : ""}${iconSizes[size]}`;
 
   return (
     <button
@@ -88,12 +88,30 @@ export const Button = forwardRef(function Button(
         </>
       ) : (
         <>
-          { /* <span >{icon}</span> */}
-          { Icon && <Icon className={iconClass} aria-hidden="true" />}
+          {/* <span >{icon}</span> */}
+          {Icon && <Icon className={iconClass} aria-hidden="true" />}
           {children}
         </>
-      )
-      }
+      )}
     </button>
   );
 });
+
+type IconButtonProps = ComponentPropsWithoutRef<"button"> & {
+  Icon: SVGComponent | React.ElementType;
+  srText: string;
+  className?: string;
+};
+export const IconButton = ({ Icon, srText, className, ...props }: IconButtonProps) => {
+  return (
+    <button
+      type="button"
+      className={classNames("text-gray-400 hover:text-gray-500", className)}
+      {...props}>
+      <Icon className="h-6 w-6" aria-hidden="true" />
+      <span className="sr-only">{srText}</span>
+    </button>
+  );
+};
+
+export default IconButton;

@@ -15,7 +15,7 @@ export type ConfirmDeleteProps = HandleCloseProps<boolean> & {
 export function ConfirmDelete({ open, title, description, handleClose }: ConfirmDeleteProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="z-110 relative" onClose={() => handleClose(false)}>
+      <Dialog as="div" className="relative z-50" onClose={() => handleClose(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

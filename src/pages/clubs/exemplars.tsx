@@ -17,8 +17,8 @@ import { api } from "~/utils/api";
 const ExemplarList = () => {
   const apiContext = api.useContext();
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedExemplar, setSelectedExemplar] = useState<ExemplarInfo | null>(null);
+  const [openCreate, setOpenCreate] = useState(false);
+  const [updateExemplar, setUpdateExemplar] = useState<ExemplarInfo | null>(null);
   const [deleteExemplarId, setDeleteExemplarId] = useState<number>(0);
 
   const { data: exemplars } = api.exemplar.getExemplars.useQuery(
@@ -46,7 +46,7 @@ const ExemplarList = () => {
       <TableCaption
         title="Plans"
         buttonText="Add Exemplar"
-        onButtonClick={() => setOpenDialog(true)}>
+        onButtonClick={() => setOpenCreate(true)}>
         Your team is on the <strong className="font-semibold text-gray-900">Startup</strong> plan.
         The next payment of $80 will be due on August 4, 2022.
       </TableCaption>
@@ -87,7 +87,7 @@ const ExemplarList = () => {
                   <div className="hidden sm:block">{exemplar.price}/month</div>
                 </TCell> */}
                     <TCell last className="space-x-2">
-                      <Link href="#" onClick={() => setSelectedExemplar(exemplar)}>
+                      <Link href="#" onClick={() => setUpdateExemplar(exemplar)}>
                         Edit<span className="sr-only">, {exemplar.name}</span>
                       </Link>
                       <span>|</span>
@@ -107,15 +107,15 @@ const ExemplarList = () => {
         )}
       </div>
 
-      <SlideOver open={!!selectedExemplar} onClose={() => setSelectedExemplar(null)}>
+      <SlideOver open={!!updateExemplar} onClose={() => setUpdateExemplar(null)}>
         <UpdateExemplarDialog
-          exemplar={selectedExemplar as ExemplarInfo}
-          handleClose={() => setSelectedExemplar(null)}
+          exemplar={updateExemplar as ExemplarInfo}
+          handleClose={() => setUpdateExemplar(null)}
         />
       </SlideOver>
 
-      <SlideOver open={openDialog} onClose={() => setOpenDialog(true)}>
-        <CreateExemplarDialog handleClose={() => setOpenDialog(false)} />
+      <SlideOver open={openCreate} onClose={() => setOpenCreate(true)}>
+        <CreateExemplarDialog handleClose={() => setOpenCreate(false)} />
       </SlideOver>
 
       <ConfirmDelete
