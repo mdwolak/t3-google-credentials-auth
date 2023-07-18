@@ -2,57 +2,36 @@ import { useState } from "react";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
 
-import { ApiErrorMessage, Button, IconButton, toast } from "~/components/core";
+import { ApiErrorMessage, Button, IconButton } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
-import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
+import { Form, Input, ValidationSummary, useForm } from "~/components/forms";
+import { useCrud } from "~/components/hooks/useCrud";
 import { type HandleCloseProps } from "~/lib/common";
 import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs } from "~/utils/api";
 
-type UpdateExemplarDialogProps = HandleCloseProps<
-  RouterOutputs["exemplar"]["update"]["exemplar"]
-> & {
+type UpdateExemplarDialogProps = HandleCloseProps<RouterOutputs["exemplar"]["update"]> & {
   exemplar: ExemplarInfo;
 };
 
 const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
-  const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
-
-  const {
-    mutate: updateExemplar,
-    isLoading,
-    error: apiError,
-  } = api.exemplar.update.useMutation({
-    onSuccess(data) {
-      handleClose(data.exemplar);
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar updated successfully");
-    },
-    onError(error) {
-      const zodError = error.data?.zodError;
-      if (zodError) setFormErrors(form, zodError);
-      else toast.error(error.message);
-    },
-  });
-
-  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
-    onSuccess() {
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar deleted successfully");
-    },
-    onError(error) {
-      toast.error(error.message);
-    },
-  });
 
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
 
+  const { getUpdateMutation, getDeleteMutation } = useCrud({
+    path: "exemplar",
+    name: "Exemplar",
+    form,
+  });
+
+  const { mutate: updateExemplar, isLoading, error: apiError } = getUpdateMutation({ handleClose });
+  const { mutate: deleteExemplar } = getDeleteMutation();
+
   const handleSubmit = (data: UpdateExemplarInput["data"]) => {
-    throw new Error("test");
     updateExemplar({ id: exemplar.id, data });
   };
 

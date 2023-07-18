@@ -1,12 +1,7 @@
 import { filterQuery, numericId } from "~/lib/schemas/common";
 import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
-import {
-  getPrismaUserFromContext as getUser,
-  httpConflictWithZod,
-  httpForbidden,
-  httpNotFound,
-} from "~/server/api/trpcHelper";
+import { getUser, httpConflictWithZod, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as exemplarService from "~/server/services/exemplar";
 import { defaultExemplarSelect } from "~/server/services/exemplar";

@@ -6,7 +6,7 @@ import { type Context } from "~/server/api/context";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import { getConstraintViolationFields, isNotFoundError } from "~/server/db";
 
-export function getPrismaUserFromContext(ctx: Context) {
+export function getUser(ctx: Context) {
   return { connect: { id: ctx.session?.user?.id } };
 }
 
