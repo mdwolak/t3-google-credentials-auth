@@ -22,12 +22,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
 
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
 
-  const { getUpdateMutation, getDeleteMutation } = useCrud({
-    path: "exemplar",
-    name: "Exemplar",
-    form,
-  });
-
+  const { getUpdateMutation, getDeleteMutation } = useCrud("exemplar", "Exemplar", form);
   const { mutate: updateExemplar, isLoading, error: apiError } = getUpdateMutation({ handleClose });
   const { mutate: deleteExemplar } = getDeleteMutation();
 

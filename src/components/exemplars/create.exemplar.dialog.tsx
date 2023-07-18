@@ -28,11 +28,7 @@ const CreateExemplarDialog = ({
     setFocus("name");
   }, [setFocus]);
 
-  const { getCreateMutation } = useCrud({
-    path: "exemplar",
-    name: "Exemplar",
-    form,
-  });
+  const { getCreateMutation } = useCrud("exemplar", "Exemplar", form);
   const { mutate: createExemplar, isLoading, error: apiError } = getCreateMutation({ handleClose });
 
   const handleSubmit = (data: CreateExemplarInput) => {

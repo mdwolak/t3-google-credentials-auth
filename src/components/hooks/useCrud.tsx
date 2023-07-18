@@ -6,19 +6,15 @@ import { setFormErrors } from "~/components/forms";
 import type { HandleCloseProps } from "~/lib/common";
 import { api } from "~/utils/api";
 
-interface CrudProps<F extends FieldValues = FieldValues> {
-  path: "exemplar";
-  name: string;
-  form: UseFormReturn<F>;
-}
-export function useCrud<T = any, F extends FieldValues = FieldValues>({
-  path,
-  form,
-  name,
-}: CrudProps<F>) {
+export function useCrud<T = any, F extends FieldValues = FieldValues>(
+  path: "exemplar",
+  name: string,
+  form?: UseFormReturn<F>
+) {
   const apiContext = api.useContext();
 
   const getCreateMutation = ({ handleClose }: Partial<HandleCloseProps<T>> = {}) => {
+    if (!form) throw new Error("form is required for create mutation");
     return api[path].create.useMutation({
       onSuccess(data: any) {
         handleClose?.(data);
@@ -34,6 +30,7 @@ export function useCrud<T = any, F extends FieldValues = FieldValues>({
   };
 
   const getUpdateMutation = ({ handleClose }: Partial<HandleCloseProps<T>> = {}) => {
+    if (!form) throw new Error("form is required for update mutation");
     return api[path].update.useMutation({
       onSuccess(data: any) {
         handleClose?.(data);

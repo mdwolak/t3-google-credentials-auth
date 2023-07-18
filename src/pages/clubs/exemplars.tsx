@@ -10,13 +10,12 @@ import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
+import { useCrud } from "~/components/hooks/useCrud";
 import { getLayout } from "~/components/layouts/Layout";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar";
 import { api } from "~/utils/api";
 
 const ExemplarList = () => {
-  const apiContext = api.useContext();
-
   const [openCreate, setOpenCreate] = useState(false);
   const [updateExemplar, setUpdateExemplar] = useState<ExemplarInfo | null>(null);
   const [deleteExemplarId, setDeleteExemplarId] = useState<number>(0);
@@ -30,16 +29,8 @@ const ExemplarList = () => {
       },
     }
   );
-
-  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
-    onSuccess() {
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar deleted successfully");
-    },
-    onError(error) {
-      toast.error(error.message);
-    },
-  });
+  const { getDeleteMutation } = useCrud("exemplar", "Exemplar");
+  const { mutate: deleteExemplar } = getDeleteMutation();
 
   return (
     <div className="sm:px-2 lg:px-4">
