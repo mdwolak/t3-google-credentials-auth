@@ -40,6 +40,7 @@ export const findAll = async (page: number, limit: number) => {
       category: true,
       content: true,
       createdAt: true,
+      published: true,
       user: {
         select: {
           id: true,
