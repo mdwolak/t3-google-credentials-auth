@@ -8,7 +8,7 @@ import {
   InputEmail,
   InputPassword,
   ValidationSummary,
-  setFormErrors,
+  getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
 import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
@@ -16,21 +16,6 @@ import { api } from "~/utils/api";
 
 const SignUp = () => {
   const router = useRouter();
-
-  const {
-    mutate: apiUserCreate,
-    isLoading,
-    error: apiError,
-  } = api.user.create.useMutation({
-    onSuccess() {
-      router.push("signin");
-    },
-    onError(error) {
-      const zodError = error.data?.zodError;
-      if (zodError) setFormErrors(form, zodError);
-      else toast.error(error.message);
-    },
-  });
 
   const form = useForm({
     schema: createUserSchema,
@@ -41,6 +26,17 @@ const SignUp = () => {
       password: "tester01",
       passwordConfirm: "tester01",
     },
+  });
+
+  const {
+    mutate: apiUserCreate,
+    isLoading,
+    error: apiError,
+  } = api.user.create.useMutation({
+    onSuccess() {
+      router.push("signin");
+    },
+    onError: getDefaultOnErrorOption(form),
   });
 
   const handleSubmit = (values: CreateUserInput) => {

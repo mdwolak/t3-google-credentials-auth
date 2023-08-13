@@ -1,6 +1,6 @@
 import React, {
   type ComponentPropsWithRef,
-  FC,
+  type FC,
   type ReactNode,
   type Ref,
   forwardRef,

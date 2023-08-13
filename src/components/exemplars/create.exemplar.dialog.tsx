@@ -3,7 +3,13 @@ import { useEffect } from "react";
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
-import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
+import {
+  Form,
+  Input,
+  ValidationSummary,
+  getDefaultOnErrorOption,
+  useForm,
+} from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
 import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar";
 import { type RouterOutputs, api } from "~/utils/api";
@@ -12,23 +18,6 @@ const CreateExemplarDialog = ({
   handleClose,
 }: HandleCloseProps<RouterOutputs["exemplar"]["create"]["exemplar"]>) => {
   const apiContext = api.useContext();
-
-  const {
-    mutate: createExemplar,
-    isLoading,
-    error: apiError,
-  } = api.exemplar.create.useMutation({
-    onSuccess(data) {
-      handleClose(data.exemplar);
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar created successfully");
-    },
-    onError(error) {
-      const zodError = error.data?.zodError;
-      if (zodError) setFormErrors(form, zodError);
-      else toast.error(error.message);
-    },
-  });
 
   const form = useForm({
     schema: createExemplarSchema,
@@ -41,6 +30,19 @@ const CreateExemplarDialog = ({
     },
   });
   const { setFocus } = form;
+
+  const {
+    mutate: createExemplar,
+    isLoading,
+    error: apiError,
+  } = api.exemplar.create.useMutation({
+    onSuccess(data) {
+      handleClose(data.exemplar);
+      apiContext.exemplar.invalidate();
+      toast.success("Exemplar created successfully");
+    },
+    onError: getDefaultOnErrorOption(form),
+  });
 
   useEffect(() => {
     setFocus("name");

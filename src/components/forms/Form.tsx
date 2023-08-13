@@ -146,3 +146,13 @@ export function setFormErrors<T extends FieldValues = FieldValues>(
   if (zodError.formErrors?.[0])
     form.setError("root.serverError", { message: zodError.formErrors?.[0] });
 }
+
+export const getDefaultOnErrorOption = <T extends FieldValues = FieldValues>(
+  form: UseFormReturn<T>
+) => {
+  return (error: any) => {
+    const zodError = error.data?.zodError;
+    if (zodError) setFormErrors(form, zodError);
+    else toast.error(error.message);
+  };
+};

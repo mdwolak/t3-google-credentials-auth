@@ -6,7 +6,13 @@ import { ApiErrorMessage, Button, IconButton, toast } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
-import { Form, Input, ValidationSummary, setFormErrors, useForm } from "~/components/forms";
+import {
+  Form,
+  Input,
+  ValidationSummary,
+  getDefaultOnErrorOption,
+  useForm,
+} from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
 import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar";
@@ -22,23 +28,6 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
   const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
 
-  const {
-    mutate: updateExemplar,
-    isLoading,
-    error: apiError,
-  } = api.exemplar.update.useMutation({
-    onSuccess(data) {
-      handleClose(data.exemplar);
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar updated successfully");
-    },
-    onError(error) {
-      const zodError = error.data?.zodError;
-      if (zodError) setFormErrors(form, zodError);
-      else toast.error(error.message);
-    },
-  });
-
   const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
     onSuccess() {
       apiContext.exemplar.invalidate();
@@ -50,6 +39,19 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
   });
 
   const form = useForm({ schema: updateExemplarSchema.shape.data, defaultValues: exemplar });
+
+  const {
+    mutate: updateExemplar,
+    isLoading,
+    error: apiError,
+  } = api.exemplar.update.useMutation({
+    onSuccess(data) {
+      handleClose(data.exemplar);
+      apiContext.exemplar.invalidate();
+      toast.success("Exemplar updated successfully");
+    },
+    onError: getDefaultOnErrorOption(form),
+  });
 
   const handleSubmit = (data: UpdateExemplarInput["data"]) => {
     updateExemplar({ id: exemplar.id, data });
