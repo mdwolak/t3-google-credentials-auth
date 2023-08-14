@@ -19,3 +19,17 @@ export function classNames(...classes: unknown[]) {
 export type HandleCloseProps<T = any> = {
   handleClose: (data?: T) => void;
 };
+
+export type NonNullableProps<T> = {
+  [K in keyof T]-?: NonNullable<T[K]>;
+};
+
+export function stripNullishProps<T>(obj: T): NonNullableProps<T> {
+  return Object.fromEntries(
+    Object.entries(obj ?? {}).filter(([, value]) => value != null)
+  ) as NonNullableProps<T>;
+}
+
+export const truncate = (str: string, maxLength: number) => {
+  return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
+};

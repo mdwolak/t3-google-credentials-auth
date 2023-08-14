@@ -44,11 +44,10 @@ const ExemplarList = () => {
   return (
     <div className="sm:px-2 lg:px-4">
       <TableCaption
-        title="Plans"
+        title="Exemplars"
         buttonText="Add Exemplar"
         onButtonClick={() => setOpenCreate(true)}>
-        Your team is on the <strong className="font-semibold text-gray-900">Startup</strong> plan.
-        The next payment of $80 will be due on August 4, 2022.
+        Manage exemplars for your account.
       </TableCaption>
       <div>
         {exemplars?.length === 0 ? (

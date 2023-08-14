@@ -58,7 +58,7 @@ export const exemplarRouter = router({
 export type ExemplarInfo = RouterOutputs["exemplar"]["getFiltered"]["exemplars"][0];
 
 async function checkUniqueName(name: string) {
-  if (await exemplarService.findUnique({ name }))
+  if (await exemplarService.findFirst({ name }))
     throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["name"]));
 }
 

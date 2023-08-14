@@ -14,24 +14,22 @@ import {
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
-import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
-import { type ExemplarInfo } from "~/server/api/routers/exemplar";
+import { type UpdateAddressInput, updateAddressSchema } from "~/lib/schemas/address";
+import { type AddressInfo } from "~/server/api/routers/address";
 import { type RouterOutputs, api } from "~/utils/api";
 
-type UpdateExemplarDialogProps = HandleCloseProps<
-  RouterOutputs["exemplar"]["update"]["exemplar"]
-> & {
-  exemplar: ExemplarInfo;
+type UpdateAddressDialogProps = HandleCloseProps<RouterOutputs["address"]["update"]["address"]> & {
+  address: AddressInfo;
 };
 
-const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogProps) => {
+const UpdateAddressDialog = ({ address, handleClose }: UpdateAddressDialogProps) => {
   const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
 
-  const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
+  const { mutate: deleteAddress } = api.address.delete.useMutation({
     onSuccess() {
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar deleted successfully");
+      apiContext.address.invalidate();
+      toast.success("Address deleted successfully");
     },
     onError(error) {
       toast.error(error.message);
@@ -39,25 +37,25 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
   });
 
   const form = useForm({
-    schema: updateExemplarSchema.shape.data,
-    defaultValues: stripNullishProps(exemplar),
+    schema: updateAddressSchema.shape.data,
+    defaultValues: stripNullishProps(address),
   });
 
   const {
-    mutate: updateExemplar,
+    mutate: updateAddress,
     isLoading,
     error: apiError,
-  } = api.exemplar.update.useMutation({
+  } = api.address.update.useMutation({
     onSuccess(data) {
-      handleClose(data.exemplar);
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar updated successfully");
+      handleClose(data.address);
+      apiContext.address.invalidate();
+      toast.success("Address updated successfully");
     },
     onError: getDefaultOnErrorOption(form),
   });
 
-  const handleSubmit = (data: UpdateExemplarInput["data"]) => {
-    updateExemplar({ id: exemplar.id, data });
+  const handleSubmit = (data: UpdateAddressInput["data"]) => {
+    updateAddress({ id: address.id, data });
   };
 
   return (
@@ -67,7 +65,7 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
         handleSubmit={handleSubmit}
         className="flex h-full flex-col bg-white shadow-xl">
         <div className="h-0 flex-1 overflow-y-auto">
-          <SlideOverHeader title="Update Exemplar" handleClose={handleClose}>
+          <SlideOverHeader title="Update Address" handleClose={handleClose}>
             <IconButton Icon={TrashIcon} onClick={() => setOpenDelete(true)} srText="Delete" />
           </SlideOverHeader>
           {/* Content */}
@@ -75,19 +73,17 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Name" {...form.register("name")} />
-            <Input label="Category" {...form.register("category")} />
-            <Input label="Content" {...form.register("content")} />
+            <Input label="Line 1" {...form.register("line1")} />
+            <Input label="Line 2" {...form.register("line2")} />
+            <Input label="City" {...form.register("city")} />
+            <Input label="County" {...form.register("county")} />
+            <Input label="Postcode" {...form.register("postcode")} />
           </fieldset>
           {/* /End Content */}
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>
@@ -96,16 +92,16 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
         open={openDelete}
         handleClose={(confirm) => {
           if (confirm) {
-            deleteExemplar(exemplar.id);
+            deleteAddress(address.id);
             handleClose();
           }
           setOpenDelete(false);
         }}
-        title="Delete exemplar"
-        description="Are you sure you want to delete this exemplar? This action cannot be undone."
+        title="Delete address"
+        description="Are you sure you want to delete this address? This action cannot be undone."
       />
     </>
   );
 };
 
-export default UpdateExemplarDialog;
+export default UpdateAddressDialog;

@@ -1,8 +1,6 @@
 import { type User, UserRole } from "@prisma/client";
 
-type NonNullableProps<T> = {
-  [K in keyof T]-?: NonNullable<T[K]>;
-};
+import type { NonNullableProps } from "~/lib/common";
 
 export const CompleteUser: NonNullableProps<User> = {
   id: 1,
