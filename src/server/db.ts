@@ -18,6 +18,8 @@ if (env.NODE_ENV !== "production") {
   global.prismaMock = prisma;
 }
 
+export type OmitAudit<T> = Omit<T, "createdAt" | "createdBy" | "updatedAt" | "updatedBy">;
+
 /*
   Check type of prisma error.
   Error codes: https://www.prisma.io/docs/reference/api-reference/error-reference#error-codes    
@@ -36,4 +38,13 @@ export function isNotFoundError(error: unknown) {
   return (
     error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025" //An operation failed because it depends on one or more records that were required but not found. {cause}
   );
+}
+
+export function getCreateProps(userId: number) {
+  const createdBy = { connect: { id: userId } };
+  return { createdBy, updatedBy: createdBy };
+}
+
+export function getUpdateProps(userId: number) {
+  return { updatedBy: { connect: { id: userId } } };
 }

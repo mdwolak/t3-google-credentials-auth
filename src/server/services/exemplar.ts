@@ -1,15 +1,15 @@
 import { Prisma } from "@prisma/client";
 
-import { prisma } from "~/server/db";
+import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
 
 export const defaultExemplarSelect = Prisma.validator<Prisma.ExemplarSelect>()({
   id: true,
   name: true,
 });
 
-/**
- * READ
- */
+//
+// READ
+
 export const findFirst = async (
   where: Partial<Prisma.ExemplarWhereInput>,
   select: Prisma.ExemplarSelect = defaultExemplarSelect
@@ -41,7 +41,7 @@ export const findAll = async (page: number, limit: number) => {
       content: true,
       createdAt: true,
       published: true,
-      user: {
+      createdBy: {
         select: {
           id: true,
           name: true,
@@ -53,22 +53,27 @@ export const findAll = async (page: number, limit: number) => {
   });
 };
 
-/**
- * WRITE
- */
-export const create = async (input: Prisma.ExemplarCreateInput) => {
+//
+// WRITE
+
+export const create = async (userId: number, input: OmitAudit<Prisma.ExemplarCreateInput>) => {
   return await prisma.exemplar.create({
-    data: input,
+    data: { ...input, ...getCreateProps(userId) },
     select: defaultExemplarSelect,
   });
 };
 
 export const update = async (
+  userId: number,
   where: Partial<Prisma.ExemplarWhereUniqueInput>,
-  data: Prisma.ExemplarUpdateInput,
+  data: OmitAudit<Prisma.ExemplarUpdateInput>,
   select: Prisma.ExemplarSelect = defaultExemplarSelect
 ) => {
-  return await prisma.exemplar.update({ where, data, select });
+  return await prisma.exemplar.update({
+    where,
+    data: { ...data, ...getUpdateProps(userId) },
+    select,
+  });
 };
 
 export const remove = async (where: Prisma.ExemplarWhereUniqueInput) => {

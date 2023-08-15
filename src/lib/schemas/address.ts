@@ -10,7 +10,7 @@ export const createAddressSchema = object({
   line2: string().trim(),
   city: nonEmptyString,
   county: string().trim(),
-  postcode: string().regex(ukPostcodeRegex, "Invalid UK postcode"),
+  postcode: nonEmptyString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase(),
 });
 
 export const updateAddressSchema = object({

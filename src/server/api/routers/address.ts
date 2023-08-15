@@ -1,7 +1,12 @@
 import { createAddressSchema, updateAddressSchema } from "~/lib/schemas/address";
 import { filterQuery, numericId } from "~/lib/schemas/common";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
-import { getUser, httpConflictWithZod, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
+import {
+  getUserId,
+  httpConflictWithZod,
+  httpForbidden,
+  httpNotFound,
+} from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as addressService from "~/server/services/address";
 import { defaultAddressSelect } from "~/server/services/address";
@@ -26,17 +31,17 @@ export const addressRouter = router({
   /**
    * WRITE
    */
-  create: publicProcedure.input(createAddressSchema).mutation(async ({ input, ctx }) => {
+  create: protectedProcedure.input(createAddressSchema).mutation(async ({ input, ctx }) => {
     await checkUniqueness(input.line1, input.postcode);
 
-    const address = await addressService.create({ ...input, user: getUser(ctx) });
+    const address = await addressService.create(getUserId(ctx), input);
 
     return { address };
   }),
   update: protectedProcedure.input(updateAddressSchema).mutation(async ({ input, ctx }) => {
     const dbAddress = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbAddress)) throw httpForbidden();
+    if (!canUpdate(ctx, dbAddress, "createdById")) throw httpForbidden();
 
     if (
       (input.data.line1 && input.data.line1 !== dbAddress.line1) ||
@@ -48,14 +53,14 @@ export const addressRouter = router({
       );
     }
 
-    const address = await addressService.update({ id: input.id }, input.data);
+    const address = await addressService.update(getUserId(ctx), { id: input.id }, input.data);
 
     return { address };
   }),
-  delete: publicProcedure.input(numericId).mutation(async ({ input, ctx }) => {
+  delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbAddress = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbAddress)) throw httpForbidden();
+    if (!canUpdate(ctx, dbAddress, "createdById")) throw httpForbidden();
 
     await addressService.remove({ id: input });
   }),
@@ -72,7 +77,7 @@ async function checkUniqueness(line1: string, postcode: string) {
 async function getByIdOrThrow(id: number) {
   const address = await addressService.findUnique(
     { id: id },
-    { ...defaultAddressSelect, createdBy: true }
+    { ...defaultAddressSelect, createdById: true }
   );
   if (!address) throw httpNotFound(entityName);
 
