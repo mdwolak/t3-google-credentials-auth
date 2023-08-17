@@ -1,12 +1,12 @@
 import type { TypeOf } from "zod";
 import { boolean, number, object } from "zod";
 
-import { nonEmptyString } from "./common";
+import { requiredStringCleaned } from "./common";
 
 export const createExemplarSchema = object({
-  name: nonEmptyString,
-  category: nonEmptyString,
-  content: nonEmptyString,
+  name: requiredStringCleaned,
+  category: requiredStringCleaned,
+  content: requiredStringCleaned,
   published: boolean({
     required_error: "Published is required",
   }),

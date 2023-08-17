@@ -2,7 +2,7 @@ import { type TypeOf, object, string } from "zod";
 
 export const createUserSchema = object({
   name: string().trim().min(1, "Name is required"),
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
+  email: string().trim().min(1, "Email address is required").email("Email Address is invalid"),
   password: string()
     .trim()
     .min(1, "Password is required")

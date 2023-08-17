@@ -6,8 +6,12 @@ import { type Context } from "~/server/api/context";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import { getConstraintViolationFields, isNotFoundError } from "~/server/db";
 
-export function getUser(ctx: Context) {
-  return { connect: { id: ctx.session?.user?.id } };
+export function getUserId(ctx: Context) {
+  const userId = ctx.session?.user?.id;
+  if (userId == null) {
+    throw new Error("getUserId failed to obtain user id from session");
+  }
+  return userId;
 }
 
 /**

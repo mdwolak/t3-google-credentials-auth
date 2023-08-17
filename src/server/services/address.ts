@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { prisma } from "~/server/db";
+import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
 
 export const defaultAddressSelect = Prisma.validator<Prisma.AddressSelect>()({
   id: true,
@@ -11,9 +11,9 @@ export const defaultAddressSelect = Prisma.validator<Prisma.AddressSelect>()({
   postcode: true,
 });
 
-/**
- * READ
- */
+//
+// READ
+
 export const findFirst = async (
   where: Partial<Prisma.AddressWhereInput>,
   select: Prisma.AddressSelect = defaultAddressSelect
@@ -46,7 +46,7 @@ export const findAll = async (page: number, limit: number) => {
       county: true,
       postcode: true,
       createdAt: true,
-      user: {
+      createdBy: {
         select: {
           id: true,
           name: true,
@@ -58,22 +58,27 @@ export const findAll = async (page: number, limit: number) => {
   });
 };
 
-/**
- * WRITE
- */
-export const create = async (input: Prisma.AddressCreateInput) => {
+//
+// WRITE
+
+export const create = async (userId: number, input: OmitAudit<Prisma.AddressCreateInput>) => {
   return await prisma.address.create({
-    data: input,
+    data: { ...input, ...getCreateProps(userId) },
     select: defaultAddressSelect,
   });
 };
 
 export const update = async (
+  userId: number,
   where: Partial<Prisma.AddressWhereUniqueInput>,
-  data: Prisma.AddressUpdateInput,
+  data: OmitAudit<Prisma.AddressUpdateInput>,
   select: Prisma.AddressSelect = defaultAddressSelect
 ) => {
-  return await prisma.address.update({ where, data, select });
+  return await prisma.address.update({
+    where,
+    data: { ...data, ...getUpdateProps(userId) },
+    select,
+  });
 };
 
 export const remove = async (where: Prisma.AddressWhereUniqueInput) => {

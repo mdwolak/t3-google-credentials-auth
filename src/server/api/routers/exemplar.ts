@@ -1,7 +1,12 @@
 import { filterQuery, numericId } from "~/lib/schemas/common";
 import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
-import { getUser, httpConflictWithZod, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
+import {
+  getUserId,
+  httpConflictWithZod,
+  httpForbidden,
+  httpNotFound,
+} from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as exemplarService from "~/server/services/exemplar";
 import { defaultExemplarSelect } from "~/server/services/exemplar";
@@ -26,30 +31,30 @@ export const exemplarRouter = router({
   /**
    * WRITE
    */
-  create: publicProcedure.input(createExemplarSchema).mutation(async ({ input, ctx }) => {
+  create: protectedProcedure.input(createExemplarSchema).mutation(async ({ input, ctx }) => {
     await checkUniqueName(input.name);
 
-    const exemplar = await exemplarService.create({ ...input, user: getUser(ctx) });
+    const exemplar = await exemplarService.create(getUserId(ctx), input);
 
     return { exemplar };
   }),
   update: protectedProcedure.input(updateExemplarSchema).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbExemplar)) throw httpForbidden();
+    if (!canUpdate(ctx, dbExemplar, "createdById")) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbExemplar.name) {
       await checkUniqueName(input.data.name);
     }
 
-    const exemplar = await exemplarService.update({ id: input.id }, input.data);
+    const exemplar = await exemplarService.update(getUserId(ctx), { id: input.id }, input.data);
 
     return { exemplar };
   }),
-  delete: publicProcedure.input(numericId).mutation(async ({ input, ctx }) => {
+  delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbExemplar)) throw httpForbidden();
+    if (!canUpdate(ctx, dbExemplar, "createdById")) throw httpForbidden();
 
     await exemplarService.remove({ id: input });
   }),
@@ -65,7 +70,7 @@ async function checkUniqueName(name: string) {
 async function getByIdOrThrow(id: number) {
   const exemplar = await exemplarService.findUnique(
     { id: id },
-    { ...defaultExemplarSelect, createdBy: true }
+    { ...defaultExemplarSelect, createdById: true }
   );
   if (!exemplar) throw httpNotFound(entityName);
 

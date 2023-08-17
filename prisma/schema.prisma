@@ -63,13 +63,15 @@ model User {
   role          UserRole  @default(USER)
   provider      String?
 
-  createdDate DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdDate      DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
   // identityProviderId   String?
   // GroupMember   GroupMember[]
   // Event         Event[]
-  Exemplar    Exemplar[]
-  Address     Address[]
+  CreatedExemplars Exemplar[] @relation("ExemplarCreatedById")
+  UpdatedExemplars Exemplar[] @relation("ExemplarUpdatedById")
+  CreatedAddresses Address[]  @relation("AddressCreatedById")
+  UpdatedAddresses Address[]  @relation("AddressUpdatedById")
 }
 
 model VerificationToken {
@@ -86,34 +88,36 @@ enum UserRole {
 }
 
 model Exemplar {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique @db.VarChar(255)
+  id        Int     @id @default(autoincrement())
+  name      String  @unique @db.VarChar(255)
   content   String
   category  String
-  published Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime @default(now())
-  createdBy Int      @default(1)
-  updatedAt DateTime @updatedAt
-  updatedBy Int      @default(1)
+  published Boolean @default(false)
+
+  createdAt   DateTime @default(now())
+  createdById Int
+  createdBy   User     @relation("ExemplarCreatedById", fields: [createdById], references: [id])
+  updatedAt   DateTime @updatedAt
+  updatedById Int
+  updatedBy   User     @relation("ExemplarUpdatedById", fields: [updatedById], references: [id])
 
   //@@unique([content, category])
 }
 
 model Address {
-  id        Int      @id @default(autoincrement())
-  line1     String
-  line2     String?
-  city      String
-  county    String?
-  postcode  String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime @default(now())
-  createdBy Int      @default(1)
-  updatedAt DateTime @updatedAt
-  updatedBy Int      @default(1)
+  id       Int     @id @default(autoincrement())
+  line1    String
+  line2    String?
+  city     String
+  county   String?
+  postcode String
+
+  createdAt   DateTime @default(now())
+  createdById Int
+  createdBy   User     @relation("AddressCreatedById", fields: [createdById], references: [id])
+  updatedAt   DateTime @updatedAt
+  updatedById Int
+  updatedBy   User     @relation("AddressUpdatedById", fields: [updatedById], references: [id])
 
   @@unique([line1, postcode])
 }
