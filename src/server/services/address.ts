@@ -46,12 +46,6 @@ export const findAll = async (page: number, limit: number) => {
       county: true,
       postcode: true,
       createdAt: true,
-      createdBy: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
     },
     skip,
     take,

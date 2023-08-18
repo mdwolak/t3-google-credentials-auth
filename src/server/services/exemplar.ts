@@ -41,12 +41,6 @@ export const findAll = async (page: number, limit: number) => {
       content: true,
       createdAt: true,
       published: true,
-      createdBy: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
     },
     skip,
     take,

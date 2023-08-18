@@ -1,7 +1,7 @@
 import { type ZodString, number, object, preprocess, string } from "zod";
 
-export const cleanString = (value: unknown): unknown =>
-  typeof value !== "string" ? value : value.replace(/\s\s+/g, " ").trim();
+export const cleanString = (value: unknown): string =>
+  typeof value !== "string" ? String(value) : value.replace(/\s\s+/g, " ").trim();
 
 //cleans string before validation
 export const preprocessCleanString = (schema: ZodString) => preprocess(cleanString, schema);

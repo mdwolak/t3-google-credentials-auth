@@ -63,15 +63,11 @@ model User {
   role          UserRole  @default(USER)
   provider      String?
 
-  createdDate      DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdDate DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   // identityProviderId   String?
   // GroupMember   GroupMember[]
   // Event         Event[]
-  CreatedExemplars Exemplar[] @relation("ExemplarCreatedById")
-  UpdatedExemplars Exemplar[] @relation("ExemplarUpdatedById")
-  CreatedAddresses Address[]  @relation("AddressCreatedById")
-  UpdatedAddresses Address[]  @relation("AddressUpdatedById")
 }
 
 model VerificationToken {
@@ -96,10 +92,8 @@ model Exemplar {
 
   createdAt   DateTime @default(now())
   createdById Int
-  createdBy   User     @relation("ExemplarCreatedById", fields: [createdById], references: [id])
   updatedAt   DateTime @updatedAt
   updatedById Int
-  updatedBy   User     @relation("ExemplarUpdatedById", fields: [updatedById], references: [id])
 
   //@@unique([content, category])
 }
@@ -114,10 +108,8 @@ model Address {
 
   createdAt   DateTime @default(now())
   createdById Int
-  createdBy   User     @relation("AddressCreatedById", fields: [createdById], references: [id])
   updatedAt   DateTime @updatedAt
   updatedById Int
-  updatedBy   User     @relation("AddressUpdatedById", fields: [updatedById], references: [id])
 
   @@unique([line1, postcode])
 }
