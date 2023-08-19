@@ -60,7 +60,7 @@ model User {
   sessions      Session[]
   //extensions
   password      String?
-  role          UserRole  @default(USER)
+  role          UserRole  @default(User)
   provider      String?
 
   createdDate DateTime @default(now())
@@ -79,8 +79,8 @@ model VerificationToken {
 }
 
 enum UserRole {
-  USER
-  ADMIN
+  User
+  Admin
 }
 
 model Exemplar {
@@ -112,4 +112,38 @@ model Address {
   updatedById Int
 
   @@unique([line1, postcode])
+}
+
+model Activity {
+  id          Int            @id @default(autoincrement())
+  name        String         @unique @db.VarChar(255)
+  description String
+  type        Int            @default(0)
+  addressId   Int            @default(0)
+  duration    Int            @default(0)
+  slug        String
+  visible     Boolean        @default(true)
+  status      ActivityStatus @default(Draft)
+  data        Json?
+
+  owningGroupId Int @default(0)
+  //owningGroup   Group? @relation(fields: [owningGroupId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  createdById Int
+  updatedAt   DateTime @updatedAt
+  updatedById Int
+
+  @@unique([owningGroupId, name])
+  @@unique([owningGroupId, slug])
+}
+
+enum ActivityStatus {
+  Draft
+  Planned
+  OpenToRegistrations
+  ClosedToRegistrations
+  Ongoing
+  Past
+  Cancelled
 }
