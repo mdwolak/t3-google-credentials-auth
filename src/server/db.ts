@@ -18,7 +18,7 @@ if (env.NODE_ENV !== "production") {
   global.prismaMock = prisma;
 }
 
-export type OmitAudit<T> = Omit<T, "createdAt" | "createdBy" | "updatedAt" | "updatedBy">;
+export type OmitAudit<T> = Omit<T, "createdAt" | "createdById" | "updatedAt" | "updatedById">;
 
 /*
   Check type of prisma error.
@@ -41,10 +41,9 @@ export function isNotFoundError(error: unknown) {
 }
 
 export function getCreateProps(userId: number) {
-  const createdBy = { connect: { id: userId } };
-  return { createdBy, updatedBy: createdBy };
+  return { createdById: userId, updatedById: userId };
 }
 
 export function getUpdateProps(userId: number) {
-  return { updatedBy: { connect: { id: userId } } };
+  return { updatedById: userId };
 }
