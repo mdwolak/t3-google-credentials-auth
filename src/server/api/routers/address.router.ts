@@ -1,5 +1,5 @@
-import { createAddressSchema, updateAddressSchema } from "~/lib/schemas/address";
-import { filterQuery, numericId } from "~/lib/schemas/common";
+import { createAddressSchema, updateAddressSchema } from "~/lib/schemas/address.schema";
+import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
@@ -8,9 +8,9 @@ import {
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import * as addressService from "~/server/services/address";
-import { defaultAddressSelect } from "~/server/services/address";
-import { canUpdate } from "~/server/services/permission";
+import * as addressService from "~/server/services/address.service";
+import { defaultAddressSelect } from "~/server/services/address.service";
+import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Address";

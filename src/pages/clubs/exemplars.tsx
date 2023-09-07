@@ -11,7 +11,7 @@ import { SlideOver } from "~/components/dialogs/SlideOver";
 import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { getLayout } from "~/components/layouts/Layout";
-import { type ExemplarInfo } from "~/server/api/routers/exemplar";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
 import { api } from "~/utils/api";
 
 const ExemplarList = () => {
@@ -113,7 +113,7 @@ const ExemplarList = () => {
         />
       </SlideOver>
 
-      <SlideOver open={openCreate} onClose={() => setOpenCreate(true)}>
+      <SlideOver open={openCreate} onClose={() => setOpenCreate(false)}>
         <CreateExemplarDialog handleClose={() => setOpenCreate(false)} />
       </SlideOver>
 

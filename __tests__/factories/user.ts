@@ -11,7 +11,7 @@ export const CompleteUser: NonNullableProps<User> = {
   image: "avatar.gif",
   createdDate: new Date(),
   updatedAt: new Date(),
-  role: UserRole.USER,
+  role: UserRole.User,
   provider: "default",
 };
 

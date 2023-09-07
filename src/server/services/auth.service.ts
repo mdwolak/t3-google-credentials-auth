@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 
 import { ErrorCode } from "~/lib/errorCodes";
-import * as userService from "~/server/services/user";
+import * as userService from "~/server/services/user.service";
 
 export async function authorize(credentials: { email: string; password: string }) {
   const user = await userService.findUnique(

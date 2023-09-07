@@ -14,8 +14,8 @@ import {
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
-import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar";
-import { type ExemplarInfo } from "~/server/api/routers/exemplar";
+import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar.schema";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
 import { type RouterOutputs, api } from "~/utils/api";
 
 type UpdateExemplarDialogProps = HandleCloseProps<

@@ -1,5 +1,7 @@
-import { createActivitySchema, updateActivitySchema } from "~/lib/schemas/activity";
-import { filterQuery, numericId } from "~/lib/schemas/common";
+import slugify from "slugify";
+
+import { createActivitySchema, updateActivitySchema } from "~/lib/schemas/activity.schema";
+import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
@@ -8,9 +10,9 @@ import {
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import * as activityService from "~/server/services/activity";
-import { defaultActivitieselect } from "~/server/services/activity";
-import { canUpdate } from "~/server/services/permission";
+import * as activityService from "~/server/services/activity.service";
+import { defaultActivitySelect } from "~/server/services/activity.service";
+import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Activity";
@@ -34,20 +36,27 @@ export const activityRouter = router({
   create: protectedProcedure.input(createActivitySchema).mutation(async ({ input, ctx }) => {
     await checkUniqueName(input.name);
 
-    const activity = await activityService.create(getUserId(ctx), input);
+    const slug = slugify(input.name);
+    const activity = await activityService.create(getUserId(ctx), { ...input, slug });
 
     return { activity };
   }),
   update: protectedProcedure.input(updateActivitySchema).mutation(async ({ input, ctx }) => {
+    let slug = "";
     const dbActivity = await getByIdOrThrow(input.id);
 
     if (!canUpdate(ctx, dbActivity, "createdById")) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbActivity.name) {
       await checkUniqueName(input.data.name);
+      slug = slugify(input.data.name);
     }
 
-    const activity = await activityService.update(getUserId(ctx), { id: input.id }, input.data);
+    const activity = await activityService.update(
+      getUserId(ctx),
+      { id: input.id },
+      { ...input.data, ...(slug ? { slug } : {}) }
+    );
 
     return { activity };
   }),
@@ -70,7 +79,7 @@ async function checkUniqueName(name: string) {
 async function getByIdOrThrow(id: number) {
   const activity = await activityService.findUnique(
     { id: id },
-    { ...defaultActivitieselect, createdById: true }
+    { ...defaultActivitySelect, createdById: true }
   );
   if (!activity) throw httpNotFound(entityName);
 

@@ -1,19 +1,18 @@
-import type { TypeOf } from "zod";
-import { boolean, number, object } from "zod";
+import z, { type TypeOf } from "zod";
 
-import { requiredStringCleaned } from "./common";
+import { requiredStringCleaned } from "~/lib/schemas/common.schema";
 
-export const createExemplarSchema = object({
+export const createExemplarSchema = z.object({
   name: requiredStringCleaned,
   category: requiredStringCleaned,
   content: requiredStringCleaned,
-  published: boolean({
+  published: z.boolean({
     required_error: "Published is required",
   }),
 });
 
-export const updateExemplarSchema = object({
-  id: number(),
+export const updateExemplarSchema = z.object({
+  id: z.number(),
   data: createExemplarSchema.partial(),
 });
 

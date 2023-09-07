@@ -3,7 +3,7 @@ import { UserRole } from "@prisma/client";
 import { type Context } from "~/server/api/context";
 
 export const isAdmin = (ctx: Context): boolean => {
-  return ctx.session?.user?.role === UserRole.ADMIN;
+  return ctx.session?.user?.role === UserRole.Admin;
 };
 
 export function canUpdate<T extends Record<string, any>>(

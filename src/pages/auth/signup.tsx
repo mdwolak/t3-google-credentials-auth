@@ -11,7 +11,7 @@ import {
   getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
-import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user";
+import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user.schema";
 import { api } from "~/utils/api";
 
 const SignUp = () => {

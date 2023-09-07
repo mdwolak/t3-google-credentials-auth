@@ -1,4 +1,5 @@
-import { TRPCError, initTRPC } from "@trpc/server";
+import { UserRole } from "@prisma/client";
+import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -53,7 +54,7 @@ const isAuthed = t.middleware(({ ctx, next }) => {
 });
 
 const isAdmin = isAuthed.unstable_pipe(async ({ ctx, next }) => {
-  if (ctx.session.user.role !== "ADMIN") {
+  if (ctx.session.user.role !== UserRole.Admin) {
     throw httpForbidden();
   }
   return next({ ctx });

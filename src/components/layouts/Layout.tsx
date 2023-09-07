@@ -23,6 +23,7 @@ const navigation = [
   { name: "Exemplars", href: "exemplars", icon: HomeIcon, current: true },
   { name: "Addresses", href: "addresses", icon: FolderIcon, current: false },
   { name: "Activities", href: "activities", icon: FolderIcon, current: false },
+  { name: "Schedules", href: "schedules", icon: FolderIcon, current: false },
   { name: "Team", href: "#", icon: UsersIcon, current: false },
   { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
   { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },

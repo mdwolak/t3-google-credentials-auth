@@ -2,7 +2,7 @@ import { ActivityStatus, Prisma } from "@prisma/client";
 
 import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
 
-export const defaultActivitieselect = Prisma.validator<Prisma.ActivitySelect>()({
+export const defaultActivitySelect = Prisma.validator<Prisma.ActivitySelect>()({
   id: true,
   name: true,
 });
@@ -12,7 +12,7 @@ export const defaultActivitieselect = Prisma.validator<Prisma.ActivitySelect>()(
 
 export const findFirst = async (
   where: Partial<Prisma.ActivityWhereInput>,
-  select: Prisma.ActivitySelect = defaultActivitieselect
+  select: Prisma.ActivitySelect = defaultActivitySelect
 ) => {
   return await prisma.activity.findFirst({
     where,
@@ -22,7 +22,7 @@ export const findFirst = async (
 
 export const findUnique = async (
   where: Prisma.ActivityWhereUniqueInput,
-  select: Prisma.ActivitySelect = defaultActivitieselect
+  select: Prisma.ActivitySelect = defaultActivitySelect
 ) => {
   return await prisma.activity.findUnique({
     where,
@@ -54,7 +54,7 @@ export const findAll = async (page: number, limit: number) => {
 export const create = async (userId: number, input: OmitAudit<Prisma.ActivityCreateInput>) => {
   return await prisma.activity.create({
     data: { ...input, ...getCreateProps(userId), slug: input.name, status: ActivityStatus.Draft },
-    select: defaultActivitieselect,
+    select: defaultActivitySelect,
   });
 };
 
@@ -62,7 +62,7 @@ export const update = async (
   userId: number,
   where: Partial<Prisma.ActivityWhereUniqueInput>,
   data: OmitAudit<Prisma.ActivityUpdateInput>,
-  select: Prisma.ActivitySelect = defaultActivitieselect
+  select: Prisma.ActivitySelect = defaultActivitySelect
 ) => {
   return await prisma.activity.update({
     where,
@@ -72,5 +72,5 @@ export const update = async (
 };
 
 export const remove = async (where: Prisma.ActivityWhereUniqueInput) => {
-  return await prisma.activity.delete({ where, select: defaultActivitieselect });
+  return await prisma.activity.delete({ where, select: defaultActivitySelect });
 };

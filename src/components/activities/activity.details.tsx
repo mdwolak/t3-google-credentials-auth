@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import UpdateActivityDialog from "~/components/activities/update.activity.dialog";
 import { SlideOver } from "~/components/dialogs/SlideOver";
-import { type ActivityInfo } from "~/server/api/routers/activity";
+import { type ActivityInfo } from "~/server/api/routers/activity.router";
 import { api } from "~/utils/api";
 
 type ActivityItemProps = {

@@ -11,7 +11,7 @@ import type { UserRole } from "@prisma/client";
 import { env } from "~/env/server.mjs";
 import { ErrorCode } from "~/lib/errorCodes";
 import { prisma } from "~/server/db";
-import { authorize } from "~/server/services/auth";
+import { authorize } from "~/server/services/auth.service";
 
 const providers: Provider[] = [
   DiscordProvider({

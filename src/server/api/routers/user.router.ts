@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-import { createUserSchema } from "~/lib/schemas/user";
+import { createUserSchema } from "~/lib/schemas/user.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
@@ -9,7 +9,7 @@ import {
   httpConflictWithZod,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import * as userService from "~/server/services/user";
+import * as userService from "~/server/services/user.service";
 
 const errorHandler = (error: unknown) => {
   const errorHandlerOptions: ErrorHandlerOptions = {

@@ -14,8 +14,8 @@ import {
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
-import { type UpdateAddressInput, updateAddressSchema } from "~/lib/schemas/address";
-import { type AddressInfo } from "~/server/api/routers/address";
+import { type UpdateAddressInput, updateAddressSchema } from "~/lib/schemas/address.schema";
+import { type AddressInfo } from "~/server/api/routers/address.router";
 import { type RouterOutputs, api } from "~/utils/api";
 
 type UpdateAddressDialogProps = HandleCloseProps<RouterOutputs["address"]["update"]["address"]> & {

@@ -1,17 +1,16 @@
-import type { TypeOf } from "zod";
-import { number, object, string, z } from "zod";
+import z, { type TypeOf } from "zod";
 
 import {
   optionalStringCleaned,
   preprocessCleanString,
   requiredString,
   requiredStringCleaned,
-} from "./common";
+} from "~/lib/schemas/common.schema";
 
 const ukPostcodeRegex =
   /^(GIR\s?0AA|[A-PR-UWYZ]\d{1,2}(\d{1,2}[A-HJKPSTUW]|[A-HK-Y]\d{1,2}[ABEHMNPRVWXY])?\s?\d[A-Z]{2})$/i;
 
-export const createAddressSchema = object({
+export const createAddressSchema = z.object({
   line1: requiredStringCleaned,
   line2: optionalStringCleaned,
   city: requiredStringCleaned,
@@ -21,8 +20,8 @@ export const createAddressSchema = object({
   ),
 });
 
-export const updateAddressSchema = object({
-  id: number(),
+export const updateAddressSchema = z.object({
+  id: z.number(),
   data: createAddressSchema.partial(),
 });
 

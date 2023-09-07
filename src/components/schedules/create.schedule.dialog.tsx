@@ -10,36 +10,36 @@ import {
   getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
-import { type HandleCloseProps } from "~/lib/common";
-import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar.schema";
+import { type HandleCloseProps, dateToInputDate } from "~/lib/common";
+import { type CreateScheduleInput, createScheduleSchema } from "~/lib/schemas/schedule.schema";
 import { type RouterOutputs, api } from "~/utils/api";
 
-const CreateExemplarDialog = ({
+const CreateScheduleDialog = ({
   handleClose,
-}: HandleCloseProps<RouterOutputs["exemplar"]["create"]["exemplar"]>) => {
+}: HandleCloseProps<RouterOutputs["schedule"]["create"]["schedule"]>) => {
   const apiContext = api.useContext();
 
   const form = useForm({
-    schema: createExemplarSchema,
+    schema: createScheduleSchema,
 
     defaultValues: {
       name: "name", //router.query.email
-      category: "category",
-      content: "content",
-      published: true,
+      startDate: dateToInputDate(new Date()),
+      endDate: dateToInputDate(new Date(new Date().setFullYear(new Date().getFullYear() + 1))),
+      activityId: 1,
     },
   });
   const { setFocus } = form;
 
   const {
-    mutate: createExemplar,
+    mutate: createSchedule,
     isLoading,
     error: apiError,
-  } = api.exemplar.create.useMutation({
+  } = api.schedule.create.useMutation({
     onSuccess(data) {
-      handleClose(data.exemplar);
-      apiContext.exemplar.invalidate();
-      toast.success("Exemplar created successfully");
+      handleClose(data.schedule);
+      apiContext.schedule.invalidate();
+      toast.success("Schedule created successfully");
     },
     onError: getDefaultOnErrorOption(form),
   });
@@ -48,8 +48,8 @@ const CreateExemplarDialog = ({
     setFocus("name");
   }, [setFocus]);
 
-  const handleSubmit = (data: CreateExemplarInput) => {
-    createExemplar(data);
+  const handleSubmit = (data: CreateScheduleInput) => {
+    createSchedule(data);
   };
 
   return (
@@ -60,8 +60,8 @@ const CreateExemplarDialog = ({
         className="flex h-full flex-col bg-white shadow-xl">
         <div className="h-0 flex-1 overflow-y-auto">
           <SlideOverHeader
-            title="Create Exemplar"
-            subtitle="Get started by filling in the information below to create your new exemplar."
+            title="Create Schedule"
+            subtitle="Get started by filling in the information below to create your new schedule."
             handleClose={handleClose}
           />
           {/* Content */}
@@ -70,18 +70,15 @@ const CreateExemplarDialog = ({
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
             <Input label="Name" {...form.register("name")} />
-            <Input label="Category" {...form.register("category")} />
-            <Input label="Content" {...form.register("content")} />
+            <Input label="Start Date" {...form.register("startDate")} type="date" />
+            <Input label="End Date" {...form.register("endDate")} type="date" />
+            <Input label="Activity" {...form.register("activityId")} />
           </fieldset>
           {/* /End Content */}
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>
@@ -90,4 +87,4 @@ const CreateExemplarDialog = ({
   );
 };
 
-export default CreateExemplarDialog;
+export default CreateScheduleDialog;

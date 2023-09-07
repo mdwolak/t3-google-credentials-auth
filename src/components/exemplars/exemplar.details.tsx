@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
-import { type ExemplarInfo } from "~/server/api/routers/exemplar";
+import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
 import { api } from "~/utils/api";
 
 type ExemplarItemProps = {

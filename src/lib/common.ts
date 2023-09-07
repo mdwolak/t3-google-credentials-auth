@@ -33,3 +33,20 @@ export function stripNullishProps<T>(obj: T): NonNullableProps<T> {
 export const truncate = (str: string, maxLength: number) => {
   return str.length > maxLength ? str.substring(0, maxLength) + "..." : str;
 };
+
+function isValidDate(date: Date) {
+  return !isNaN(date.getTime());
+}
+
+/**
+ * Create a date YYYY-MM-DD date string that is typecasted as a `Date`.
+ * Hack when using `defaultValues` in `react-hook-form`
+ * This is because `react-hook-form` doesn't support `defaultValue` of type `Date` even if the types say so
+ * @see https://github.com/orgs/react-hook-form/discussions/4718#discussioncomment-2738053
+ */
+export function dateToInputDate(date?: Date) {
+  if (!date || !isValidDate(date)) {
+    return undefined;
+  }
+  return date.toISOString().slice(0, 10) as unknown as Date;
+}

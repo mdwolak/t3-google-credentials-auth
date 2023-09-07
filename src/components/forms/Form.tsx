@@ -21,10 +21,12 @@ import type { TypeOf, ZodSchema, typeToFlattenedError } from "zod";
 
 import { Alert } from "~/components/core/Alert";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface UseFormProps<T extends ZodSchema<any>> extends UseHookFormProps<TypeOf<T>> {
   schema: T;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useForm = <T extends ZodSchema<any>>({ schema, ...formConfig }: UseFormProps<T>) => {
   return useHookForm({
     ...formConfig,
@@ -126,6 +128,7 @@ export const getFieldError = (errors: FieldErrors, fieldName: string) => {
 
 export function setFormErrors<T extends FieldValues = FieldValues>(
   form: UseFormReturn<T>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   zodError: typeToFlattenedError<any, string>
 ) {
   //display field errors
@@ -150,6 +153,7 @@ export function setFormErrors<T extends FieldValues = FieldValues>(
 export const getDefaultOnErrorOption = <T extends FieldValues = FieldValues>(
   form: UseFormReturn<T>
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (error: any) => {
     const zodError = error.data?.zodError;
     if (zodError) setFormErrors(form, zodError);

@@ -11,7 +11,7 @@ import {
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
-import { type CreateAddressInput, createAddressSchema } from "~/lib/schemas/address";
+import { type CreateAddressInput, createAddressSchema } from "~/lib/schemas/address.schema";
 import { type RouterOutputs, api } from "~/utils/api";
 
 const CreateAddressDialog = ({

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TRPCError } from "@trpc/server";
-import { type typeToFlattenedError } from "zod";
-import { type ZodError } from "zod";
+import { type ZodError, type typeToFlattenedError } from "zod";
 
 import { type ErrorHandlerOptions, getConstraintViolationError } from "~/server/api/trpcHelper";
 

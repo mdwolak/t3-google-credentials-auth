@@ -1,23 +1,21 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getCsrfToken, signIn } from "next-auth/react";
+import type { InferGetServerSidePropsType } from "next";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { type TypeOf, object, string } from "zod";
+import z, { type TypeOf } from "zod";
 
 import AuthPanel from "~/components/auth/AuthPanel";
 import { Alert, Button, Link, SEOHead } from "~/components/core";
 import { Form, InputEmail, InputPassword, useForm } from "~/components/forms";
 import FacebookIcon from "~/components/icons/facebook";
-import GoogleIcon from "~/components/icons/google.svg";
 import { ErrorCode } from "~/lib/errorCodes";
-import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 
-const userLoginSchema = object({
-  csrfToken: string(),
-  email: string().min(1, "Email address is required").email("Email Address is invalid"),
-  password: string().min(1, "Password is required"),
+const userLoginSchema = z.object({
+  csrfToken: z.string(),
+  email: z.string().min(1, "Email address is required").email("Email Address is invalid"),
+  password: z.string().min(1, "Password is required"),
 });
 export type UserLoginInput = TypeOf<typeof userLoginSchema>;
 

@@ -13,25 +13,25 @@ import {
   getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
-import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
-import { type UpdateActivityInput, updateActivitySchema } from "~/lib/schemas/activity.schema";
-import { type ActivityInfo } from "~/server/api/routers/activity.router";
+import { type HandleCloseProps, dateToInputDate } from "~/lib/common";
+import { type UpdateScheduleInput, updateScheduleSchema } from "~/lib/schemas/schedule.schema";
+import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
 import { type RouterOutputs, api } from "~/utils/api";
 
-type UpdateActivityDialogProps = HandleCloseProps<
-  RouterOutputs["activity"]["update"]["activity"]
+type UpdateScheduleDialogProps = HandleCloseProps<
+  RouterOutputs["schedule"]["update"]["schedule"]
 > & {
-  activity: ActivityInfo;
+  schedule: ScheduleInfo;
 };
 
-const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogProps) => {
+const UpdateScheduleDialog = ({ schedule, handleClose }: UpdateScheduleDialogProps) => {
   const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
 
-  const { mutate: deleteActivity } = api.activity.delete.useMutation({
+  const { mutate: deleteSchedule } = api.schedule.delete.useMutation({
     onSuccess() {
-      apiContext.activity.invalidate();
-      toast.success("Activity deleted successfully");
+      apiContext.schedule.invalidate();
+      toast.success("Schedule deleted successfully");
     },
     onError(error) {
       toast.error(error.message);
@@ -39,25 +39,29 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
   });
 
   const form = useForm({
-    schema: updateActivitySchema.shape.data,
-    defaultValues: stripNullishProps(activity),
+    schema: updateScheduleSchema.shape.data,
+    defaultValues: {
+      name: schedule?.name || "",
+      startDate: dateToInputDate(schedule?.startDate),
+      endDate: dateToInputDate(schedule?.endDate ?? undefined),
+    },
   });
 
   const {
-    mutate: updateActivity,
+    mutate: updateSchedule,
     isLoading,
     error: apiError,
-  } = api.activity.update.useMutation({
+  } = api.schedule.update.useMutation({
     onSuccess(data) {
-      handleClose(data.activity);
-      apiContext.activity.invalidate();
-      toast.success("Activity updated successfully");
+      handleClose(data.schedule);
+      apiContext.schedule.invalidate();
+      toast.success("Schedule updated successfully");
     },
     onError: getDefaultOnErrorOption(form),
   });
 
-  const handleSubmit = (data: UpdateActivityInput["data"]) => {
-    updateActivity({ id: activity.id, data });
+  const handleSubmit = (data: UpdateScheduleInput["data"]) => {
+    updateSchedule({ id: schedule.id, data });
   };
 
   return (
@@ -67,7 +71,7 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
         handleSubmit={handleSubmit}
         className="flex h-full flex-col bg-white shadow-xl">
         <div className="h-0 flex-1 overflow-y-auto">
-          <SlideOverHeader title="Update Activity" handleClose={handleClose}>
+          <SlideOverHeader title="Update Schedule" handleClose={handleClose}>
             <IconButton Icon={TrashIcon} onClick={() => setOpenDelete(true)} srText="Delete" />
           </SlideOverHeader>
           {/* Content */}
@@ -76,20 +80,14 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
             <Input label="Name" {...form.register("name")} />
-            <Input label="Description" {...form.register("description")} />
-            <Input label="AddressId" {...form.register("addressId")} type="number" />
-            <Input label="Duration" {...form.register("duration")} type="number" />
-            <Input label="Visible" {...form.register("visible")} type="checkbox" />
+            <Input label="Start Date" {...form.register("startDate")} type="date" />
+            <Input label="End Date" {...form.register("endDate")} type="date" />
           </fieldset>
           {/* /End Content */}
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>
@@ -98,16 +96,16 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
         open={openDelete}
         handleClose={(confirm) => {
           if (confirm) {
-            deleteActivity(activity.id);
+            deleteSchedule(schedule.id);
             handleClose();
           }
           setOpenDelete(false);
         }}
-        title="Delete activity"
-        description="Are you sure you want to delete this activity? This action cannot be undone."
+        title="Delete schedule"
+        description="Are you sure you want to delete this schedule? This action cannot be undone."
       />
     </>
   );
 };
 
-export default UpdateActivityDialog;
+export default UpdateScheduleDialog;

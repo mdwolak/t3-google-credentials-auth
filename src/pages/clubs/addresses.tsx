@@ -11,7 +11,7 @@ import { Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
-import { type AddressInfo } from "~/server/api/routers/address";
+import { type AddressInfo } from "~/server/api/routers/address.router";
 import { api } from "~/utils/api";
 
 const AddressList = () => {
@@ -112,7 +112,7 @@ const AddressList = () => {
         />
       </SlideOver>
 
-      <SlideOver open={openCreate} onClose={() => setOpenCreate(true)}>
+      <SlideOver open={openCreate} onClose={() => setOpenCreate(false)}>
         <CreateAddressDialog handleClose={() => setOpenCreate(false)} />
       </SlideOver>
 

@@ -1,12 +1,12 @@
 import z, { type TypeOf } from "zod";
 
-import { requiredStringCleaned } from "./common";
+import { requiredStringCleaned } from "~/lib/schemas/common.schema";
 
 export const createActivitySchema = z.object({
   name: requiredStringCleaned,
   description: requiredStringCleaned,
   //type: z.number().int(),
-  addressId: z.number().int().min(0),
+  addressId: z.coerce.number().int().min(0).optional(),
   duration: z.number().int().min(1).max(600), //TODO: between
   //slug: requiredStringCleaned,
   visible: z.boolean().optional(),

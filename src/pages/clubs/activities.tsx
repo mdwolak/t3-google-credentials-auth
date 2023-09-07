@@ -11,7 +11,7 @@ import { Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
-import { type ActivityInfo } from "~/server/api/routers/activity";
+import { type ActivityInfo } from "~/server/api/routers/activity.router";
 import { api } from "~/utils/api";
 
 const ActivityList = () => {
@@ -113,7 +113,7 @@ const ActivityList = () => {
         />
       </SlideOver>
 
-      <SlideOver open={openCreate} onClose={() => setOpenCreate(true)}>
+      <SlideOver open={openCreate} onClose={() => setOpenCreate(false)}>
         <CreateActivityDialog handleClose={() => setOpenCreate(false)} />
       </SlideOver>
 

@@ -8,6 +8,6 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.tsdk": "./node_modules/typescript/lib",
   "todo-tree.tree.showBadges": true,
-  "cSpell.words": ["toastify"],
+  "cSpell.words": ["heroicons", "toastify"],
   "prettier.prettierPath": "./node_modules/prettier"
 }

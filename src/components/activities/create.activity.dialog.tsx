@@ -11,7 +11,7 @@ import {
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
-import { type CreateActivityInput, createActivitySchema } from "~/lib/schemas/activity";
+import { type CreateActivityInput, createActivitySchema } from "~/lib/schemas/activity.schema";
 import { type RouterOutputs, api } from "~/utils/api";
 
 const CreateActivityDialog = ({
@@ -25,7 +25,6 @@ const CreateActivityDialog = ({
     defaultValues: {
       name: "name", //router.query.email
       description: "description",
-      addressId: 0,
       duration: 30,
       visible: true,
     },
@@ -80,11 +79,7 @@ const CreateActivityDialog = ({
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>

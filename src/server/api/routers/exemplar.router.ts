@@ -1,5 +1,5 @@
-import { filterQuery, numericId } from "~/lib/schemas/common";
-import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar";
+import { filterQuery, numericId } from "~/lib/schemas/common.schema";
+import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
@@ -8,9 +8,9 @@ import {
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import * as exemplarService from "~/server/services/exemplar";
-import { defaultExemplarSelect } from "~/server/services/exemplar";
-import { canUpdate } from "~/server/services/permission";
+import * as exemplarService from "~/server/services/exemplar.service";
+import { defaultExemplarSelect } from "~/server/services/exemplar.service";
+import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Exemplar";
