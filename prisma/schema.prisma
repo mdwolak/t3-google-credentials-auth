@@ -156,6 +156,41 @@ enum ActivityStatus {
   Cancelled
 }
 
+model Organisation {
+  id          Int                @id @default(autoincrement())
+  parentId    Int?
+  name        String
+  description String?
+  type        OrganisationType   @default(Company)
+  visible     Boolean            @default(true)
+  status      OrganisationStatus @default(Draft)
+  data        Json?
+
+  createdAt   DateTime @default(now())
+  createdById Int
+  updatedAt   DateTime @updatedAt
+  updatedById Int
+
+  @@unique([parentId, name])
+}
+
+enum OrganisationStatus {
+  Prospect //potential organisation
+  Lead //engagement with organisation
+  Draft //organisation started to set up their account
+  Preapproval //organisation has submitted their application
+  Active //profile visible to public
+  Inactive //profile not visible to public due to inactivity of the organisation
+  Suspended //profile not visible to public due to suspension
+  Archived //account closed
+}
+
+enum OrganisationType {
+  Nonprofit
+  SelfEmployed
+  Company
+}
+
 model Schedule {
   id         Int       @id @default(autoincrement())
   name       String?

@@ -3,6 +3,7 @@ import { activityRouter } from "./activity.router";
 import { addressRouter } from "./address.router";
 import { exampleRouter } from "./example.router";
 import { exemplarRouter } from "./exemplar.router";
+import { organisationRouter } from "./organisation.router";
 import { scheduleRouter } from "./schedule.router";
 import { userRouter } from "./user.router";
 
@@ -11,6 +12,7 @@ export const appRouter = router({
   address: addressRouter,
   example: exampleRouter,
   exemplar: exemplarRouter,
+  organisation: organisationRouter,
   schedule: scheduleRouter,
   user: userRouter,
 });

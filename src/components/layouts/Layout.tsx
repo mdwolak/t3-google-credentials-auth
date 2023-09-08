@@ -24,6 +24,7 @@ const navigation = [
   { name: "Addresses", href: "addresses", icon: FolderIcon, current: false },
   { name: "Activities", href: "activities", icon: FolderIcon, current: false },
   { name: "Schedules", href: "schedules", icon: FolderIcon, current: false },
+  { name: "Organisations", href: "organisations", icon: FolderIcon, current: false },
   { name: "Team", href: "#", icon: UsersIcon, current: false },
   { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
   { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
