@@ -1,0 +1,209 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Project "Project Name" {
+  database_type: 'PostgreSQL'
+  Note: 'Test project description'
+}
+
+Table Example {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Account {
+  id Int [pk, increment]
+  userId Int [not null]
+  type String [not null]
+  provider String [not null]
+  providerAccountId String [not null]
+  refresh_token String
+  access_token String
+  expires_at Int
+  token_type String
+  scope String
+  id_token String
+  session_state String
+  user User [not null]
+
+  indexes {
+    (provider, providerAccountId) [unique]
+  }
+}
+
+Table Session {
+  id Int [pk, increment]
+  sessionToken String [unique, not null]
+  userId Int [not null]
+  expires DateTime [not null]
+  user User [not null]
+}
+
+Table User {
+  id Int [pk, increment]
+  name String
+  email String [unique, not null]
+  emailVerified DateTime
+  image String
+  accounts Account [not null]
+  sessions Session [not null]
+  password String
+  role UserRole [not null, default: 'User']
+  provider String
+  createdDate DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table VerificationToken {
+  identifier String [not null]
+  token String [unique, not null]
+  expires DateTime [not null]
+
+  indexes {
+    (identifier, token) [unique]
+  }
+}
+
+Table Exemplar {
+  id Int [pk, increment]
+  name String [unique, not null]
+  content String [not null]
+  category String [not null]
+  published Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
+}
+
+Table Address {
+  id Int [pk, increment]
+  line1 String [not null]
+  line2 String
+  city String [not null]
+  county String
+  postcode String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
+  activities Activity [not null]
+
+  indexes {
+    (line1, postcode) [unique]
+  }
+}
+
+Table Activity {
+  id Int [pk, increment]
+  name String [unique, not null]
+  description String [not null]
+  type Int [not null, default: 0]
+  addressId Int
+  duration Int [not null, default: 0]
+  slug String [not null]
+  visible Boolean [not null, default: true]
+  status ActivityStatus [not null, default: 'Draft']
+  minAge Int
+  maxAge Int
+  position Int [not null, default: 0]
+  data Json
+  owningGroupId Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
+  address Address
+  schedules Schedule [not null]
+
+  indexes {
+    (owningGroupId, name) [unique]
+    (owningGroupId, slug) [unique]
+  }
+}
+
+Table Organisation {
+  id Int [pk, increment]
+  parentId Int
+  name String [not null]
+  description String
+  type OrganisationType [not null, default: 'Company']
+  visible Boolean [not null, default: true]
+  status OrganisationStatus [not null, default: 'Draft']
+  data Json
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
+
+  indexes {
+    (parentId, name) [unique]
+  }
+}
+
+Table Schedule {
+  id Int [pk, increment]
+  name String
+  startDate DateTime [not null]
+  endDate DateTime
+  activityId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
+  activity Activity [not null]
+  scheduleDays ScheduleDay [not null]
+}
+
+Table ScheduleDay {
+  id Int [pk, increment]
+  dayOfWeek Int [not null]
+  startTime DateTime [not null]
+  duration Int [not null]
+  scheduleId Int [not null]
+  schedule Schedule [not null]
+}
+
+Enum UserRole {
+  User
+  Admin
+}
+
+Enum ActivityStatus {
+  Draft
+  Planned
+  OpenToRegistrations
+  ClosedToRegistrations
+  Ongoing
+  Past
+  Cancelled
+}
+
+Enum OrganisationStatus {
+  Prospect
+  Lead
+  Draft
+  Preapproval
+  Active
+  Inactive
+  Suspended
+  Archived
+}
+
+Enum OrganisationType {
+  Nonprofit
+  SelfEmployed
+  Company
+}
+
+Ref: Account.userId > User.id [delete: Cascade]
+
+Ref: Session.userId > User.id [delete: Cascade]
+
+Ref: Activity.addressId > Address.id [delete: Cascade]
+
+Ref: Schedule.activityId > Activity.id [delete: Cascade]
+
+Ref: ScheduleDay.scheduleId > Schedule.id [delete: Cascade]
