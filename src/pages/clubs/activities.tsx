@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
 import CreateActivityDialog from "~/components/activities/create.activity.dialog";
 import UpdateActivityDialog from "~/components/activities/update.activity.dialog";
-import { Link } from "~/components/core";
+import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
@@ -79,7 +78,7 @@ const ActivityList = () => {
                     <TCell screen="sm">{activity.addressId}</TCell>
                     <TCell screen="lg">{activity.duration}</TCell>
                     <TCell screen="lg">
-                      {format(parseISO(activity.createdAt.toISOString()), "PPP")}
+                      <FormattedDate date={activity.createdAt} />
                     </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{activity.price}/mo</div>

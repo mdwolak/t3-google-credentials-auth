@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
 import CreateAddressDialog from "~/components/address/create.address.dialog";
 import UpdateAddressDialog from "~/components/address/update.address.dialog";
-import { Link } from "~/components/core";
+import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
@@ -78,7 +77,7 @@ const AddressList = () => {
                     <TCell screen="lg">{address.county}</TCell>
                     <TCell>{address.postcode}</TCell>
                     <TCell screen="lg">
-                      {format(parseISO(address.createdAt.toISOString()), "PPP")}
+                      <FormattedDate date={address.createdAt} />
                     </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{address.price}/mo</div>

@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
-import { Link } from "~/components/core";
+import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
@@ -79,7 +78,7 @@ const ExemplarList = () => {
                     <TCell screen="sm">{exemplar.category}</TCell>
                     <TCell screen="lg">{exemplar.content}</TCell>
                     <TCell screen="lg">
-                      {format(parseISO(exemplar.createdAt.toISOString()), "PPP")}
+                      <FormattedDate date={exemplar.createdAt} />
                     </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{exemplar.price}/mo</div>

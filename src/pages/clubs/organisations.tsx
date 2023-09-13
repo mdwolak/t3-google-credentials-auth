@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
-import { Link } from "~/components/core";
+import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
@@ -79,7 +78,7 @@ const OrganisationList = () => {
                     <TCell screen="sm">{organisation.type}</TCell>
                     <TCell screen="lg">{organisation.description}</TCell>
                     <TCell screen="lg">
-                      {format(parseISO(organisation.createdAt.toISOString()), "PPP")}
+                      <FormattedDate date={organisation.createdAt} />
                     </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{organisation.price}/mo</div>

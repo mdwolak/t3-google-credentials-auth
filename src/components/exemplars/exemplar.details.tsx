@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
+import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
@@ -48,7 +48,7 @@ const ExemplarItem = ({ exemplar }: ExemplarItemProps) => {
           <div className="mt-4 flex items-center">
             <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{exemplar.category}</p>
             <p className="text-[#ffa238]">
-              {format(parseISO(exemplar.createdAt.toISOString()), "PPP")}
+              <FormattedDate date={exemplar.createdAt} />
             </p>
           </div>
           <div className="mt-4">{exemplar.content}</div>

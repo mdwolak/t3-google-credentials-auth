@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
+import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import UpdateScheduleDialog from "~/components/schedules/update.schedule.dialog";
 import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
@@ -48,9 +48,11 @@ const ScheduleItem = ({ schedule }: ScheduleItemProps) => {
               : schedule.name}
           </h5>
           <div className="mt-4 flex items-center">
-            <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{format(schedule.startDate, "PPP")}</p>
+            <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">
+              <FormattedDate date={schedule.startDate} />
+            </p>
             <p className="text-[#ffa238]">
-              {format(parseISO(schedule.createdAt.toISOString()), "PPP")}
+              <FormattedDate date={schedule.createdAt} />
             </p>
           </div>
         </div>

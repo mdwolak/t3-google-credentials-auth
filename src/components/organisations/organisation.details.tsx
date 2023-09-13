@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
+import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import UpdateOrganisationDialog from "~/components/organisations/update.organisation.dialog";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
@@ -50,7 +50,7 @@ const OrganisationItem = ({ organisation }: OrganisationItemProps) => {
           <div className="mt-4 flex items-center">
             <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{organisation.type}</p>
             <p className="text-[#ffa238]">
-              {format(parseISO(organisation.createdAt.toISOString()), "PPP")}
+              <FormattedDate date={organisation.createdAt} />
             </p>
           </div>
           <div className="mt-4">{organisation.description}</div>

@@ -2,11 +2,6 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Project "Project Name" {
-  database_type: 'PostgreSQL'
-  Note: 'Test project description'
-}
-
 Table Example {
   id Int [pk, increment]
   createdAt DateTime [default: `now()`, not null]

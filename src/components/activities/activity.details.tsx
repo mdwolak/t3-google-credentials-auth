@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import UpdateActivityDialog from "~/components/activities/update.activity.dialog";
+import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type ActivityInfo } from "~/server/api/routers/activity.router";
 import { api } from "~/utils/api";
@@ -48,7 +48,7 @@ const ActivityItem = ({ activity }: ActivityItemProps) => {
           <div className="mt-4 flex items-center">
             <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{activity.duration}</p>
             <p className="text-[#ffa238]">
-              {format(parseISO(activity.createdAt.toISOString()), "PPP")}
+              <FormattedDate date={activity.createdAt} />
             </p>
           </div>
           <div className="mt-4">{activity.description}</div>

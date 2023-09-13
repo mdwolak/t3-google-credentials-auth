@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 
 import UpdateAddressDialog from "~/components/address/update.address.dialog";
+import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { truncate } from "~/lib/common";
 import { type AddressInfo } from "~/server/api/routers/address.router";
@@ -49,7 +49,7 @@ const AddressItem = ({ address }: AddressItemProps) => {
           <div className="mt-4 flex items-center">
             <p className="mr-4 rounded-sm bg-[#dad8d8] p-1">{address.line2}</p>
             <p className="text-[#ffa238]">
-              {format(parseISO(address.createdAt.toISOString()), "PPP")}
+              <FormattedDate date={address.createdAt} />
             </p>
           </div>
           <div className="mt-4">{address.postcode + " " + address.city}</div>
