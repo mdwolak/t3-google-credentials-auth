@@ -16,16 +16,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//
-// Next Auth models
-//
-
-model Example {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                Int     @id @default(autoincrement())
@@ -103,37 +93,42 @@ model Exemplar {
 }
 
 model Address {
-  id       Int     @id @default(autoincrement())
-  line1    String
-  line2    String?
-  city     String
-  county   String?
-  postcode String
+  id             Int     @id @default(autoincrement())
+  line1          String
+  line2          String?
+  city           String
+  county         String?
+  postcode       String
+  organisationId Int
+  isRegistered   Boolean
+  isDefault      Boolean
 
   createdAt   DateTime @default(now())
   createdById Int
   updatedAt   DateTime @updatedAt
   updatedById Int
 
-  activities Activity[]
+  activities   Activity[]
+  organisation Organisation? @relation(fields: [organisationId], references: [id])
 
   @@unique([line1, postcode])
 }
 
 model Activity {
-  id          Int            @id @default(autoincrement())
-  name        String         @unique
-  description String
-  type        Int            @default(0)
-  addressId   Int?
-  duration    Int            @default(0)
-  slug        String
-  visible     Boolean        @default(true)
-  status      ActivityStatus @default(Draft)
-  minAge      Int?
-  maxAge      Int?
-  position    Int            @default(0)
-  data        Json?
+  id             Int            @id @default(autoincrement())
+  name           String         @unique
+  description    String
+  type           Int            @default(0)
+  addressId      Int?
+  duration       Int            @default(0)
+  slug           String
+  visible        Boolean        @default(true)
+  status         ActivityStatus @default(Draft)
+  minAge         Int?
+  maxAge         Int?
+  position       Int            @default(0)
+  data           Json?
+  organisationId Int
 
   owningGroupId Int @default(0)
   //owningGroup   Group? @relation(fields: [owningGroupId], references: [id], onDelete: Cascade)
@@ -143,8 +138,9 @@ model Activity {
   updatedAt   DateTime @updatedAt
   updatedById Int
 
-  address   Address?   @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  schedules Schedule[]
+  address      Address?     @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  schedules    Schedule[]
 
   @@unique([owningGroupId, name])
   @@unique([owningGroupId, slug])
@@ -174,6 +170,9 @@ model Organisation {
   createdById Int
   updatedAt   DateTime @updatedAt
   updatedById Int
+
+  Addresses  Address[]
+  Activities Activity[]
 
   @@unique([parentId, name])
 }

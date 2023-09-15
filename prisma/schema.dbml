@@ -2,12 +2,6 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table Example {
-  id Int [pk, increment]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
 Table Account {
   id Int [pk, increment]
   userId Int [not null]
@@ -80,11 +74,15 @@ Table Address {
   city String [not null]
   county String
   postcode String [not null]
+  organisationId Int [not null]
+  isRegistered Boolean [not null]
+  isDefault Boolean [not null]
   createdAt DateTime [default: `now()`, not null]
   createdById Int [not null]
   updatedAt DateTime [not null]
   updatedById Int [not null]
   activities Activity [not null]
+  organisation Organisation
 
   indexes {
     (line1, postcode) [unique]
@@ -105,12 +103,14 @@ Table Activity {
   maxAge Int
   position Int [not null, default: 0]
   data Json
+  organisationId Int [not null]
   owningGroupId Int [not null, default: 0]
   createdAt DateTime [default: `now()`, not null]
   createdById Int [not null]
   updatedAt DateTime [not null]
   updatedById Int [not null]
   address Address
+  organisation Organisation [not null]
   schedules Schedule [not null]
 
   indexes {
@@ -132,6 +132,8 @@ Table Organisation {
   createdById Int [not null]
   updatedAt DateTime [not null]
   updatedById Int [not null]
+  Addresses Address [not null]
+  Activities Activity [not null]
 
   indexes {
     (parentId, name) [unique]
@@ -197,7 +199,11 @@ Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
 
+Ref: Address.organisationId > Organisation.id
+
 Ref: Activity.addressId > Address.id [delete: Cascade]
+
+Ref: Activity.organisationId > Organisation.id [delete: Cascade]
 
 Ref: Schedule.activityId > Activity.id [delete: Cascade]
 

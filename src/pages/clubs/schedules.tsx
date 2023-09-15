@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
 import { TCell, THeader, TableCaption } from "~/components/Table";
-import { Link } from "~/components/core";
+import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
@@ -71,9 +71,15 @@ const ScheduleList = () => {
                 {schedule?.map((schedule) => (
                   <tr key={schedule.id}>
                     <TCell first>{schedule.name}</TCell>
-                    <TCell screen="sm">{format(schedule.startDate, "PPP")}</TCell>
-                    <TCell screen="lg">{schedule.endDate && format(schedule.endDate, "PPP")}</TCell>
-                    <TCell screen="lg">{format(schedule.createdAt, "PPP")}</TCell>
+                    <TCell screen="sm">
+                      <FormattedDate date={schedule.startDate} />
+                    </TCell>
+                    <TCell screen="lg">
+                      {schedule.endDate && <FormattedDate date={schedule.endDate} />}
+                    </TCell>
+                    <TCell screen="lg">
+                      <FormattedDate date={schedule.createdAt} />
+                    </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{schedule.price}/mo</div>
                   <div className="hidden sm:block">{schedule.price}/month</div>
