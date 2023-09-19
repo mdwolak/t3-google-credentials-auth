@@ -58,7 +58,6 @@ export const findAll = async (organisationId: number, page: number, limit: numbe
 // WRITE
 
 export const create = async (
-  organisationId: number,
   userId: number,
   input: OmitAudit<Prisma.AddressUncheckedCreateInput>
 ) => {

@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
@@ -18,6 +19,7 @@ const CreateAddressDialog = ({
   handleClose,
 }: HandleCloseProps<RouterOutputs["address"]["create"]["address"]>) => {
   const apiContext = api.useContext();
+  const router = useRouter();
 
   const form = useForm({
     schema: createAddressSchema,
@@ -28,6 +30,7 @@ const CreateAddressDialog = ({
       city: "city",
       county: "county",
       postcode: "postcode",
+      organisationId: Number(router.query.organisationId),
     },
   });
   const { setFocus } = form;

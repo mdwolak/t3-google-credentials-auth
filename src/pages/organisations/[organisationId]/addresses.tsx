@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 import toast from "react-hot-toast";
@@ -20,8 +21,10 @@ const AddressList = () => {
   const [updateAddress, setUpdateAddress] = useState<AddressInfo | null>(null);
   const [deleteAddressId, setDeleteAddressId] = useState<number>(0);
 
+  const router = useRouter();
+  const { organisationId } = router.query;
   const { data: addresses } = api.address.getFiltered.useQuery(
-    { limit: 10, page: 1 },
+    { organisationId: Number(organisationId), limit: 10, page: 1 },
     {
       select: (data) => data?.addresses,
       onError(error) {
