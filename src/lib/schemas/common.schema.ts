@@ -17,7 +17,14 @@ export const filterQuery = z.object({
   page: z.number().default(10),
 });
 
+export const filterQueryWithOrg = z.object({
+  organisationId: z.number(),
+  limit: z.number().default(1),
+  page: z.number().default(10),
+});
+
 export const numericId = z.number();
+export const organisationId = z.number();
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string;

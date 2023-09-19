@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
@@ -18,6 +19,7 @@ const CreateActivityDialog = ({
   handleClose,
 }: HandleCloseProps<RouterOutputs["activity"]["create"]["activity"]>) => {
   const apiContext = api.useContext();
+  const router = useRouter();
 
   const form = useForm({
     schema: createActivitySchema,
@@ -27,6 +29,7 @@ const CreateActivityDialog = ({
       description: "description",
       duration: 30,
       visible: true,
+      organisationId: Number(router.query.organisationId),
     },
   });
   const { setFocus } = form;

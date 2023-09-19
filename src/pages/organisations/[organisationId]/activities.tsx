@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 import toast from "react-hot-toast";
@@ -20,8 +21,10 @@ const ActivityList = () => {
   const [updateActivity, setUpdateActivity] = useState<ActivityInfo | null>(null);
   const [deleteActivityId, setDeleteActivityId] = useState<number>(0);
 
+  const router = useRouter();
+  const { organisationId } = router.query;  
   const { data: activities } = api.activity.getFiltered.useQuery(
-    { limit: 10, page: 1 },
+    { organisationId: Number(organisationId), limit: 10, page: 1 },
     {
       select: (data) => data?.activities,
       onError(error) {

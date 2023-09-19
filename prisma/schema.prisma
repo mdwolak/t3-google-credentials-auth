@@ -100,8 +100,8 @@ model Address {
   county         String?
   postcode       String
   organisationId Int
-  isRegistered   Boolean
-  isDefault      Boolean
+  isRegistered   Boolean @default(false)
+  isDefault      Boolean @default(false)
 
   createdAt   DateTime @default(now())
   createdById Int

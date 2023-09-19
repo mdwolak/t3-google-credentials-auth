@@ -1,5 +1,5 @@
 import { createAddressSchema, updateAddressSchema } from "~/lib/schemas/address.schema";
-import { filterQuery, numericId } from "~/lib/schemas/common.schema";
+import { filterQueryWithOrg, numericId } from "~/lib/schemas/common.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
@@ -22,8 +22,8 @@ export const addressRouter = router({
   getById: publicProcedure.input(numericId).query(async ({ input }) => {
     return await getByIdOrThrow(input);
   }),
-  getFiltered: publicProcedure.input(filterQuery).query(async ({ input }) => {
-    const addresses = await addressService.findAll(input.page, input.limit);
+  getFiltered: publicProcedure.input(filterQueryWithOrg).query(async ({ input }) => {
+    const addresses = await addressService.findAll(input.organisationId, input.page, input.limit);
 
     return { results: addresses.length, addresses };
   }),

@@ -1,7 +1,7 @@
 import slugify from "slugify";
 
 import { createActivitySchema, updateActivitySchema } from "~/lib/schemas/activity.schema";
-import { filterQuery, numericId } from "~/lib/schemas/common.schema";
+import { filterQueryWithOrg, numericId } from "~/lib/schemas/common.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
@@ -24,8 +24,8 @@ export const activityRouter = router({
   getById: publicProcedure.input(numericId).query(async ({ input }) => {
     return await getByIdOrThrow(input);
   }),
-  getFiltered: publicProcedure.input(filterQuery).query(async ({ input }) => {
-    const activities = await activityService.findAll(input.page, input.limit);
+  getFiltered: protectedProcedure.input(filterQueryWithOrg).query(async ({ input }) => {
+    const activities = await activityService.findAll(input.organisationId, input.page, input.limit);
 
     return { results: activities.length, activities };
   }),
@@ -37,7 +37,12 @@ export const activityRouter = router({
     await checkUniqueName(input.name);
 
     const slug = slugify(input.name);
-    const activity = await activityService.create(getUserId(ctx), { ...input, slug });
+    const activity = await activityService.create(getUserId(ctx), {
+      ...input,
+      slug,
+      //TODO: use checked input
+      //organisation: { connect: { id: input.organisationId } },
+    });
 
     return { activity };
   }),

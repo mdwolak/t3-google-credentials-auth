@@ -1,35 +1,20 @@
+/* eslint-disable @next/next/no-img-element */
 import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
 import type { ReactElement, ReactNode } from "react";
 import { Fragment, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  CalendarIcon,
-  ChartPieIcon,
-  DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
-  UsersIcon,
-  XMarkIcon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
 
+import { useRouter } from "next/router";
 import { SEOHead, Toaster } from "~/components/core";
 import { classNames } from "~/lib/common";
 import { APP_NAME } from "~/lib/constants";
-
-const navigation = [
-  { name: "Exemplars", href: "exemplars", icon: HomeIcon, current: true },
-  { name: "Addresses", href: "addresses", icon: FolderIcon, current: false },
-  { name: "Activities", href: "activities", icon: FolderIcon, current: false },
-  { name: "Schedules", href: "schedules", icon: FolderIcon, current: false },
-  { name: "Organisations", href: "organisations", icon: FolderIcon, current: false },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-];
 
 export type LayoutProps = {
   title?: string;
@@ -162,6 +147,21 @@ const DesktopSidebar = () => {
 const SidebarNav = () => {
   //TODO: makes 2 calls to the server (1 per SidebarNav)
   const { data: sessionData } = useSession();
+
+  const router = useRouter();
+  const { organisationId } = router.query;
+
+  const navigation = [
+    { name: "Organisations", href: "/organisations", icon: FolderIcon, current: true },
+    { name: "Addresses", href: `/organisations/${organisationId}/addresses`, icon: FolderIcon, current: false },
+    { name: "Activities", href: `/organisations/${organisationId}/activities`, icon: FolderIcon, current: false },
+    { name: "Schedules", href: "schedules", icon: FolderIcon, current: false },
+    { name: "Exemplars", href: "exemplars", icon: HomeIcon, current: false },
+    // { name: "Team", href: "#", icon: UsersIcon, current: false },
+    // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
+    // { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
+    // { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
+  ];
 
   return (
     <>

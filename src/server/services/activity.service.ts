@@ -30,9 +30,10 @@ export const findUnique = async (
   });
 };
 
-export const findAll = async (page: number, limit: number) => {
+export const findAll = async (organisationId: number, page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
+  const where = { organisationId };
   return await prisma.activity.findMany({
     select: {
       id: true,
@@ -43,6 +44,7 @@ export const findAll = async (page: number, limit: number) => {
       visible: true,
       createdAt: true,
     },
+    where,
     skip,
     take,
   });
@@ -51,7 +53,11 @@ export const findAll = async (page: number, limit: number) => {
 //
 // WRITE
 
-export const create = async (userId: number, input: OmitAudit<Prisma.ActivityCreateInput>) => {
+export const create = async (
+  userId: number,
+  //TODO: use type CreateActivityInput
+  input: OmitAudit<Prisma.ActivityUncheckedCreateInput>
+) => {
   return await prisma.activity.create({
     data: { ...input, ...getCreateProps(userId), slug: input.name, status: ActivityStatus.Draft },
     select: defaultActivitySelect,

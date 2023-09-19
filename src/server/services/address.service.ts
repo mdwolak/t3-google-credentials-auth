@@ -34,9 +34,10 @@ export const findUnique = async (
   });
 };
 
-export const findAll = async (page: number, limit: number) => {
+export const findAll = async (organisationId: number, page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
+  const where = { organisationId };
   return await prisma.address.findMany({
     select: {
       id: true,
@@ -47,6 +48,7 @@ export const findAll = async (page: number, limit: number) => {
       postcode: true,
       createdAt: true,
     },
+    where,
     skip,
     take,
   });
@@ -55,7 +57,11 @@ export const findAll = async (page: number, limit: number) => {
 //
 // WRITE
 
-export const create = async (userId: number, input: OmitAudit<Prisma.AddressCreateInput>) => {
+export const create = async (
+  organisationId: number,
+  userId: number,
+  input: OmitAudit<Prisma.AddressUncheckedCreateInput>
+) => {
   return await prisma.address.create({
     data: { ...input, ...getCreateProps(userId) },
     select: defaultAddressSelect,

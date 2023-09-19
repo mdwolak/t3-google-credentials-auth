@@ -75,8 +75,8 @@ Table Address {
   county String
   postcode String [not null]
   organisationId Int [not null]
-  isRegistered Boolean [not null]
-  isDefault Boolean [not null]
+  isRegistered Boolean [not null, default: false]
+  isDefault Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
   createdById Int [not null]
   updatedAt DateTime [not null]
