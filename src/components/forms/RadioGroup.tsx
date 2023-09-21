@@ -1,69 +1,90 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
-import { RadioGroup as HeadlessRadioGroup } from "@headlessui/react";
+import { RadioGroup as HRG } from "@headlessui/react";
 
 import { classNames } from "~/lib/common";
 
-type RadioGroupProps = HeadlessRadioGroup.RadioGroupItemProps & {
-  children: ReactNode;
-  classNames?: { container?: string };
+export type Option<T> = {
+  name: string;
+  description: ReactNode;
+  value?: T;
+  disabled?: boolean;
 };
 
-const RadioGroup = ({
-  children,
-  className,
-  classNames: innerClassNames,
-  ...props
-}: RadioGroupProps) => {
-  const radioGroupId = useId();
-  const id = props.id ?? radioGroupId;
+type RadioGroupProps<T> = {
+  options: Option<T>[];
+  // if option value is not provided, then option is used as value
+  selectedValue?: T;
+  srOnly?: string;
+};
+
+/* Radio group with options
+ *  @see https://tailwindui.com/components/application-ui/forms/radio-groups
+ *  @see https://headlessui.com/react/radio-group
+ */
+const RadioGroup = <T extends string | number | Record<string, any>>({
+  selectedValue,
+  srOnly,
+  options,
+}: RadioGroupProps<T>) => {
+  const [selected, setSelected] = useState(selectedValue);
 
   return (
-    <div
-      className={classNames(
-        "border-subtle [&:has(input:checked)]:border-emphasis relative flex items-start rounded-md border",
-        className
-      )}>
-      <HeadlessRadioGroup.Item
-        id={id}
-        {...props}
-        className={classNames(
-          "hover:bg-subtle border-default focus:ring-emphasis absolute left-3 top-[0.9rem] mt-0.5 h-4 w-4 flex-shrink-0 rounded-full border focus:ring-2",
-          props.disabled && "opacity-60"
-        )}>
-        <HeadlessRadioGroup.Indicator
-          className={classNames(
-            "after:bg-default dark:after:bg-inverted relative flex h-full w-full items-center justify-center rounded-full bg-black after:h-[6px] after:w-[6px] after:rounded-full after:content-['']",
-            props.disabled ? "after:bg-muted" : "bg-black"
-          )}
-        />
-      </HeadlessRadioGroup.Item>
-      <label
-        htmlFor={id}
-        className={classNames("text-default p-4 pl-10 pt-3", innerClassNames?.container)}>
-        {children}
-      </label>
-    </div>
+    <HRG value={selected} onChange={setSelected}>
+      <HRG.Label className="sr-only">{srOnly}</HRG.Label>
+
+      {/* @see https://tailwindui.com/components/application-ui/forms/radio-groups#component-7b583a008c3fc62c0fe403d10ca042bb */}
+      <div className="-space-y-px rounded-md bg-white">
+        {options.map((option, optionIdx) => (
+          <HRG.Option
+            key={String(optionIdx)} //{setting.key ?? setting.name}
+            value={option.value ?? option}
+            disabled={option.disabled}
+            className={({ checked }) =>
+              classNames(
+                optionIdx === 0 ? "rounded-tl-md rounded-tr-md" : "",
+                optionIdx === options.length - 1 ? "rounded-bl-md rounded-br-md" : "",
+                checked ? "z-10 border-indigo-200 bg-indigo-50" : "border-gray-200",
+                option.disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+                "relative flex border p-4 focus:outline-none"
+              )
+            }>
+            {({ active, checked }) => (
+              <>
+                <span
+                  className={classNames(
+                    checked ? "border-transparent bg-indigo-600" : "border-gray-300 bg-white",
+                    active && "ring-2 ring-indigo-600 ring-offset-2",
+                    "mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border"
+                  )}
+                  aria-hidden="true">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                </span>
+                <span className="ml-3 flex flex-col">
+                  <HRG.Label
+                    as="span"
+                    className={classNames(
+                      checked ? "text-indigo-900" : "text-gray-900",
+                      "block text-sm font-medium"
+                    )}>
+                    {option.name}
+                  </HRG.Label>
+                  <HRG.Description
+                    as="span"
+                    className={classNames(
+                      checked ? "text-indigo-700" : "text-gray-500",
+                      "block text-sm"
+                    )}>
+                    {option.description}
+                  </HRG.Description>
+                </span>
+              </>
+            )}
+          </HRG.Option>
+        ))}
+      </div>
+    </HRG>
   );
 };
 
-const RadioGroupGroup = ({
-  children,
-  className,
-  onValueChange,
-  ...passThroughProps
-}: HeadlessRadioGroup.RadioGroupProps) => {
-  return (
-    <HeadlessRadioGroup.Root
-      className={className}
-      onValueChange={onValueChange}
-      {...passThroughProps}>
-      {children}
-    </HeadlessRadioGroup.Root>
-  );
-};
-
-const Item = RadioGroup;
-const Group = RadioGroupGroup;
-
-export { RadioGroup, RadioGroupGroup, Item, Group };
+export { RadioGroup };

@@ -70,10 +70,12 @@ const OrganisationList = () => {
                 {organisations?.map((organisation) => (
                   <tr key={organisation.id}>
                     <TCell first>
-                      {organisation.name}
-                      {organisation.visible && (
-                        <span className="ml-1 text-indigo-600">(visible)</span>
-                      )}
+                      <Link href={`/organisations/${organisation.id}/activities`}>
+                        {organisation.name}
+                        {organisation.visible && (
+                          <span className="ml-1 text-indigo-600">(visible)</span>
+                        )}
+                      </Link>
                     </TCell>
                     <TCell screen="sm">{organisation.type}</TCell>
                     <TCell screen="lg">{organisation.description}</TCell>
