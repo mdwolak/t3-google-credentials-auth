@@ -22,10 +22,12 @@ const AddressList = () => {
   const [deleteAddressId, setDeleteAddressId] = useState<number>(0);
 
   const router = useRouter();
-  const { organisationId } = router.query;
+  const organisationId = Number(router.query.organisationId);
+
   const { data: addresses } = api.address.getFiltered.useQuery(
-    { organisationId: Number(organisationId), limit: 10, page: 1 },
+    { organisationId, limit: 10, page: 1 },
     {
+      enabled: !!organisationId,
       select: (data) => data?.addresses,
       onError(error) {
         toast.error(error.message);

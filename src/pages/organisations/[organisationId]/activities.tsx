@@ -22,10 +22,12 @@ const ActivityList = () => {
   const [deleteActivityId, setDeleteActivityId] = useState<number>(0);
 
   const router = useRouter();
-  const { organisationId } = router.query;  
+  const organisationId = Number(router.query.organisationId);
+
   const { data: activities } = api.activity.getFiltered.useQuery(
-    { organisationId: Number(organisationId), limit: 10, page: 1 },
+    { organisationId, limit: 10, page: 1 },
     {
+      enabled: !!organisationId,
       select: (data) => data?.activities,
       onError(error) {
         toast.error(error.message);
