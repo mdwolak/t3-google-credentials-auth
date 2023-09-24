@@ -13,14 +13,14 @@ export const requiredStringCleaned = requiredString.transform(cleanString);
 export const optionalStringCleaned = z.string().transform(cleanString);
 
 export const filterQuery = z.object({
-  limit: z.number().default(1),
-  page: z.number().default(10),
+  limit: z.number().default(10),
+  page: z.number().default(1),
 });
 
 export const filterQueryWithOrg = z.object({
   organisationId: z.number(),
-  limit: z.number().default(1),
-  page: z.number().default(10),
+  limit: z.number().default(10),
+  page: z.number().default(1),
 });
 
 export const numericId = z.number();

@@ -1,12 +1,15 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import { Controller } from "react-hook-form";
+
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import {
   Form,
   Input,
+  RadioGroup,
   ValidationSummary,
   getDefaultOnErrorOption,
   useForm,
@@ -20,6 +23,7 @@ const CreateActivityDialog = ({
 }: HandleCloseProps<RouterOutputs["activity"]["create"]["activity"]>) => {
   const apiContext = api.useContext();
   const router = useRouter();
+  const organisationId = Number(router.query.organisationId);
 
   const form = useForm({
     schema: createActivitySchema,
@@ -29,7 +33,8 @@ const CreateActivityDialog = ({
       description: "description",
       duration: 30,
       visible: true,
-      organisationId: Number(router.query.organisationId),
+      organisationId,
+      addressId: 0,
     },
   });
   const { setFocus } = form;
@@ -46,6 +51,21 @@ const CreateActivityDialog = ({
     },
     onError: getDefaultOnErrorOption(form),
   });
+
+  const { data: addressOptions, isLoading: isLoadingAddresses } = api.address.getFiltered.useQuery(
+    { organisationId },
+    {
+      select: (data) =>
+        data.addresses.map((address) => ({
+          name: `${address.postcode}`,
+          description: `${address.line1}, ${address.line2}, ${address.city}, ${address.county}`,
+          value: address.id,
+        })),
+      onError(error) {
+        toast.error(error.message);
+      },
+    }
+  );
 
   useEffect(() => {
     setFocus("name");
@@ -68,13 +88,32 @@ const CreateActivityDialog = ({
             handleClose={handleClose}
           />
           {/* Content */}
-          <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading}>
+          <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading || isLoadingAddresses}>
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
+            {!addressOptions || addressOptions.length === 0 ? (
+              <div className="text-center">No addresses found, please add one first.</div>
+            ) : (
+              <Controller
+                name="addressId"
+                control={form.control}
+                rules={{
+                  required: "Please select an address",
+                }}
+                render={({ field: { onChange, value, onBlur } }) => (
+                  <RadioGroup
+                    options={addressOptions}
+                    value={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    error={form.formState.errors.addressId}
+                  />
+                )}
+              />
+            )}
             <Input label="Name" {...form.register("name")} />
             <Input label="Description" {...form.register("description")} />
-            <Input label="AddressId" {...form.register("addressId")} type="number" />
             <Input label="Duration" {...form.register("duration")} type="number" />
             <Input label="Visible" {...form.register("visible")} type="checkbox" />
           </fieldset>
