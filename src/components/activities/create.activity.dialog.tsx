@@ -92,24 +92,14 @@ const CreateActivityDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            {!addressOptions || addressOptions.length === 0 ? (
+            {!addressOptions?.length ? (
               <div className="text-center">No addresses found, please add one first.</div>
             ) : (
-              <Controller
+              <RadioGroup
                 name="addressId"
                 control={form.control}
-                rules={{
-                  required: "Please select an address",
-                }}
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <RadioGroup
-                    options={addressOptions}
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    error={form.formState.errors.addressId}
-                  />
-                )}
+                options={addressOptions}
+                onChange={(e) => console.log(e)}
               />
             )}
             <Input label="Name" {...form.register("name")} />

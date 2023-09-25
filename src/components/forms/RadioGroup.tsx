@@ -1,25 +1,26 @@
-import { type ReactNode, useState } from "react";
+import { type ReactNode } from "react";
 
 import { RadioGroup as HRG } from "@headlessui/react";
-import { type FieldError } from "react-hook-form";
+import { type FieldValues, type UseControllerProps, useController } from "react-hook-form";
 
 import { classNames } from "~/lib/common";
 
-export type Option<T> = {
+export type Option<TValue> = {
   name: string;
   description: ReactNode;
-  value: T;
+  value: TValue;
   disabled?: boolean;
 };
 
-type RadioGroupProps<T> = {
-  options: Option<T>[];
-  // if option value is not provided, then option is used as value
-  onChange: (value: T) => void;
-  onBlur?: any;
-  value?: T;
+type RadioGroupProps<
+  TValue,
+  TFieldValues extends FieldValues
+> = UseControllerProps<TFieldValues> & {
+  options: Option<TValue>[];
   srOnly?: string;
-  error?: FieldError | undefined;
+  onChange: (value: TValue) => void;
+  disabled?: boolean;
+  //error?: FieldError | undefined;
 };
 
 /* Radio group with options
@@ -27,17 +28,45 @@ type RadioGroupProps<T> = {
  * @see https://headlessui.com/react/radio-group
  * @see https://github.com/singhBinary/rhf-with-headlessui/blob/main/components/formElements/RadioGroup.tsx
  */
-const RadioGroup = <T extends string | number | Record<string, any>>({
+const RadioGroup = <
+  TValue extends string | number | Record<string, any>,
+  TFieldValues extends FieldValues
+>({
   options,
-  onChange,
-  onBlur,
-  value,
   srOnly,
-  error,
-}: RadioGroupProps<T>) => {
+  onChange,
+  disabled,
+
+  //UseControllerProps
+  name,
+  control,
+  defaultValue,
+  rules,
+  shouldUnregister,
+}: RadioGroupProps<TValue, TFieldValues>) => {
+  const {
+    field,
+    // fieldState,
+    // formState,
+  } = useController({
+    name,
+    control,
+    defaultValue,
+    rules,
+    shouldUnregister,
+  });
+
   return (
     <>
-      <HRG value={value} onChange={onChange} onBlur={onBlur}>
+      <HRG
+        value={field.value}
+        onChange={(e) => {
+          field.onChange(e);
+          onChange?.(e);
+        }}
+        onBlur={field.onBlur}
+        disabled={disabled}
+        name={field.name}>
         <HRG.Label className="sr-only">{srOnly}</HRG.Label>
 
         {/* @see https://tailwindui.com/components/application-ui/forms/radio-groups#component-7b583a008c3fc62c0fe403d10ca042bb */}
@@ -91,11 +120,11 @@ const RadioGroup = <T extends string | number | Record<string, any>>({
           ))}
         </div>
       </HRG>
-      {error && (
+      {/* {error && (
         <p className="mt-2 text-sm text-red-600" id="email-error">
           {error.message}
         </p>
-      )}
+      )} */}
     </>
   );
 };
