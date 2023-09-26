@@ -1,4 +1,4 @@
-import React, {
+import {
   type ComponentPropsWithRef,
   type FC,
   type ReactNode,
@@ -10,7 +10,8 @@ import React, {
 import classNames from "classnames";
 import { useFormContext } from "react-hook-form";
 
-import { FieldError, Label, getFieldError } from "./Form";
+import type { FieldWrapperProps } from "./common";
+import { DefaultWrap, FieldError, Label, getFieldError } from "./common";
 
 interface InputProps extends ComponentPropsWithRef<"input"> {
   label?: ReactNode;
@@ -18,36 +19,6 @@ interface InputProps extends ComponentPropsWithRef<"input"> {
   // name: Path<TFormValues>;
   // register?: UseFormRegister<TFormValues>;
 }
-
-/* Field wrapper for input elements */
-type FieldWrapperProps = {
-  label: React.ReactNode;
-  control: React.ReactNode;
-  error: React.ReactNode;
-};
-export const DefaultWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
-  return (
-    <>
-      <div>
-        {label}
-        <div className="mt-2">
-          {control}
-          {error}
-        </div>
-      </div>
-    </>
-  );
-};
-
-const NoWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
-  return (
-    <>
-      {label}
-      {control}
-      {error}
-    </>
-  );
-};
 
 export const Input = forwardRef(function Input(
   { className, id, label, type = "text", Wrapper = DefaultWrap, ...props }: InputProps,
@@ -63,7 +34,7 @@ export const Input = forwardRef(function Input(
 
   return (
     <Wrapper
-      label={label && <Label htmlFor={id}>{label}</Label>}
+      label={label && <Label htmlFor={targetId}>{label}</Label>}
       control={
         <input
           className={classNames(

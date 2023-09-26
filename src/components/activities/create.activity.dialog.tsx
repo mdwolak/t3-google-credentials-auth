@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { Controller } from "react-hook-form";
-
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
@@ -34,7 +32,6 @@ const CreateActivityDialog = ({
       duration: 30,
       visible: true,
       organisationId,
-      addressId: 0,
     },
   });
   const { setFocus } = form;
@@ -92,18 +89,23 @@ const CreateActivityDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
+            <Input label="Name" {...form.register("name")} />
+            <Input label="Description" {...form.register("description")} />
+
             {!addressOptions?.length ? (
               <div className="text-center">No addresses found, please add one first.</div>
             ) : (
               <RadioGroup
+                rules={{
+                  required: "Please select an address",
+                }}
+                label="Address"
                 name="addressId"
                 control={form.control}
                 options={addressOptions}
                 onChange={(e) => console.log(e)}
               />
             )}
-            <Input label="Name" {...form.register("name")} />
-            <Input label="Description" {...form.register("description")} />
             <Input label="Duration" {...form.register("duration")} type="number" />
             <Input label="Visible" {...form.register("visible")} type="checkbox" />
           </fieldset>

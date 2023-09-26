@@ -4,8 +4,6 @@
 import { type ComponentProps } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import classNames from "classnames";
-import get from "lodash.get";
 import type {
   FieldErrors,
   FieldValues,
@@ -20,6 +18,8 @@ import toast from "react-hot-toast";
 import type { TypeOf, ZodSchema, typeToFlattenedError } from "zod";
 
 import { Alert } from "~/components/core/Alert";
+
+import { getFieldError } from "./common";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface UseFormProps<T extends ZodSchema<any>> extends UseHookFormProps<TypeOf<T>> {
@@ -73,24 +73,6 @@ export const Form = <T extends FieldValues>(props: FormProps<T>) => {
   );
 };
 
-export function Label(props: ComponentProps<"label">) {
-  return (
-    <label
-      className={classNames("block text-sm font-medium text-gray-700", props.className)}
-      {...props}>
-      {props.children}
-    </label>
-  );
-}
-
-export function FieldError({ error }: { error: string }) {
-  return (
-    <span role="alert" aria-label={error} className="text-sm text-red-500">
-      {error}
-    </span>
-  );
-}
-
 export const ValidationSummary = <T extends FieldValues = FieldValues>({
   header = "Please fix the errors below before continuing.",
   errors,
@@ -120,10 +102,6 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
   }
 
   return null;
-};
-
-export const getFieldError = (errors: FieldErrors, fieldName: string) => {
-  return get(errors, fieldName);
 };
 
 export function setFormErrors<T extends FieldValues = FieldValues>(
