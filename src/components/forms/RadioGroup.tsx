@@ -20,7 +20,6 @@ type RadioGroupProps<
   TFieldValues extends FieldValues
 > = UseControllerProps<TFieldValues> & {
   options: Option<TValue>[];
-  srOnly?: string;
   onChange: (value: TValue) => void;
   disabled?: boolean;
   Wrapper?: FC<FieldWrapperProps>;
@@ -38,7 +37,6 @@ const RadioGroup = <
   TFieldValues extends FieldValues
 >({
   options,
-  srOnly,
   onChange,
   disabled,
   Wrapper = DefaultWrap,
@@ -65,11 +63,12 @@ const RadioGroup = <
 
   const error = getFieldError(errors, name as string)?.message as string;
 
-  const id = name;
+  const targetId = name;
 
   return (
     <Wrapper
-      label={label && <Label htmlFor={id}>{label}</Label>}
+      id={targetId}
+      label={label}
       control={
         <HRG
           value={field.value}
@@ -80,7 +79,7 @@ const RadioGroup = <
           onBlur={field.onBlur}
           disabled={disabled}
           name={field.name}>
-          <HRG.Label className="sr-only">{srOnly}</HRG.Label>
+          <HRG.Label className="sr-only">{label}</HRG.Label>
 
           {/* @see https://tailwindui.com/components/application-ui/forms/radio-groups#component-7b583a008c3fc62c0fe403d10ca042bb */}
           <div className="-space-y-px rounded-md bg-white">
@@ -134,7 +133,7 @@ const RadioGroup = <
           </div>
         </HRG>
       }
-      error={error && <FieldError error={error} />}
+      error={error}
     />
   );
 };

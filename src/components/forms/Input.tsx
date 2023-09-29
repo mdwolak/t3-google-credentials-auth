@@ -34,7 +34,8 @@ export const Input = forwardRef(function Input(
 
   return (
     <Wrapper
-      label={label && <Label htmlFor={targetId}>{label}</Label>}
+      id={targetId}
+      label={label}
       control={
         <input
           className={classNames(
@@ -48,7 +49,7 @@ export const Input = forwardRef(function Input(
           {...props}
         />
       }
-      error={error && <FieldError error={error} />}
+      error={error}
     />
   );
 });

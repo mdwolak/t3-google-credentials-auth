@@ -36,31 +36,32 @@ export const getFieldError = (errors: FieldErrors, fieldName: string) => {
 
 /* Field wrapper for input elements */
 export type FieldWrapperProps = {
-  label: React.ReactNode;
+  id: string;
+  label: string | React.ReactNode;
   control: React.ReactNode;
-  error: React.ReactNode;
+  error: string | React.ReactNode;
 };
 
-export const DefaultWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
+export const DefaultWrap: FC<FieldWrapperProps> = ({ id, label, control, error }) => {
   return (
     <>
       <div>
-        {label}
+        {typeof label === "string" ? <Label htmlFor={id}>{label}</Label> : label}
         <div className="mt-2">
           {control}
-          {error}
+          {typeof error === "string" ? <FieldError error={error} /> : error}
         </div>
       </div>
     </>
   );
 };
 
-const NoWrap: FC<FieldWrapperProps> = ({ label, control, error }) => {
+const NoWrap: FC<FieldWrapperProps> = ({ id, label, control, error }) => {
   return (
     <>
-      {label}
+      {typeof label === "string" ? <Label htmlFor={id}>{label}</Label> : label}
       {control}
-      {error}
+      {typeof error === "string" ? <FieldError error={error} /> : error}
     </>
   );
 };
