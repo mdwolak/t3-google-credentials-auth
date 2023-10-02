@@ -96,9 +96,6 @@ const CreateActivityDialog = ({
               <div className="text-center">No addresses found, please add one first.</div>
             ) : (
               <RadioGroup
-                rules={{
-                  required: "Please select an address",
-                }}
                 label="Address"
                 name="addressId"
                 control={form.control}
