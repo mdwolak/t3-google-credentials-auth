@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { useFormContext } from "react-hook-form";
 
 import type { FieldWrapperProps } from "./common";
-import { DefaultWrap, FieldError, Label, getFieldError } from "./common";
+import { DefaultWrap, getFieldError } from "./common";
 
 interface InputProps extends ComponentPropsWithRef<"input"> {
   label?: ReactNode;
@@ -81,5 +81,53 @@ export const InputPassword = forwardRef(function InputPassword(
   const { className, placeholder, ...rest } = props;
   return (
     <Input className={className} placeholder={placeholder} ref={ref} type="password" {...rest} />
+  );
+});
+
+interface CheckboxProps extends ComponentPropsWithRef<"input"> {
+  label?: ReactNode;
+  description?: ReactNode;
+  Wrapper?: FC<FieldWrapperProps>;
+  // name: Path<TFormValues>;
+  // register?: UseFormRegister<TFormValues>;
+}
+
+export const Checkbox = forwardRef(function Checkbox(
+  { className, id, label, description, ...props }: CheckboxProps,
+  ref: Ref<HTMLInputElement>
+) {
+  const {
+    formState: { errors },
+  } = useFormContext();
+  const error = getFieldError(errors, props.name as string)?.message as string;
+
+  const uniqueInputId = useId();
+  const targetId = id || uniqueInputId;
+
+  return (
+    <div className="relative flex items-start">
+      <div className="flex h-6 items-center">
+        <input
+          className={classNames(
+            "h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600",
+            className,
+            { "border-red-500": error }
+          )}
+          id={targetId}
+          ref={ref}
+          type="checkbox"
+          aria-describedby={`${targetId}-description`}
+          {...props}
+        />
+      </div>
+      <div className="ml-3 text-sm leading-6">
+        <label htmlFor={targetId} className="font-medium text-gray-900">
+          {label}
+        </label>
+        <p id={`${targetId}-description`} className="text-gray-500">
+          {description}
+        </p>
+      </div>
+    </div>
   );
 });

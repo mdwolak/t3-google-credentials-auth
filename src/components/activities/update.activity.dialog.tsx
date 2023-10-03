@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -7,8 +8,10 @@ import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import {
+  Checkbox,
   Form,
   Input,
+  RadioGroup,
   ValidationSummary,
   getDefaultOnErrorOption,
   useForm,
@@ -27,6 +30,8 @@ type UpdateActivityDialogProps = HandleCloseProps<
 const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogProps) => {
   const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
+  const router = useRouter();
+  const organisationId = Number(router.query.organisationId);
 
   const { mutate: deleteActivity } = api.activity.delete.useMutation({
     onSuccess() {
@@ -56,6 +61,21 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
     onError: getDefaultOnErrorOption(form),
   });
 
+  const { data: addressOptions, isLoading: isLoadingAddresses } = api.address.getFiltered.useQuery(
+    { organisationId },
+    {
+      select: (data) =>
+        data.addresses.map((address) => ({
+          name: `${address.postcode}`,
+          description: `${address.line1}, ${address.line2}, ${address.city}, ${address.county}`,
+          value: address.id,
+        })),
+      onError(error) {
+        toast.error(error.message);
+      },
+    }
+  );
+
   const handleSubmit = (data: UpdateActivityInput["data"]) => {
     updateActivity({ id: activity.id, data });
   };
@@ -71,25 +91,39 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
             <IconButton Icon={TrashIcon} onClick={() => setOpenDelete(true)} srText="Delete" />
           </SlideOverHeader>
           {/* Content */}
-          <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading}>
+          <fieldset className="space-y-6 p-4 pt-6" disabled={isLoading || isLoadingAddresses}>
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
             <Input label="Name" {...form.register("name")} />
             <Input label="Description" {...form.register("description")} />
-            <Input label="AddressId" {...form.register("addressId")} type="number" />
-            <Input label="Duration" {...form.register("duration")} type="number" />
-            <Input label="Visible" {...form.register("visible")} type="checkbox" />
+
+            {!addressOptions?.length ? (
+              <div className="text-center">No addresses found, please add one first.</div>
+            ) : (
+              <RadioGroup
+                label="Address"
+                name="addressId"
+                control={form.control}
+                options={addressOptions}
+              />
+            )}
+            <Input
+              label="Duration"
+              {...form.register("duration", { valueAsNumber: true })}
+              type="number"
+            />
+            <Checkbox
+              label="Make visible to Public"
+              {...form.register("visible")}
+              description="This activity will be visible to all users."
+            />
           </fieldset>
           {/* /End Content */}
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>

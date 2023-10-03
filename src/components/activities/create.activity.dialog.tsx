@@ -5,6 +5,7 @@ import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
 import {
+  Checkbox,
   Form,
   Input,
   RadioGroup,
@@ -100,11 +101,14 @@ const CreateActivityDialog = ({
                 name="addressId"
                 control={form.control}
                 options={addressOptions}
-                onChange={(e) => console.log(e)}
               />
             )}
             <Input label="Duration" {...form.register("duration")} type="number" />
-            <Input label="Visible" {...form.register("visible")} type="checkbox" />
+            <Checkbox
+              label="Make visible to Public"
+              {...form.register("visible")}
+              description="This activity will be visible to all users."
+            />
           </fieldset>
           {/* /End Content */}
         </div>

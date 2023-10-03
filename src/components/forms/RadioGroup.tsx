@@ -26,7 +26,7 @@ const RadioGroup = <
 >(
   props: {
     options: Option<TValue>[];
-    onChange: (value: TValue) => void;
+    onChange?: (value: TValue) => void;
     disabled?: boolean;
     Wrapper?: FC<FieldWrapperProps>;
     label?: ReactNode;
