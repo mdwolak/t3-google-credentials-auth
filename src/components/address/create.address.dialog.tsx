@@ -30,7 +30,7 @@ const CreateAddressDialog = ({
       city: "city",
       county: "county",
       postcode: "postcode",
-      organisationId: Number(router.query.organisationId),
+      orgId: Number(router.query.orgId),
     },
   });
   const { setFocus } = form;

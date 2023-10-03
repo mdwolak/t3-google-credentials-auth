@@ -22,7 +22,7 @@ const CreateActivityDialog = ({
 }: HandleCloseProps<RouterOutputs["activity"]["create"]["activity"]>) => {
   const apiContext = api.useContext();
   const router = useRouter();
-  const organisationId = Number(router.query.organisationId);
+  const orgId = Number(router.query.orgId);
 
   const form = useForm({
     schema: createActivitySchema,
@@ -32,7 +32,7 @@ const CreateActivityDialog = ({
       description: "description",
       duration: 30,
       visible: true,
-      organisationId,
+      orgId,
     },
   });
   const { setFocus } = form;
@@ -51,7 +51,7 @@ const CreateActivityDialog = ({
   });
 
   const { data: addressOptions, isLoading: isLoadingAddresses } = api.address.getFiltered.useQuery(
-    { organisationId },
+    { orgId },
     {
       select: (data) =>
         data.addresses.map((address) => ({

@@ -74,7 +74,7 @@ Table Address {
   city String [not null]
   county String
   postcode String [not null]
-  organisationId Int [not null]
+  orgId Int [not null]
   isRegistered Boolean [not null, default: false]
   isDefault Boolean [not null, default: false]
   createdAt DateTime [default: `now()`, not null]
@@ -103,7 +103,7 @@ Table Activity {
   maxAge Int
   position Int [not null, default: 0]
   data Json
-  organisationId Int [not null]
+  orgId Int [not null]
   owningGroupId Int [not null, default: 0]
   createdAt DateTime [default: `now()`, not null]
   createdById Int [not null]
@@ -199,11 +199,11 @@ Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
 
-Ref: Address.organisationId > Organisation.id
+Ref: Address.orgId > Organisation.id
 
 Ref: Activity.addressId > Address.id [delete: Cascade]
 
-Ref: Activity.organisationId > Organisation.id [delete: Cascade]
+Ref: Activity.orgId > Organisation.id [delete: Cascade]
 
 Ref: Schedule.activityId > Activity.id [delete: Cascade]
 

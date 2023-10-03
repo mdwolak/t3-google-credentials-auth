@@ -31,7 +31,7 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
   const apiContext = api.useContext();
   const [openDelete, setOpenDelete] = useState(false);
   const router = useRouter();
-  const organisationId = Number(router.query.organisationId);
+  const orgId = Number(router.query.orgId);
 
   const { mutate: deleteActivity } = api.activity.delete.useMutation({
     onSuccess() {
@@ -62,7 +62,7 @@ const UpdateActivityDialog = ({ activity, handleClose }: UpdateActivityDialogPro
   });
 
   const { data: addressOptions, isLoading: isLoadingAddresses } = api.address.getFiltered.useQuery(
-    { organisationId },
+    { orgId },
     {
       select: (data) =>
         data.addresses.map((address) => ({

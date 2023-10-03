@@ -30,10 +30,10 @@ export const findUnique = async (
   });
 };
 
-export const findAll = async (organisationId: number, page: number, limit: number) => {
+export const findAll = async (orgId: number, page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
-  const where = { organisationId };
+  const where = { orgId };
   return await prisma.activity.findMany({
     select: {
       id: true,

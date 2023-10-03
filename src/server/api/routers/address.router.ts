@@ -23,7 +23,7 @@ export const addressRouter = router({
     return await getByIdOrThrow(input);
   }),
   getFiltered: publicProcedure.input(filterQueryWithOrg).query(async ({ input }) => {
-    const addresses = await addressService.findAll(input.organisationId, input.page, input.limit);
+    const addresses = await addressService.findAll(input.orgId, input.page, input.limit);
 
     return { results: addresses.length, addresses };
   }),

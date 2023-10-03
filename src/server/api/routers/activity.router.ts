@@ -25,7 +25,7 @@ export const activityRouter = router({
     return await getByIdOrThrow(input);
   }),
   getFiltered: protectedProcedure.input(filterQueryWithOrg).query(async ({ input }) => {
-    const activities = await activityService.findAll(input.organisationId, input.page, input.limit);
+    const activities = await activityService.findAll(input.orgId, input.page, input.limit);
 
     return { results: activities.length, activities };
   }),
@@ -41,7 +41,7 @@ export const activityRouter = router({
       ...input,
       slug,
       //TODO: use checked input
-      //organisation: { connect: { id: input.organisationId } },
+      //organisation: { connect: { id: input.orgId } },
     });
 
     return { activity };

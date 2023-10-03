@@ -8,8 +8,8 @@ import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
-import CreateOrganisationDialog from "~/components/organisations/create.organisation.dialog";
-import UpdateOrganisationDialog from "~/components/organisations/update.organisation.dialog";
+import CreateOrganisationDialog from "~/components/org/create.organisation.dialog";
+import UpdateOrganisationDialog from "~/components/org/update.organisation.dialog";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
 import { api } from "~/utils/api";
 
@@ -70,7 +70,7 @@ const OrganisationList = () => {
                 {organisations?.map((organisation) => (
                   <tr key={organisation.id}>
                     <TCell first>
-                      <Link href={`/organisations/${organisation.id}/activities`}>
+                      <Link href={`/org/${organisation.id}/activities`}>
                         {organisation.name}
                         {organisation.visible && (
                           <span className="ml-1 text-indigo-600">(visible)</span>

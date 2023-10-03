@@ -93,15 +93,15 @@ model Exemplar {
 }
 
 model Address {
-  id             Int     @id @default(autoincrement())
-  line1          String
-  line2          String?
-  city           String
-  county         String?
-  postcode       String
-  organisationId Int
-  isRegistered   Boolean @default(false)
-  isDefault      Boolean @default(false)
+  id           Int     @id @default(autoincrement())
+  line1        String
+  line2        String?
+  city         String
+  county       String?
+  postcode     String
+  orgId        Int
+  isRegistered Boolean @default(false)
+  isDefault    Boolean @default(false)
 
   createdAt   DateTime @default(now())
   createdById Int
@@ -109,26 +109,26 @@ model Address {
   updatedById Int
 
   activities   Activity[]
-  organisation Organisation? @relation(fields: [organisationId], references: [id])
+  organisation Organisation? @relation(fields: [orgId], references: [id])
 
   @@unique([line1, postcode])
 }
 
 model Activity {
-  id             Int            @id @default(autoincrement())
-  name           String         @unique
-  description    String
-  type           Int            @default(0)
-  addressId      Int?
-  duration       Int            @default(0)
-  slug           String
-  visible        Boolean        @default(true)
-  status         ActivityStatus @default(Draft)
-  minAge         Int?
-  maxAge         Int?
-  position       Int            @default(0)
-  data           Json?
-  organisationId Int
+  id          Int            @id @default(autoincrement())
+  name        String         @unique
+  description String
+  type        Int            @default(0)
+  addressId   Int?
+  duration    Int            @default(0)
+  slug        String
+  visible     Boolean        @default(true)
+  status      ActivityStatus @default(Draft)
+  minAge      Int?
+  maxAge      Int?
+  position    Int            @default(0)
+  data        Json?
+  orgId       Int
 
   owningGroupId Int @default(0)
   //owningGroup   Group? @relation(fields: [owningGroupId], references: [id], onDelete: Cascade)
@@ -139,7 +139,7 @@ model Activity {
   updatedById Int
 
   address      Address?     @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  organisation Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  organisation Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
   schedules    Schedule[]
 
   @@unique([owningGroupId, name])

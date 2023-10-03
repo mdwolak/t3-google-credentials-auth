@@ -18,7 +18,7 @@ export const createAddressSchema = z.object({
   postcode: preprocessCleanString(
     requiredString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase()
   ),
-  organisationId: z.number(),
+  orgId: z.number(),
 });
 
 export const updateAddressSchema = z.object({

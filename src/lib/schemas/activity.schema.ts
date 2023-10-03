@@ -7,7 +7,7 @@ export const createActivitySchema = z.object({
   description: requiredStringCleaned,
   //type: z.number().int(),
   addressId: z.number().int().min(1),
-  organisationId: z.number(),
+  orgId: z.number(),
   duration: z.number().int().min(1).max(600), //TODO: between
   //slug: requiredStringCleaned,
   visible: z.boolean().optional(),
