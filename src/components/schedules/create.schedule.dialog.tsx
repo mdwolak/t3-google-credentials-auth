@@ -15,8 +15,11 @@ import { type CreateScheduleInput, createScheduleSchema } from "~/lib/schemas/sc
 import { type RouterOutputs, api } from "~/utils/api";
 
 const CreateScheduleDialog = ({
+  activityId,
   handleClose,
-}: HandleCloseProps<RouterOutputs["schedule"]["create"]["schedule"]>) => {
+}: HandleCloseProps<RouterOutputs["schedule"]["create"]["schedule"]> & {
+  activityId: number;
+}) => {
   const apiContext = api.useContext();
 
   const form = useForm({
@@ -26,7 +29,7 @@ const CreateScheduleDialog = ({
       name: "name", //router.query.email
       startDate: dateToInputDate(new Date()),
       endDate: dateToInputDate(new Date(new Date().setFullYear(new Date().getFullYear() + 1))),
-      activityId: 1,
+      activityId,
     },
   });
   const { setFocus } = form;

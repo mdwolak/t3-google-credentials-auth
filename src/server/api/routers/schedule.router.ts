@@ -22,6 +22,13 @@ export const scheduleRouter = router({
   getById: publicProcedure.input(numericId).query(async ({ input }) => {
     return await getByIdOrThrow(input);
   }),
+
+  getByActivityId: publicProcedure.input(numericId).query(async ({ input }) => {
+    const schedules = await scheduleService.findByActivityId(input);
+
+    return { schedules };
+  }),
+
   getFiltered: publicProcedure.input(filterQuery).query(async ({ input }) => {
     const schedules = await scheduleService.findAll(input.page, input.limit);
 

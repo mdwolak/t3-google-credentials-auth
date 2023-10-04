@@ -147,7 +147,7 @@ const SidebarNav = () => {
   const { orgId } = router.query;
 
   const navigation = [
-    { name: "Organisations", href: "/organisations", icon: FolderIcon, current: true },
+    { name: "Organisations", href: "/org", icon: FolderIcon, current: true },
     {
       name: "Addresses",
       href: `/org/${orgId}/addresses`,

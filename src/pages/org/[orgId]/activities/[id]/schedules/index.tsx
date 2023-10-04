@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { format } from "date-fns";
@@ -21,15 +22,16 @@ const ScheduleList = () => {
   const [updateSchedule, setUpdateSchedule] = useState<ScheduleInfo | null>(null);
   const [deleteScheduleId, setDeleteScheduleId] = useState<number>(0);
 
-  const { data: schedule } = api.schedule.getFiltered.useQuery(
-    { limit: 10, page: 1 },
-    {
-      select: (data) => data?.schedules,
-      onError(error) {
-        toast.error(error.message);
-      },
-    }
-  );
+  const router = useRouter();
+  const activityId = Number(router.query.id);
+
+  const { data: schedules } = api.schedule.getByActivityId.useQuery(activityId, {
+    enabled: !!activityId,
+    select: (data) => data?.schedules,
+    onError(error) {
+      toast.error(error.message);
+    },
+  });
 
   const { mutate: deleteSchedule } = api.schedule.delete.useMutation({
     onSuccess() {
@@ -50,7 +52,7 @@ const ScheduleList = () => {
         Manage schedules for your account.
       </TableCaption>
       <div>
-        {schedule?.length === 0 ? (
+        {schedules?.length === 0 ? (
           <Message>There are no schedules at the moment</Message>
         ) : (
           <div className="-mx-4 mt-8 flow-root sm:mx-0">
@@ -68,7 +70,7 @@ const ScheduleList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {schedule?.map((schedule) => (
+                {schedules?.map((schedule) => (
                   <tr key={schedule.id}>
                     <TCell first>{schedule.name}</TCell>
                     <TCell screen="sm">
@@ -113,7 +115,7 @@ const ScheduleList = () => {
       </SlideOver>
 
       <SlideOver open={openCreate} onClose={() => setOpenCreate(false)}>
-        <CreateScheduleDialog handleClose={() => setOpenCreate(false)} />
+        <CreateScheduleDialog activityId={activityId} handleClose={() => setOpenCreate(false)} />
       </SlideOver>
 
       <ConfirmDelete
