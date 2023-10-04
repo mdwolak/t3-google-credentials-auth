@@ -4,7 +4,12 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "jest-dom"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:jest-dom/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest-dom/recommended",
+    "plugin:storybook/recommended"
+  ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     "jest-dom/prefer-checked": "error",
