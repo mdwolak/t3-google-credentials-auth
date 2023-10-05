@@ -56,7 +56,7 @@ export const Button = forwardRef(function Button(
     disabled,
     variant = "primary",
     Icon,
-    size = "lg",
+    size = "default",
     fullWidth = false,
     rounded = false,
     ...props

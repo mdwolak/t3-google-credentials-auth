@@ -10,9 +10,19 @@ import { classNames } from "~/lib/common";
 
 export type Option<TValue> = {
   name: string;
-  description: ReactNode;
+  description?: ReactNode;
   value: TValue;
   disabled?: boolean;
+};
+
+export type RadioGroupProps<TValue> = {
+  options: Option<TValue>[];
+  onChange?: (value: TValue) => void;
+  disabled?: boolean;
+  Wrapper?: FC<FieldWrapperProps>;
+  label?: ReactNode;
+  style?: "ListWithDescriptions" | "SmallCards";
+  containerClass?: string;
 };
 
 /* Radio group with options
@@ -24,15 +34,7 @@ const RadioGroup = <
   TValue extends string | number | Record<string, unknown>,
   TFieldValues extends FieldValues
 >(
-  props: {
-    options: Option<TValue>[];
-    onChange?: (value: TValue) => void;
-    disabled?: boolean;
-    Wrapper?: FC<FieldWrapperProps>;
-    label?: ReactNode;
-    style?: "ListWithDescriptions" | "SmallCards";
-    //error?: FieldError | undefined;
-  } & UseControllerProps<TFieldValues>
+  props: RadioGroupProps<TValue> & UseControllerProps<TFieldValues>
 ) => {
   const {
     options,
@@ -41,6 +43,7 @@ const RadioGroup = <
     Wrapper = DefaultWrap,
     label,
     style = "ListWithDescriptions",
+    containerClass,
     ...controllerProps
   } = props;
   const {
@@ -68,9 +71,12 @@ const RadioGroup = <
           }}
           disabled={disabled}>
           <HRG.Label className="sr-only">{label}</HRG.Label>
-
           {/* @see https://tailwindui.com/components/application-ui/forms/radio-groups#component-7b583a008c3fc62c0fe403d10ca042bb */}
-          {style == "ListWithDescriptions" ? ListWithDescriptions(options) : SmallCards(options)}
+          {style == "ListWithDescriptions" ? (
+            <ListWithDescriptions options={options} containerClass={containerClass} />
+          ) : (
+            <SmallCards options={options} containerClass={containerClass} />
+          )}
         </HRG>
       }
       error={error}
@@ -80,11 +86,15 @@ const RadioGroup = <
 
 export { RadioGroup };
 
-function ListWithDescriptions<TValue extends string | number | Record<string, unknown>>(
-  options: Option<TValue>[]
-) {
+function ListWithDescriptions<TValue extends string | number | Record<string, unknown>>({
+  options,
+  containerClass,
+}: {
+  options: Option<TValue>[];
+  containerClass?: string;
+}) {
   return (
-    <div className="-space-y-px rounded-md bg-white">
+    <div className={containerClass ?? "-space-y-px rounded-md bg-white"}>
       {options.map((option, optionIdx) => (
         <HRG.Option
           key={String(optionIdx)} //{setting.key ?? setting.name}
@@ -136,11 +146,15 @@ function ListWithDescriptions<TValue extends string | number | Record<string, un
   );
 }
 
-function SmallCards<TValue extends string | number | Record<string, unknown>>(
-  options: Option<TValue>[]
-) {
+function SmallCards<TValue extends string | number | Record<string, unknown>>({
+  options,
+  containerClass,
+}: {
+  options: Option<TValue>[];
+  containerClass?: string;
+}) {
   return (
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+    <div className={containerClass ?? "grid grid-cols-3 gap-3 sm:grid-cols-6"}>
       {options.map((option, optionIdx) => (
         <HRG.Option
           key={String(optionIdx)} //{setting.key ?? setting.name}
@@ -153,7 +167,7 @@ function SmallCards<TValue extends string | number | Record<string, unknown>>(
               checked
                 ? "bg-indigo-600 text-white hover:bg-indigo-500"
                 : "bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50",
-              "flex items-center justify-center rounded-md px-3 py-3 text-sm font-semibold uppercase sm:flex-1"
+              "flex items-center justify-center rounded-md px-2 py-2 text-sm font-semibold sm:flex-1"
             )
           }>
           <HRG.Label as="span">{option.name}</HRG.Label>
