@@ -1,3 +1,5 @@
+import z from "zod";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isNumber(n: any) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -50,3 +52,32 @@ export function dateToInputDate(date?: Date) {
   }
   return date.toISOString().slice(0, 10) as unknown as Date;
 }
+
+export function dateToInputTime(date?: Date) {
+  if (!date || !isValidDate(date)) {
+    return undefined;
+  }
+  return date.toISOString().slice(11, 16) as unknown as Date;
+}
+
+export const weekDaysOptions = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+  (day, index) => ({
+    value: index + 1,
+    name: day,
+  })
+);
+export const hoursWithMinutes = z
+  .date()
+  .or(z.string())
+  .transform((val, ctx) => {
+    if (val instanceof Date) return val; //string is transformed to Date on the client
+
+    const iso8601Date = `2020-01-01T${val}:00Z`;
+
+    const milliseconds = Date.parse(iso8601Date);
+    if (!milliseconds) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid time" });
+
+    const result = new Date();
+    result.setTime(milliseconds);
+    return result;
+  });

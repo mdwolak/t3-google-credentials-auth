@@ -75,7 +75,6 @@ const CreateScheduleDialog = ({
             <Input label="Name" {...form.register("name")} />
             <Input label="Start Date" {...form.register("startDate")} type="date" />
             <Input label="End Date" {...form.register("endDate")} type="date" />
-            <Input label="Activity" {...form.register("activityId")} />
           </fieldset>
           {/* /End Content */}
         </div>

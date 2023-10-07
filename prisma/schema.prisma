@@ -217,5 +217,10 @@ model ScheduleDay {
   duration   Int
   scheduleId Int
 
+  createdAt   DateTime @default(now())
+  createdById Int
+  updatedAt   DateTime @updatedAt
+  updatedById Int
+
   schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 }

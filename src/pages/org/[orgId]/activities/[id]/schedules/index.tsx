@@ -23,6 +23,7 @@ const ScheduleList = () => {
   const [deleteScheduleId, setDeleteScheduleId] = useState<number>(0);
 
   const router = useRouter();
+  const orgId = Number(router.query.orgId);
   const activityId = Number(router.query.id);
 
   const { data: schedules } = api.schedule.getByActivityId.useQuery(activityId, {
@@ -63,6 +64,7 @@ const ScheduleList = () => {
                   <THeader screen="sm">Start Date</THeader>
                   <THeader screen="lg">End Date</THeader>
                   <THeader screen="lg">Created</THeader>
+                  <THeader screen="lg">ScheduleDays</THeader>
                   {/* <THeader>Price</THeader> */}
                   <THeader last>
                     <span className="sr-only">Select</span>
@@ -81,6 +83,12 @@ const ScheduleList = () => {
                     </TCell>
                     <TCell screen="lg">
                       <FormattedDate date={schedule.createdAt} />
+                    </TCell>
+                    <TCell screen="lg">
+                      <Link
+                        href={`/org/${orgId}/activities/${schedule.activityId}/schedules/${schedule.id}`}>
+                        Schedule Days
+                      </Link>
                     </TCell>
                     {/* <TCell>
                   <div className="sm:hidden">{schedule.price}/mo</div>

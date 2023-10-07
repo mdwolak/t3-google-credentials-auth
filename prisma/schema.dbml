@@ -160,6 +160,10 @@ Table ScheduleDay {
   startTime DateTime [not null]
   duration Int [not null]
   scheduleId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  createdById Int [not null]
+  updatedAt DateTime [not null]
+  updatedById Int [not null]
   schedule Schedule [not null]
 }
 
