@@ -1,11 +1,13 @@
 import z, { type TypeOf } from "zod";
 
+import { duration } from "~/lib/schemas/common.schema";
+
 import { hoursWithMinutes } from "../common";
 
 export const createScheduleDaySchema = z.object({
   dayOfWeek: z.number().int().min(1).max(7),
   startTime: hoursWithMinutes,
-  duration: z.number().int().min(1).max(1440),
+  duration: duration,
   scheduleId: z.number().int().positive(),
 
   // duration: z

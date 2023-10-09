@@ -90,8 +90,8 @@ const CreateActivityDialog = ({
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Name" {...form.register("name")} />
-            <Input label="Description" {...form.register("description")} />
+            <Input label="Name" {...form.register("name")} required />
+            <Input label="Description" {...form.register("description")} required />
 
             {!addressOptions?.length ? (
               <div className="text-center">No addresses found, please add one first.</div>
@@ -101,9 +101,10 @@ const CreateActivityDialog = ({
                 name="addressId"
                 control={form.control}
                 options={addressOptions}
+                required
               />
             )}
-            <Input label="Duration" {...form.register("duration")} type="number" />
+            <Input label="Duration" {...form.register("duration")} type="number" required />
             <Checkbox
               label="Make visible to Public"
               {...form.register("visible")}

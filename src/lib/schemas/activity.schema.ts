@@ -1,6 +1,6 @@
 import z, { type TypeOf } from "zod";
 
-import { requiredStringCleaned } from "~/lib/schemas/common.schema";
+import { duration, requiredStringCleaned } from "~/lib/schemas/common.schema";
 
 export const createActivitySchema = z.object({
   name: requiredStringCleaned,
@@ -8,7 +8,7 @@ export const createActivitySchema = z.object({
   //type: z.number().int(),
   addressId: z.number().int().min(1),
   orgId: z.number(),
-  duration: z.number().int().min(1).max(600), //TODO: between
+  duration: duration,
   //slug: requiredStringCleaned,
   visible: z.boolean().optional(),
   //status: nativeEnum(ActivityStatus).optional(),

@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { useFormContext } from "react-hook-form";
 
 import type { FieldWrapperProps } from "./common";
-import { DefaultWrap, getFieldError } from "./common";
+import { Asterisk, DefaultWrap, getFieldError } from "./common";
 
 interface InputProps extends ComponentPropsWithRef<"input"> {
   label?: ReactNode;
@@ -21,7 +21,7 @@ interface InputProps extends ComponentPropsWithRef<"input"> {
 }
 
 export const Input = forwardRef(function Input(
-  { className, id, label, type = "text", Wrapper = DefaultWrap, ...props }: InputProps,
+  { className, id, label, type = "text", Wrapper = DefaultWrap, required, ...props }: InputProps,
   ref: Ref<HTMLInputElement>
 ) {
   const {
@@ -36,6 +36,7 @@ export const Input = forwardRef(function Input(
     <Wrapper
       id={targetId}
       label={label}
+      asterisk={required && !props.disabled}
       control={
         <input
           className={classNames(
@@ -123,6 +124,7 @@ export const Checkbox = forwardRef(function Checkbox(
       <div className="ml-3 text-sm leading-6">
         <label htmlFor={targetId} className="font-medium text-gray-900">
           {label}
+          {props.required && !props.disabled && <Asterisk />}
         </label>
         <p id={`${targetId}-description`} className="text-gray-500">
           {description}

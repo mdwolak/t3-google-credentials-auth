@@ -96,23 +96,26 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
               name="dayOfWeek"
               style="SmallCards"
               containerClass="grid grid-cols-7 gap-2"
+              required
             />
             <Input
               label="What time does it start at?"
               {...form.register("startTime")}
               type="time"
+              required
             />
-            <Input label="How many minutes?" {...form.register("duration")} />
+            <Input
+              label="How many minutes?"
+              {...form.register("duration")}
+              type="number"
+              required
+            />
           </fieldset>
           {/* /End Content */}
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>

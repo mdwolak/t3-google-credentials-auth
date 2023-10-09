@@ -4,12 +4,15 @@ import classNames from "classnames";
 import get from "lodash.get";
 import type { FieldErrors } from "react-hook-form";
 
-export function Label(props: ComponentProps<"label">) {
+export const Asterisk = () => <span className="ml-1 text-sm font-medium text-red-500">*</span>;
+
+export function Label(props: ComponentProps<"label"> & { asterisk?: boolean }) {
   return (
     <label
       className={classNames("block text-sm font-medium text-gray-700", props.className)}
       {...props}>
       {props.children}
+      {props.asterisk && <Asterisk />}
     </label>
   );
 }
@@ -40,13 +43,20 @@ export type FieldWrapperProps = {
   label: string | React.ReactNode;
   control: React.ReactNode;
   error: string | React.ReactNode;
+  asterisk?: boolean;
 };
 
-export const DefaultWrap: FC<FieldWrapperProps> = ({ id, label, control, error }) => {
+export const DefaultWrap: FC<FieldWrapperProps> = ({ id, label, control, error, asterisk }) => {
   return (
     <>
       <div>
-        {typeof label === "string" ? <Label htmlFor={id}>{label}</Label> : label}
+        {typeof label === "string" ? (
+          <Label htmlFor={id} asterisk={asterisk}>
+            {label}
+          </Label>
+        ) : (
+          label
+        )}
         <div className="mt-2">
           {control}
           {typeof error === "string" ? <FieldError error={error} /> : error}
@@ -56,10 +66,16 @@ export const DefaultWrap: FC<FieldWrapperProps> = ({ id, label, control, error }
   );
 };
 
-const NoWrap: FC<FieldWrapperProps> = ({ id, label, control, error }) => {
+const NoWrap: FC<FieldWrapperProps> = ({ id, label, control, error, asterisk }) => {
   return (
     <>
-      {typeof label === "string" ? <Label htmlFor={id}>{label}</Label> : label}
+      {typeof label === "string" ? (
+        <Label htmlFor={id} asterisk={asterisk}>
+          {label}
+        </Label>
+      ) : (
+        label
+      )}
       {control}
       {typeof error === "string" ? <FieldError error={error} /> : error}
     </>

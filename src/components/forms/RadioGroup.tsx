@@ -21,6 +21,7 @@ export type RadioGroupProps<TValue> = {
   disabled?: boolean;
   Wrapper?: FC<FieldWrapperProps>;
   label?: ReactNode;
+  required?: boolean;
   style?: "ListWithDescriptions" | "SmallCards";
   containerClass?: string;
 };
@@ -42,6 +43,7 @@ const RadioGroup = <
     disabled,
     Wrapper = DefaultWrap,
     label,
+    required,
     style = "ListWithDescriptions",
     containerClass,
     ...controllerProps
@@ -60,6 +62,7 @@ const RadioGroup = <
     <Wrapper
       id={targetId}
       label={label}
+      asterisk={required && !props.disabled}
       control={
         <HRG
           name={field.name}

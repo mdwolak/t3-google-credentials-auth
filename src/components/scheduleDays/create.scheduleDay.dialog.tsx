@@ -82,17 +82,15 @@ const CreateScheduleDayDialog = ({
               name="dayOfWeek"
               style="SmallCards"
               containerClass="grid grid-cols-7 gap-2"
+              required
             />
             <Input
               label="What time does it start at?"
               {...form.register("startTime")}
               type="time"
+              required
             />
-            <Input
-              label="Duration"
-              {...form.register("duration", { valueAsNumber: true })}
-              type="number"
-            />
+            <Input label="Duration" {...form.register("duration")} type="number" required />
           </fieldset>
           {/* /End Content */}
         </div>

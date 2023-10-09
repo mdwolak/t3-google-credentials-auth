@@ -75,9 +75,9 @@ const UpdateExemplarDialog = ({ exemplar, handleClose }: UpdateExemplarDialogPro
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Name" {...form.register("name")} />
-            <Input label="Category" {...form.register("category")} />
-            <Input label="Content" {...form.register("content")} />
+            <Input label="Name" {...form.register("name")} required />
+            <Input label="Category" {...form.register("category")} required />
+            <Input label="Content" {...form.register("content")} required />
           </fieldset>
           {/* /End Content */}
         </div>

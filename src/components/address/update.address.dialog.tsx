@@ -73,11 +73,11 @@ const UpdateAddressDialog = ({ address, handleClose }: UpdateAddressDialogProps)
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Line 1" {...form.register("line1")} />
+            <Input label="Line 1" {...form.register("line1")} required />
             <Input label="Line 2" {...form.register("line2")} />
-            <Input label="City" {...form.register("city")} />
+            <Input label="City" {...form.register("city")} required />
             <Input label="County" {...form.register("county")} />
-            <Input label="Postcode" {...form.register("postcode")} />
+            <Input label="Postcode" {...form.register("postcode")} required />
           </fieldset>
           {/* /End Content */}
         </div>

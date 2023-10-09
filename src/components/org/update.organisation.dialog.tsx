@@ -78,8 +78,8 @@ const UpdateOrganisationDialog = ({ organisation, handleClose }: UpdateOrganisat
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Name" {...form.register("name")} />
-            <Input label="Description" {...form.register("description")} />
+            <Input label="Name" {...form.register("name")} required />
+            <Input label="Description" {...form.register("description")} required />
             <Input label="Visible" {...form.register("visible")} type="checkbox" />
           </fieldset>
           {/* /End Content */}

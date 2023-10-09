@@ -25,6 +25,7 @@ export const filterQueryWithOrg = z.object({
 
 export const numericId = z.number();
 export const orgId = z.number();
+export const duration = z.coerce.number().int().min(1, "Specify number between 1 and 600").max(600);
 
 // Helper schema for JSON fields
 type Literal = boolean | number | string;
