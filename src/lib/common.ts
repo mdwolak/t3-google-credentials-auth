@@ -1,5 +1,3 @@
-import z from "zod";
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isNumber(n: any) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -59,25 +57,38 @@ export function dateToInputTime(date?: Date) {
   }
   return date.toISOString().slice(11, 16) as unknown as Date;
 }
+export const weekDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
-export const weekDaysOptions = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
-  (day, index) => ({
-    value: index + 1,
-    name: day,
-  })
-);
-export const hoursWithMinutes = z
-  .date()
-  .or(z.string())
-  .transform((val, ctx) => {
-    if (val instanceof Date) return val; //string is transformed to Date on the client
+export const weekDaysOptions = weekDays.map((day, index) => ({
+  value: index + 1,
+  name: day.substring(0, 3),
+}));
 
-    const iso8601Date = `2020-01-01T${val}:00Z`;
+const formatter = new Intl.DateTimeFormat("en-GB", {
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "UTC",
+});
+export const formatTime = (date: Date) => formatter.format(date);
 
-    const milliseconds = Date.parse(iso8601Date);
-    if (!milliseconds) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid time" });
-
-    const result = new Date();
-    result.setTime(milliseconds);
-    return result;
-  });
+export const groupArrayByObjectProperty = <
+  T extends Record<string, any>,
+  K extends keyof T,
+  P extends T[K] | string | number
+>(
+  array: T[],
+  attributeGetter: (item: T) => P
+): Record<P, T[]> =>
+  array.reduce((previous, current) => {
+    const value = attributeGetter(current);
+    previous[value] = (previous[value] || []).concat(current);
+    return previous;
+  }, {} as Record<P, T[]>);

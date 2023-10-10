@@ -4,13 +4,13 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import Message from "~/components/Message";
-import { TCell, THeader, TableCaption } from "~/components/Table";
-import { FormattedDate, Link } from "~/components/core";
+import { TableCaption } from "~/components/Table";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { getLayout } from "~/components/layouts/Layout";
 import CreateScheduleDayDialog from "~/components/scheduleDays/create.scheduleDay.dialog";
 import UpdateScheduleDayDialog from "~/components/scheduleDays/update.scheduleDay.dialog";
+import { formatTime, groupArrayByObjectProperty, weekDays } from "~/lib/common";
 import { type ScheduleDayInfo } from "~/server/api/routers/scheduleDay.router";
 import { api } from "~/utils/api";
 
@@ -24,9 +24,10 @@ const ScheduleDayList = () => {
   const router = useRouter();
   const scheduleId = Number(router.query.scheduleId);
 
-  const { data: scheduleDays } = api.scheduleDay.getByScheduleId.useQuery(scheduleId, {
+  const { data: scheduleDaysByDayOfWeek } = api.scheduleDay.getByScheduleId.useQuery(scheduleId, {
     enabled: !!scheduleId,
-    select: (data) => data?.scheduleDays,
+    select: (data) =>
+      groupArrayByObjectProperty(data?.scheduleDays, (scheduleDay) => scheduleDay.dayOfWeek),
     onError(error) {
       toast.error(error.message);
     },
@@ -51,47 +52,21 @@ const ScheduleDayList = () => {
         Manage scheduleDays for your account.
       </TableCaption>
       <div>
-        {scheduleDays?.length === 0 ? (
+        {scheduleDaysByDayOfWeek &&
+          Object.entries(scheduleDaysByDayOfWeek).map(([dayOfWeek, scheduleDays]) => (
+            <div key={dayOfWeek} className="flex flex-wrap gap-x-6 gap-y-4">
+              <span>{weekDays[parseInt(dayOfWeek)]}</span>
+              {scheduleDays.map((scheduleDay) => (
+                <span
+                  key={scheduleDay.id}
+                  className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+                  {formatTime(scheduleDay.startTime)}
+                </span>
+              ))}
+            </div>
+          ))}
+        {(!scheduleDaysByDayOfWeek || Object.keys(scheduleDaysByDayOfWeek).length === 0) && (
           <Message>There are no scheduleDays at the moment</Message>
-        ) : (
-          <div className="-mx-4 mt-8 flow-root sm:mx-0">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead>
-                <tr>
-                  <THeader first>ScheduleDay</THeader>
-                  <THeader screen="sm">Duration</THeader>
-                  <THeader screen="lg">StartTime</THeader>
-                  <THeader last>
-                    <span className="sr-only">Select</span>
-                  </THeader>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {scheduleDays?.map((scheduleDay) => (
-                  <tr key={scheduleDay.id}>
-                    <TCell first>{scheduleDay.dayOfWeek}</TCell>
-                    <TCell screen="lg">{scheduleDay.duration}</TCell>
-                    <TCell screen="lg">
-                      <FormattedDate date={scheduleDay.startTime} />
-                    </TCell>
-                    <TCell last className="space-x-2">
-                      <Link href="#" onClick={() => setUpdateScheduleDay(scheduleDay)}>
-                        Edit<span className="sr-only">, {scheduleDay.id}</span>
-                      </Link>
-                      <span>|</span>
-
-                      <Link
-                        href="#"
-                        variant="secondary"
-                        onClick={() => setDeleteScheduleDayId(scheduleDay.id)}>
-                        Delete<span className="sr-only">, {scheduleDay.id}</span>
-                      </Link>
-                    </TCell>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         )}
       </div>
 

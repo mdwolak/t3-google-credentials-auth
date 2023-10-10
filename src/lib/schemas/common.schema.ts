@@ -34,3 +34,19 @@ const literalSchema = z.union([z.string(), z.number(), z.boolean()]);
 const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
   z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])
 );
+
+export const hoursWithMinutes = z
+  .date()
+  .or(z.string())
+  .transform((val, ctx) => {
+    if (val instanceof Date) return val; //string is transformed to Date on the client
+
+    const iso8601Date = `2020-01-01T${val}:00Z`;
+
+    const milliseconds = Date.parse(iso8601Date);
+    if (!milliseconds) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Invalid time" });
+
+    const result = new Date();
+    result.setTime(milliseconds);
+    return result;
+  });
