@@ -39,7 +39,7 @@ function isValidDate(date: Date) {
 }
 
 /**
- * Create a date YYYY-MM-DD date string that is typecasted as a `Date`.
+ * Create a date YYYY-MM-DD date string that is typecast as a `Date`.
  * Hack when using `defaultValues` in `react-hook-form`
  * This is because `react-hook-form` doesn't support `defaultValue` of type `Date` even if the types say so
  * @see https://github.com/orgs/react-hook-form/discussions/4718#discussioncomment-2738053
@@ -79,7 +79,14 @@ const formatter = new Intl.DateTimeFormat("en-GB", {
 });
 export const formatTime = (date: Date) => formatter.format(date);
 
+/**
+ * Group an array of objects by a property of the object
+ *
+ * Usage:
+ * const grouped = groupArrayByObjectProperty(data.scheduleDays, (scheduleDay) => scheduleDay.dayOfWeek),
+ */
 export const groupArrayByObjectProperty = <
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Record<string, any>,
   K extends keyof T,
   P extends T[K] | string | number
@@ -92,3 +99,19 @@ export const groupArrayByObjectProperty = <
     previous[value] = (previous[value] || []).concat(current);
     return previous;
   }, {} as Record<P, T[]>);
+
+const groupArrayByObjectStringProperty = <T>(
+  array: T[],
+  predicate: (value: T, index: number, array: T[]) => string
+) =>
+  array.reduce((acc, value, index, array) => {
+    (acc[predicate(value, index, array)] ||= []).push(value);
+    return acc;
+  }, {} as { [key: string]: T[] });
+
+const groupByToMap = <T, Q>(array: T[], predicate: (value: T, index: number, array: T[]) => Q) =>
+  array.reduce((map, value, index, array) => {
+    const key = predicate(value, index, array);
+    map.get(key)?.push(value) ?? map.set(key, [value]);
+    return map;
+  }, new Map<Q, T[]>());

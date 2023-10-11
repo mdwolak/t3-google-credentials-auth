@@ -79,7 +79,7 @@ const UpdateScheduleDialog = ({ schedule, handleClose }: UpdateScheduleDialogPro
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
-            <Input label="Name" {...form.register("name")} required />
+            <Input label="Name" {...form.register("name")} />
             <Input label="Start Date" {...form.register("startDate")} type="date" required />
             <Input label="End Date" {...form.register("endDate")} type="date" />
           </fieldset>

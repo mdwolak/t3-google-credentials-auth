@@ -30,6 +30,18 @@ export const findUnique = async (
   });
 };
 
+// return await prisma.scheduleDay.findMany({
+//   where: { scheduleId },
+//   select: {
+//     id: true,
+//     dayOfWeek: true,
+//     startTime: true,
+//     duration: true,
+//     scheduleId: true,
+//   },
+//   orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
+// });
+
 export const findByActivityId = async (activityId: number) => {
   return await prisma.schedule.findMany({
     where: { activityId },
@@ -40,6 +52,15 @@ export const findByActivityId = async (activityId: number) => {
       endDate: true,
       activityId: true,
       createdAt: true,
+      scheduleDays: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          startTime: true,
+          duration: true,
+        },
+        orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
+      },
     },
   });
 };

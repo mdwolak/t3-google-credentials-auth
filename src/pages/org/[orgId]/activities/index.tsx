@@ -63,7 +63,7 @@ const ActivityList = () => {
                 <tr>
                   <THeader first>Activity</THeader>
                   <THeader screen="sm">Address</THeader>
-                  <THeader screen="lg">Schedules</THeader>
+                  <THeader>Schedules</THeader>
                   <THeader screen="lg">Created</THeader>
                   {/* <THeader>Price</THeader> */}
                   <THeader last>
@@ -81,7 +81,7 @@ const ActivityList = () => {
                       )}
                     </TCell>
                     <TCell screen="sm">{activity.addressId}</TCell>
-                    <TCell screen="lg">
+                    <TCell>
                       <Link href={`/org/${orgId}/activities/${activity.id}/schedules`}>
                         Schedules
                       </Link>
