@@ -4,6 +4,9 @@ import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server
 
 export const defaultScheduleDaySelect = Prisma.validator<Prisma.ScheduleDaySelect>()({
   id: true,
+  dayOfWeek: true,
+  createdById: true,
+  scheduleId: true,
 });
 
 //
@@ -19,13 +22,10 @@ export const findFirst = async (
   });
 };
 
-export const findUnique = async (
-  where: Prisma.ScheduleDayWhereUniqueInput,
-  select: Prisma.ScheduleDaySelect = defaultScheduleDaySelect
-) => {
+export const findUnique = async (where: Prisma.ScheduleDayWhereUniqueInput) => {
   return await prisma.scheduleDay.findUnique({
     where,
-    select,
+    select: defaultScheduleDaySelect,
   });
 };
 
@@ -75,7 +75,7 @@ export const create = async (
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.ScheduleDayWhereUniqueInput>,
+  where: Prisma.ScheduleDayWhereUniqueInput,
   data: OmitAudit<Prisma.ScheduleDayUpdateInput>,
   select: Prisma.ScheduleDaySelect = defaultScheduleDaySelect
 ) => {

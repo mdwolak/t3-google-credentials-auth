@@ -17,7 +17,7 @@ export const createActivitySchema = z.object({
 
 export const updateActivitySchema = z.object({
   id: z.number(),
-  data: createActivitySchema.partial(),
+  data: createActivitySchema.omit({ orgId: true }).partial(),
 });
 
 export type CreateActivityInput = TypeOf<typeof createActivitySchema>;

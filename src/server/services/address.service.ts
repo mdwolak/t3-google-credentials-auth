@@ -69,7 +69,7 @@ export const create = async (
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.AddressWhereUniqueInput>,
+  where: Prisma.AddressWhereUniqueInput,
   data: OmitAudit<Prisma.AddressUpdateInput>,
   select: Prisma.AddressSelect = defaultAddressSelect
 ) => {

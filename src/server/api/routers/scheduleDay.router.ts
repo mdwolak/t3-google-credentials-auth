@@ -8,9 +8,8 @@ import {
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import { canUpdate } from "~/server/services/permission.service";
+import { canUpdate2 } from "~/server/services/permission.service";
 import * as scheduleDayService from "~/server/services/scheduleDay.service";
-import { defaultScheduleDaySelect } from "~/server/services/scheduleDay.service";
 import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "ScheduleDay";
@@ -40,19 +39,20 @@ export const scheduleDayRouter = router({
    * WRITE
    */
   create: protectedProcedure.input(createScheduleDaySchema).mutation(async ({ input, ctx }) => {
-    //await checkUniqueName(input.name);
+    await checkUniqueness(input.scheduleId, input.dayOfWeek);
+
     const scheduleDay = await scheduleDayService.create(getUserId(ctx), input);
 
     return { scheduleDay };
   }),
   update: protectedProcedure.input(updateScheduleDaySchema).mutation(async ({ input, ctx }) => {
-    //const dbScheduleDay = await getByIdOrThrow(input.id);
+    const dbScheduleDay = await getByIdOrThrow(input.id);
 
-    // if (!canUpdate(ctx, dbScheduleDay, "createdById")) throw httpForbidden();
+    if (!canUpdate2(ctx, dbScheduleDay.createdById)) throw httpForbidden();
 
-    // if (input.data.name && input.data.name !== dbScheduleDay.name) {
-    //   await checkUniqueName(input.data.name);
-    // }
+    if (input.data.dayOfWeek && input.data.dayOfWeek !== dbScheduleDay.dayOfWeek) {
+      await checkUniqueness(dbScheduleDay.scheduleId, input.data.dayOfWeek);
+    }
 
     const scheduleDay = await scheduleDayService.update(
       getUserId(ctx),
@@ -63,9 +63,9 @@ export const scheduleDayRouter = router({
     return { scheduleDay };
   }),
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
-    //const dbScheduleDay = await getByIdOrThrow(input);
+    const dbScheduleDay = await getByIdOrThrow(input);
 
-    //if (!canUpdate(ctx, dbScheduleDay, "createdById")) throw httpForbidden();
+    if (!canUpdate2(ctx, dbScheduleDay.createdById)) throw httpForbidden();
 
     await scheduleDayService.remove({ id: input });
   }),
@@ -73,16 +73,13 @@ export const scheduleDayRouter = router({
 
 export type ScheduleDayInfo = RouterOutputs["scheduleDay"]["getFiltered"]["scheduleDays"][0];
 
-// async function checkUniqueName(name: string) {
-//   if (await scheduleDayService.findFirst({ name }))
-//     throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["name"]));
-// }
+async function checkUniqueness(scheduleId: number, dayOfWeek: number) {
+  if (await scheduleDayService.findUnique({ scheduleId_dayOfWeek: { scheduleId, dayOfWeek } }))
+    throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["dayOfWeek"]));
+}
 
 async function getByIdOrThrow(id: number) {
-  const scheduleDay = await scheduleDayService.findUnique(
-    { id: id },
-    { ...defaultScheduleDaySelect }
-  );
+  const scheduleDay = await scheduleDayService.findUnique({ id });
   if (!scheduleDay) throw httpNotFound(entityName);
 
   return scheduleDay;

@@ -5,6 +5,8 @@ import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server
 export const defaultActivitySelect = Prisma.validator<Prisma.ActivitySelect>()({
   id: true,
   name: true,
+  orgId: true,
+  status: true,
 });
 
 //
@@ -66,7 +68,7 @@ export const create = async (
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.ActivityWhereUniqueInput>,
+  where: Prisma.ActivityWhereUniqueInput,
   data: OmitAudit<Prisma.ActivityUpdateInput>,
   select: Prisma.ActivitySelect = defaultActivitySelect
 ) => {

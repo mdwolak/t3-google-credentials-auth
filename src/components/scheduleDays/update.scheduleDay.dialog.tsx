@@ -39,7 +39,7 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
 
   const { mutate: deleteScheduleDay } = api.scheduleDay.delete.useMutation({
     onSuccess() {
-      apiContext.scheduleDay.invalidate();
+      apiContext.schedule.invalidate();
       toast.success("ScheduleDay deleted successfully");
     },
     onError(error) {
@@ -64,7 +64,7 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
   } = api.scheduleDay.update.useMutation({
     onSuccess(data) {
       handleClose(data.scheduleDay);
-      apiContext.scheduleDay.invalidate();
+      apiContext.schedule.invalidate();
       toast.success("ScheduleDay updated successfully");
     },
     onError: getDefaultOnErrorOption(form),

@@ -94,7 +94,7 @@ export const create = async (userId: number, input: OmitAudit<Prisma.ScheduleCre
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.ScheduleWhereUniqueInput>,
+  where: Prisma.ScheduleWhereUniqueInput,
   data: Omit<OmitAudit<Prisma.ScheduleUpdateInput>, "activity">,
   select: Prisma.ScheduleSelect = defaultScheduleSelect
 ) => {

@@ -44,7 +44,7 @@ const CreateScheduleDayDialog = ({
   } = api.scheduleDay.create.useMutation({
     onSuccess(data) {
       handleClose(data.scheduleDay);
-      apiContext.scheduleDay.invalidate();
+      apiContext.schedule.invalidate();
       toast.success("ScheduleDay created successfully");
     },
     onError: getDefaultOnErrorOption(form),

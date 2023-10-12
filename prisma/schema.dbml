@@ -83,10 +83,6 @@ Table Address {
   updatedById Int [not null]
   activities Activity [not null]
   organisation Organisation
-
-  indexes {
-    (line1, postcode) [unique]
-  }
 }
 
 Table Activity {
@@ -114,6 +110,7 @@ Table Activity {
   schedules Schedule [not null]
 
   indexes {
+    (orgId, name, status) [unique]
     (owningGroupId, name) [unique]
     (owningGroupId, slug) [unique]
   }
@@ -165,6 +162,10 @@ Table ScheduleDay {
   updatedAt DateTime [not null]
   updatedById Int [not null]
   schedule Schedule [not null]
+
+  indexes {
+    (scheduleId, dayOfWeek) [unique]
+  }
 }
 
 Enum UserRole {

@@ -23,14 +23,13 @@ const ScheduleList = () => {
 
   const [openCreate, setOpenCreate] = useState(false);
   const [updateSchedule, setUpdateSchedule] = useState<ScheduleInfo | null>(null);
-  const [deleteScheduleId, setDeleteScheduleId] = useState<number>(0);
+  const [deleteScheduleId, setDeleteScheduleId] = useState(0);
 
-  const [openCreateScheduleDay, setOpenCreateScheduleDay] = useState(false);
+  const [openCreateScheduleId, setOpenCreateScheduleId] = useState(0);
   const [updateScheduleDay, setUpdateScheduleDay] = useState<ScheduleDayInfo | null>(null);
 
   const router = useRouter();
   const activityId = Number(router.query.id);
-  const scheduleId = Number(router.query.scheduleId);
 
   const { data: schedules } = api.schedule.getByActivityId.useQuery(activityId, {
     enabled: !!activityId,
@@ -104,7 +103,7 @@ const ScheduleList = () => {
                         )}
                         <Button
                           size="xs"
-                          onClick={() => setOpenCreateScheduleDay(true)}
+                          onClick={() => setOpenCreateScheduleId(schedule.id)}
                           // className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
                         >
                           + Add schedule day
@@ -171,10 +170,10 @@ const ScheduleList = () => {
         />
       </SlideOver>
 
-      <SlideOver open={openCreateScheduleDay} onClose={() => setOpenCreateScheduleDay(false)}>
+      <SlideOver open={!!openCreateScheduleId} onClose={() => setOpenCreateScheduleId(0)}>
         <CreateScheduleDayDialog
-          scheduleId={scheduleId}
-          handleClose={() => setOpenCreateScheduleDay(false)}
+          scheduleId={openCreateScheduleId}
+          handleClose={() => setOpenCreateScheduleId(0)}
         />
       </SlideOver>
     </div>

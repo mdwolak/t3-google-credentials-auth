@@ -1,3 +1,4 @@
+import { ActivityStatus } from "@prisma/client";
 import slugify from "slugify";
 
 import { createActivitySchema, updateActivitySchema } from "~/lib/schemas/activity.schema";
@@ -34,7 +35,7 @@ export const activityRouter = router({
    * WRITE
    */
   create: protectedProcedure.input(createActivitySchema).mutation(async ({ input, ctx }) => {
-    await checkUniqueName(input.name);
+    await checkUniqueness(input.orgId, input.name, ActivityStatus.Draft);
 
     const slug = slugify(input.name);
     const activity = await activityService.create(getUserId(ctx), {
@@ -53,7 +54,7 @@ export const activityRouter = router({
     if (!canUpdate(ctx, dbActivity, "createdById")) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbActivity.name) {
-      await checkUniqueName(input.data.name);
+      await checkUniqueness(dbActivity.orgId, input.data.name, dbActivity.status);
       slug = slugify(input.data.name);
     }
 
@@ -76,9 +77,11 @@ export const activityRouter = router({
 
 export type ActivityInfo = RouterOutputs["activity"]["getFiltered"]["activities"][0];
 
-async function checkUniqueName(name: string) {
-  if (await activityService.findFirst({ name }))
-    throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["name"]));
+async function checkUniqueness(orgId: number, name: string, status: ActivityStatus) {
+  if (await activityService.findUnique({ orgId_name_status: { orgId, name, status } }))
+    throw httpConflictWithZod(
+      getZodErrorWithCustomIssue("Activity with the same name and status already exists", ["name"])
+    );
 }
 
 async function getByIdOrThrow(id: number) {

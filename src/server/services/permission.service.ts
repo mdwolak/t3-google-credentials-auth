@@ -16,3 +16,12 @@ export function canUpdate<T extends Record<string, any>>(
 
   return object[idField] === ctx.session.user?.id;
 }
+
+export function canUpdate2(ctx: Context, permittedUserId: number): boolean {
+  if (!ctx.session) return false;
+  if (isAdmin(ctx)) return true;
+
+  if (!permittedUserId) throw new Error("PermittedUserId has not been provided.");
+
+  return ctx.session.user?.id === permittedUserId;
+}

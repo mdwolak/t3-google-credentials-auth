@@ -16,7 +16,7 @@ export const createScheduleDaySchema = z.object({
 
 export const updateScheduleDaySchema = z.object({
   id: z.number(),
-  data: createScheduleDaySchema.partial(),
+  data: createScheduleDaySchema.omit({ scheduleId: true }).partial(),
 });
 
 export type CreateScheduleDayInput = TypeOf<typeof createScheduleDaySchema>;

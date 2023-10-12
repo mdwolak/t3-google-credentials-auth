@@ -111,7 +111,7 @@ model Address {
   activities   Activity[]
   organisation Organisation? @relation(fields: [orgId], references: [id])
 
-  @@unique([line1, postcode])
+  @@index([orgId, line1, postcode])
 }
 
 model Activity {
@@ -142,6 +142,7 @@ model Activity {
   organisation Organisation @relation(fields: [orgId], references: [id], onDelete: Cascade)
   schedules    Schedule[]
 
+  @@unique([orgId, name, status])
   @@unique([owningGroupId, name])
   @@unique([owningGroupId, slug])
 }
@@ -208,6 +209,8 @@ model Schedule {
 
   activity     Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
   scheduleDays ScheduleDay[]
+
+  @@index([activityId])
 }
 
 model ScheduleDay {
@@ -223,4 +226,6 @@ model ScheduleDay {
   updatedById Int
 
   schedule Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@unique([scheduleId, dayOfWeek])
 }
