@@ -12,7 +12,6 @@ import {
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as activityService from "~/server/services/activity.service";
-import { defaultActivitySelect } from "~/server/services/activity.service";
 import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
@@ -85,10 +84,7 @@ async function checkUniqueness(orgId: number, name: string, status: ActivityStat
 }
 
 async function getByIdOrThrow(id: number) {
-  const activity = await activityService.findUnique(
-    { id: id },
-    { ...defaultActivitySelect, createdById: true }
-  );
+  const activity = await activityService.findUnique({ id: id });
   if (!activity) throw httpNotFound(entityName);
 
   return activity;

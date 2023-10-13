@@ -4,7 +4,6 @@ import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import { getUserId, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import { canUpdate } from "~/server/services/permission.service";
 import * as scheduleService from "~/server/services/schedule.service";
-import { defaultScheduleSelect } from "~/server/services/schedule.service";
 import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Schedule";
@@ -64,10 +63,7 @@ export const scheduleRouter = router({
 export type ScheduleInfo = RouterOutputs["schedule"]["getFiltered"]["schedules"][0];
 
 async function getByIdOrThrow(id: number) {
-  const schedule = await scheduleService.findUnique(
-    { id: id },
-    { ...defaultScheduleSelect, createdById: true }
-  );
+  const schedule = await scheduleService.findUnique({ id: id });
   if (!schedule) throw httpNotFound(entityName);
 
   return schedule;

@@ -9,7 +9,6 @@ import {
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as exemplarService from "~/server/services/exemplar.service";
-import { defaultExemplarSelect } from "~/server/services/exemplar.service";
 import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
@@ -63,15 +62,12 @@ export const exemplarRouter = router({
 export type ExemplarInfo = RouterOutputs["exemplar"]["getFiltered"]["exemplars"][0];
 
 async function checkUniqueName(name: string) {
-  if (await exemplarService.findFirst({ name }))
+  if (await exemplarService.findUnique({ name }))
     throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["name"]));
 }
 
 async function getByIdOrThrow(id: number) {
-  const exemplar = await exemplarService.findUnique(
-    { id: id },
-    { ...defaultExemplarSelect, createdById: true }
-  );
+  const exemplar = await exemplarService.findUnique({ id: id });
   if (!exemplar) throw httpNotFound(entityName);
 
   return exemplar;

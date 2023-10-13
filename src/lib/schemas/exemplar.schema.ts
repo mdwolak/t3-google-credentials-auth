@@ -9,11 +9,12 @@ export const createExemplarSchema = z.object({
   published: z.boolean({
     required_error: "Published is required",
   }),
+  orgId: z.number(),
 });
 
 export const updateExemplarSchema = z.object({
   id: z.number(),
-  data: createExemplarSchema.partial(),
+  data: createExemplarSchema.omit({ orgId: true }).partial(),
 });
 
 export type CreateExemplarInput = TypeOf<typeof createExemplarSchema>;

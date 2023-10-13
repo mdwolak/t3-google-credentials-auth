@@ -51,10 +51,7 @@ export const addressRouter = router({
 export type AddressInfo = RouterOutputs["address"]["getFiltered"]["addresses"][0];
 
 async function getByIdOrThrow(id: number) {
-  const address = await addressService.findUnique(
-    { id: id },
-    { ...defaultAddressSelect, createdById: true }
-  );
+  const address = await addressService.findUnique({ id: id });
   if (!address) throw httpNotFound(entityName);
 
   return address;

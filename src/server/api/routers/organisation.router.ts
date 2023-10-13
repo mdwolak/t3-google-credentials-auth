@@ -12,7 +12,6 @@ import {
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as organisationService from "~/server/services/organisation.service";
-import { defaultOrganisationSelect } from "~/server/services/organisation.service";
 import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 
@@ -69,16 +68,13 @@ export const organisationRouter = router({
 
 export type OrganisationInfo = RouterOutputs["organisation"]["getFiltered"]["organisations"][0];
 
-async function checkUniqueName(name: string) {
-  if (await organisationService.findFirst({ name }))
+async function checkUniqueName(name: string, parentId?: number) {
+  if (await organisationService.findFirst({ parentId, name }))
     throw httpConflictWithZod(getZodErrorWithCustomIssue("Already in use", ["name"]));
 }
 
 async function getByIdOrThrow(id: number) {
-  const organisation = await organisationService.findUnique(
-    { id: id },
-    { ...defaultOrganisationSelect, createdById: true }
-  );
+  const organisation = await organisationService.findUnique({ id: id });
   if (!organisation) throw httpNotFound(entityName);
 
   return organisation;

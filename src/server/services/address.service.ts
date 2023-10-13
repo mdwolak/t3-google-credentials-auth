@@ -9,28 +9,23 @@ export const defaultAddressSelect = Prisma.validator<Prisma.AddressSelect>()({
   city: true,
   county: true,
   postcode: true,
+  createdById: true,
 });
 
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.AddressWhereInput>,
-  select: Prisma.AddressSelect = defaultAddressSelect
-) => {
+export const findFirst = async (where: Prisma.AddressWhereInput) => {
   return await prisma.address.findFirst({
     where,
-    select,
+    select: defaultAddressSelect,
   });
 };
 
-export const findUnique = async (
-  where: Prisma.AddressWhereUniqueInput,
-  select: Prisma.AddressSelect = defaultAddressSelect
-) => {
+export const findUnique = async (where: Prisma.AddressWhereUniqueInput) => {
   return await prisma.address.findUnique({
     where,
-    select,
+    select: defaultAddressSelect,
   });
 };
 

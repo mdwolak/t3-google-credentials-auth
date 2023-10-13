@@ -20,13 +20,27 @@ export const findFirst = async (
   });
 };
 
-export const findUnique = async (
-  where: Prisma.UserWhereUniqueInput,
-  select: Prisma.UserSelect = defaultUserSelect
-) => {
+export const findUnique = async (where: Prisma.UserWhereUniqueInput) => {
   return await prisma.user.findUnique({
     where,
-    select,
+    select: defaultUserSelect,
+  });
+};
+
+export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) => {
+  return await prisma.user.findUnique({
+    where,
+    select: {
+      id: true,
+      // username: true,
+      name: true,
+      email: true,
+      // identityProvider: true,
+      //image: true,
+      password: true,
+      //createdDate: true,
+      role: true,
+    },
   });
 };
 
@@ -39,7 +53,7 @@ export const create = async (input: Prisma.UserCreateInput) => {
 };
 
 export const update = async (
-  where: Partial<Prisma.UserWhereUniqueInput>,
+  where: Prisma.UserWhereUniqueInput,
   data: Prisma.UserUpdateInput,
   select: Prisma.UserSelect = defaultUserSelect
 ) => {

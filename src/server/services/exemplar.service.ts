@@ -5,28 +5,23 @@ import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server
 export const defaultExemplarSelect = Prisma.validator<Prisma.ExemplarSelect>()({
   id: true,
   name: true,
+  createdById: true,
 });
 
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.ExemplarWhereInput>,
-  select: Prisma.ExemplarSelect = defaultExemplarSelect
-) => {
+export const findFirst = async (where: Partial<Prisma.ExemplarWhereInput>) => {
   return await prisma.exemplar.findFirst({
     where,
-    select,
+    select: defaultExemplarSelect,
   });
 };
 
-export const findUnique = async (
-  where: Prisma.ExemplarWhereUniqueInput,
-  select: Prisma.ExemplarSelect = defaultExemplarSelect
-) => {
+export const findUnique = async (where: Prisma.ExemplarWhereUniqueInput) => {
   return await prisma.exemplar.findUnique({
     where,
-    select,
+    select: defaultExemplarSelect,
   });
 };
 
@@ -59,7 +54,7 @@ export const create = async (userId: number, input: OmitAudit<Prisma.ExemplarCre
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.ExemplarWhereUniqueInput>,
+  where: Prisma.ExemplarWhereUniqueInput,
   data: OmitAudit<Prisma.ExemplarUpdateInput>,
   select: Prisma.ExemplarSelect = defaultExemplarSelect
 ) => {

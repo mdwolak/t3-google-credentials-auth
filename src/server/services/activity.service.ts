@@ -7,28 +7,23 @@ export const defaultActivitySelect = Prisma.validator<Prisma.ActivitySelect>()({
   name: true,
   orgId: true,
   status: true,
+  createdById: true,
 });
 
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.ActivityWhereInput>,
-  select: Prisma.ActivitySelect = defaultActivitySelect
-) => {
+export const findFirst = async (where: Prisma.ActivityWhereInput) => {
   return await prisma.activity.findFirst({
     where,
-    select,
+    select: defaultActivitySelect,
   });
 };
 
-export const findUnique = async (
-  where: Prisma.ActivityWhereUniqueInput,
-  select: Prisma.ActivitySelect = defaultActivitySelect
-) => {
+export const findUnique = async (where: Prisma.ActivityWhereUniqueInput) => {
   return await prisma.activity.findUnique({
     where,
-    select,
+    select: defaultActivitySelect,
   });
 };
 

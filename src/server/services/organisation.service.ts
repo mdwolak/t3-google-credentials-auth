@@ -5,28 +5,23 @@ import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server
 export const defaultOrganisationSelect = Prisma.validator<Prisma.OrganisationSelect>()({
   id: true,
   name: true,
+  createdById: true,
 });
 
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.OrganisationWhereInput>,
-  select: Prisma.OrganisationSelect = defaultOrganisationSelect
-) => {
+export const findFirst = async (where: Partial<Prisma.OrganisationWhereInput>) => {
   return await prisma.organisation.findFirst({
     where,
-    select,
+    select: defaultOrganisationSelect,
   });
 };
 
-export const findUnique = async (
-  where: Prisma.OrganisationWhereUniqueInput,
-  select: Prisma.OrganisationSelect = defaultOrganisationSelect
-) => {
+export const findUnique = async (where: Prisma.OrganisationWhereUniqueInput) => {
   return await prisma.organisation.findUnique({
     where,
-    select,
+    select: defaultOrganisationSelect,
   });
 };
 
@@ -62,7 +57,7 @@ export const create = async (userId: number, input: OmitAudit<Prisma.Organisatio
 
 export const update = async (
   userId: number,
-  where: Partial<Prisma.OrganisationWhereUniqueInput>,
+  where: Prisma.OrganisationWhereUniqueInput,
   data: OmitAudit<Prisma.OrganisationUpdateInput>,
   select: Prisma.OrganisationSelect = defaultOrganisationSelect
 ) => {

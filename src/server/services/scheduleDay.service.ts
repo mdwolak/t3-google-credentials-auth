@@ -12,13 +12,10 @@ export const defaultScheduleDaySelect = Prisma.validator<Prisma.ScheduleDaySelec
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.ScheduleDayWhereInput>,
-  select: Prisma.ScheduleDaySelect = defaultScheduleDaySelect
-) => {
+export const findFirst = async (where: Partial<Prisma.ScheduleDayWhereInput>) => {
   return await prisma.scheduleDay.findFirst({
     where,
-    select,
+    select: defaultScheduleDaySelect,
   });
 };
 

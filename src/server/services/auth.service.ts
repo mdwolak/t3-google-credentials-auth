@@ -4,22 +4,9 @@ import { ErrorCode } from "~/lib/errorCodes";
 import * as userService from "~/server/services/user.service";
 
 export async function authorize(credentials: { email: string; password: string }) {
-  const user = await userService.findUnique(
-    {
-      email: credentials.email.toLowerCase(),
-    },
-    {
-      id: true,
-      // username: true,
-      name: true,
-      email: true,
-      // identityProvider: true,
-      //image: true,
-      password: true,
-      //createdDate: true,
-      role: true,
-    }
-  );
+  const user = await userService.findUniqueSensitive({
+    email: credentials.email.toLowerCase(),
+  });
 
   if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password)))
     throw new Error(ErrorCode.InvalidEmailOrPassword);

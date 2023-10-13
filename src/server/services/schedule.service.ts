@@ -5,28 +5,23 @@ import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server
 export const defaultScheduleSelect = Prisma.validator<Prisma.ScheduleSelect>()({
   id: true,
   name: true,
+  createdById: true,
 });
 
 //
 // READ
 
-export const findFirst = async (
-  where: Partial<Prisma.ScheduleWhereInput>,
-  select: Prisma.ScheduleSelect = defaultScheduleSelect
-) => {
+export const findFirst = async (where: Partial<Prisma.ScheduleWhereInput>) => {
   return await prisma.schedule.findFirst({
     where,
-    select,
+    select: defaultScheduleSelect,
   });
 };
 
-export const findUnique = async (
-  where: Prisma.ScheduleWhereUniqueInput,
-  select: Prisma.ScheduleSelect = defaultScheduleSelect
-) => {
+export const findUnique = async (where: Prisma.ScheduleWhereUniqueInput) => {
   return await prisma.schedule.findUnique({
     where,
-    select,
+    select: defaultScheduleSelect,
   });
 };
 
