@@ -46,7 +46,7 @@ export const scheduleRouter = router({
   update: protectedProcedure.input(updateScheduleSchema).mutation(async ({ input, ctx }) => {
     const dbSchedule = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbSchedule, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbSchedule.createdById)) throw httpForbidden();
 
     const schedule = await scheduleService.update(getUserId(ctx), { id: input.id }, input.data);
 
@@ -55,7 +55,7 @@ export const scheduleRouter = router({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbSchedule = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbSchedule, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbSchedule.createdById)) throw httpForbidden();
 
     await scheduleService.remove({ id: input });
   }),

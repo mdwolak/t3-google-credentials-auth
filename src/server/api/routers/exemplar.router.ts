@@ -41,7 +41,7 @@ export const exemplarRouter = router({
   update: protectedProcedure.input(updateExemplarSchema).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbExemplar, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbExemplar.createdById)) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbExemplar.name) {
       await checkUniqueName(input.data.name);
@@ -54,7 +54,7 @@ export const exemplarRouter = router({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbExemplar, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbExemplar.createdById)) throw httpForbidden();
 
     await exemplarService.remove({ id: input });
   }),

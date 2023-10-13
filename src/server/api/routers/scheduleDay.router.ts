@@ -8,7 +8,7 @@ import {
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import { canUpdate2 } from "~/server/services/permission.service";
+import { canUpdate } from "~/server/services/permission.service";
 import * as scheduleDayService from "~/server/services/scheduleDay.service";
 import type { RouterOutputs } from "~/utils/api";
 
@@ -48,7 +48,7 @@ export const scheduleDayRouter = router({
   update: protectedProcedure.input(updateScheduleDaySchema).mutation(async ({ input, ctx }) => {
     const dbScheduleDay = await getByIdOrThrow(input.id);
 
-    if (!canUpdate2(ctx, dbScheduleDay.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx, dbScheduleDay.createdById)) throw httpForbidden();
 
     if (input.data.dayOfWeek && input.data.dayOfWeek !== dbScheduleDay.dayOfWeek) {
       await checkUniqueness(dbScheduleDay.scheduleId, input.data.dayOfWeek);
@@ -65,7 +65,7 @@ export const scheduleDayRouter = router({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbScheduleDay = await getByIdOrThrow(input);
 
-    if (!canUpdate2(ctx, dbScheduleDay.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx, dbScheduleDay.createdById)) throw httpForbidden();
 
     await scheduleDayService.remove({ id: input });
   }),

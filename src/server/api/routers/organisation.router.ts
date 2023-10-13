@@ -44,7 +44,7 @@ export const organisationRouter = router({
   update: protectedProcedure.input(updateOrganisationSchema).mutation(async ({ input, ctx }) => {
     const dbOrganisation = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbOrganisation, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbOrganisation.createdById)) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbOrganisation.name) {
       await checkUniqueName(input.data.name);
@@ -61,7 +61,7 @@ export const organisationRouter = router({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbOrganisation = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbOrganisation, "createdById")) throw httpForbidden();
+    if (!canUpdate(ctx, dbOrganisation.createdById)) throw httpForbidden();
 
     await organisationService.remove({ id: input });
   }),
