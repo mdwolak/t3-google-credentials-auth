@@ -7,12 +7,13 @@ import type { FieldErrors } from "react-hook-form";
 export const Asterisk = () => <span className="ml-1 text-sm font-medium text-red-500">*</span>;
 
 export function Label(props: ComponentProps<"label"> & { asterisk?: boolean }) {
+  const { asterisk, children, ...rest } = props;
   return (
     <label
       className={classNames("block text-sm font-medium text-gray-700", props.className)}
-      {...props}>
-      {props.children}
-      {props.asterisk && <Asterisk />}
+      {...rest}>
+      {children}
+      {asterisk && <Asterisk />}
     </label>
   );
 }
