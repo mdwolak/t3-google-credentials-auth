@@ -71,6 +71,15 @@ export const findAll = async (page: number, limit: number) => {
       endDate: true,
       activityId: true,
       createdAt: true,
+      scheduleDays: {
+        select: {
+          //id: true,
+          dayOfWeek: true,
+          startTime: true,
+          //duration: true,
+        },
+        orderBy: [{ dayOfWeek: "asc" }],
+      },
     },
     skip,
     take,

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
@@ -16,13 +16,14 @@ import {
   type CreateScheduleDayInput,
   createScheduleDaySchema,
 } from "~/lib/schemas/scheduleDay.schema";
+import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
 import { type RouterOutputs, api } from "~/utils/api";
 
 const CreateScheduleDayDialog = ({
-  scheduleId,
+  schedule,
   handleClose,
 }: HandleCloseProps<RouterOutputs["scheduleDay"]["create"]["scheduleDay"]> & {
-  scheduleId: number;
+  schedule: ScheduleInfo;
 }) => {
   const apiContext = api.useContext();
 
@@ -30,8 +31,8 @@ const CreateScheduleDayDialog = ({
     schema: createScheduleDaySchema,
 
     defaultValues: {
-      dayOfWeek: 1,
-      scheduleId,
+      dayOfWeek: 0,
+      scheduleId: schedule?.id,
       duration: 60,
     },
   });
@@ -53,6 +54,13 @@ const CreateScheduleDayDialog = ({
   useEffect(() => {
     setFocus("dayOfWeek");
   }, [setFocus]);
+
+  const mWeekDaysOptions = useMemo(() => {
+    return weekDaysOptions.map((o) => {
+      const isDisabled = schedule?.scheduleDays.some((sd) => sd.dayOfWeek === o.value);
+      return { ...o, disabled: isDisabled };
+    });
+  }, [schedule?.scheduleDays]);
 
   const handleSubmit = (data: CreateScheduleDayInput) => {
     createScheduleDay(data);
@@ -78,7 +86,7 @@ const CreateScheduleDayDialog = ({
             <RadioGroup
               control={form.control}
               label="What day is the activity on? "
-              options={weekDaysOptions}
+              options={mWeekDaysOptions}
               name="dayOfWeek"
               style="SmallCards"
               containerClass="grid grid-cols-7 gap-2"

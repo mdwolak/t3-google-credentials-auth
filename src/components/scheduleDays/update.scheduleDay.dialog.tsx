@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { nextWednesday } from "date-fns";
 
-import { ApiErrorMessage, Button, FormattedDate, IconButton, toast } from "~/components/core";
+import { ApiErrorMessage, Button, IconButton, toast } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOverHeader } from "~/components/dialogs/SlideOver";
 import styles from "~/components/dialogs/SlideOver.module.css";
@@ -24,19 +25,25 @@ import {
   type UpdateScheduleDayInput,
   updateScheduleDaySchema,
 } from "~/lib/schemas/scheduleDay.schema";
+import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
 import { type ScheduleDayInfo } from "~/server/api/routers/scheduleDay.router";
 import { type RouterOutputs, api } from "~/utils/api";
 
 type UpdateScheduleDayDialogProps = HandleCloseProps<
   RouterOutputs["scheduleDay"]["update"]["scheduleDay"]
 > & {
+  schedule: ScheduleInfo;
   scheduleDay: ScheduleDayInfo;
 };
 
-const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDayDialogProps) => {
+const UpdateScheduleDayDialog = ({
+  scheduleDay,
+  schedule,
+  handleClose,
+}: UpdateScheduleDayDialogProps) => {
   const apiContext = api.useContext();
-  const [openDelete, setOpenDelete] = useState(false);
 
+  const [openDelete, setOpenDelete] = useState(false);
   const { mutate: deleteScheduleDay } = api.scheduleDay.delete.useMutation({
     onSuccess() {
       apiContext.schedule.invalidate();
@@ -46,8 +53,6 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
       toast.error(error.message);
     },
   });
-
-  console.log(scheduleDay);
 
   const form = useForm({
     schema: updateScheduleDaySchema.shape.data,
@@ -69,6 +74,17 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
     },
     onError: getDefaultOnErrorOption(form),
   });
+
+  const currentDayOfWeek = scheduleDay?.dayOfWeek;
+
+  const mWeekDaysOptions = useMemo(() => {
+    return weekDaysOptions.map((o) => {
+      const isDisabled = schedule?.scheduleDays.some(
+        (sd) => sd.dayOfWeek === o.value && sd.dayOfWeek != currentDayOfWeek
+      );
+      return { ...o, disabled: isDisabled };
+    });
+  }, [schedule?.scheduleDays, currentDayOfWeek]);
 
   const handleSubmit = (data: UpdateScheduleDayInput["data"]) => {
     updateScheduleDay({ id: scheduleDay.id, data });
@@ -92,7 +108,7 @@ const UpdateScheduleDayDialog = ({ scheduleDay, handleClose }: UpdateScheduleDay
             <RadioGroup
               control={form.control}
               label="What day is the activity on? "
-              options={weekDaysOptions}
+              options={mWeekDaysOptions}
               name="dayOfWeek"
               style="SmallCards"
               containerClass="grid grid-cols-7 gap-2"

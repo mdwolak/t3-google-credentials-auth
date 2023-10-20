@@ -25,8 +25,11 @@ const ScheduleList = () => {
   const [updateSchedule, setUpdateSchedule] = useState<ScheduleInfo | null>(null);
   const [deleteScheduleId, setDeleteScheduleId] = useState(0);
 
-  const [openCreateScheduleId, setOpenCreateScheduleId] = useState(0);
-  const [updateScheduleDay, setUpdateScheduleDay] = useState<ScheduleDayInfo | null>(null);
+  const [openCreateScheduleDay, setOpenCreateScheduleDay] = useState<ScheduleInfo | null>(null);
+  const [updateScheduleDay, setUpdateScheduleDay] = useState<{
+    schedule: ScheduleInfo;
+    scheduleDay: ScheduleDayInfo;
+  } | null>(null);
 
   const router = useRouter();
   const activityId = Number(router.query.id);
@@ -90,7 +93,10 @@ const ScheduleList = () => {
                               key={scheduleDay.id}
                               size="xs"
                               onClick={() =>
-                                setUpdateScheduleDay({ ...scheduleDay, scheduleId: schedule.id })
+                                setUpdateScheduleDay({
+                                  schedule,
+                                  scheduleDay: { ...scheduleDay, scheduleId: schedule.id },
+                                })
                               }
                               // className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
                             >
@@ -103,7 +109,7 @@ const ScheduleList = () => {
                         )}
                         <Button
                           size="xs"
-                          onClick={() => setOpenCreateScheduleId(schedule.id)}
+                          onClick={() => setOpenCreateScheduleDay(schedule)}
                           // className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600"
                         >
                           + Add schedule day
@@ -165,15 +171,16 @@ const ScheduleList = () => {
       {/* Modals for ScheduleDays */}
       <SlideOver open={!!updateScheduleDay} onClose={() => setUpdateScheduleDay(null)}>
         <UpdateScheduleDayDialog
-          scheduleDay={updateScheduleDay as ScheduleDayInfo}
+          schedule={updateScheduleDay?.schedule as ScheduleInfo}
+          scheduleDay={updateScheduleDay?.scheduleDay as ScheduleDayInfo}
           handleClose={() => setUpdateScheduleDay(null)}
         />
       </SlideOver>
 
-      <SlideOver open={!!openCreateScheduleId} onClose={() => setOpenCreateScheduleId(0)}>
+      <SlideOver open={!!openCreateScheduleDay} onClose={() => setOpenCreateScheduleDay(null)}>
         <CreateScheduleDayDialog
-          scheduleId={openCreateScheduleId}
-          handleClose={() => setOpenCreateScheduleId(0)}
+          schedule={openCreateScheduleDay as ScheduleInfo}
+          handleClose={() => setOpenCreateScheduleDay(null)}
         />
       </SlideOver>
     </div>
