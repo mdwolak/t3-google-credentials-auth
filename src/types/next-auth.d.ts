@@ -13,5 +13,6 @@ declare module "next-auth" {
   interface User extends DefaultSession["user"] {
     id: PrismaUser["id"];
     role: PrismaUser["role"];
+    orgId: PrismaUser["orgId"];
   }
 }

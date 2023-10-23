@@ -65,6 +65,7 @@ export const authOptions: NextAuthOptions = {
           ...token,
           id: Number(user.id),
           role: user.role,
+          orgId: user.orgId,
         };
       }
       return token;
@@ -81,6 +82,7 @@ export const authOptions: NextAuthOptions = {
         ...session.user,
         id: token.id as number,
         role: token.role as UserRole,
+        orgId: token.orgId as number,
       };
       return session;
     },

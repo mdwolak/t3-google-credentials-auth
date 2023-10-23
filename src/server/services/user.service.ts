@@ -40,6 +40,7 @@ export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) =>
       password: true,
       //createdDate: true,
       role: true,
+      orgId: true,
     },
   });
 };

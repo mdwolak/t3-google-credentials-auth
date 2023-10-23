@@ -16,6 +16,7 @@ export async function authorize(credentials: { email: string; password: string }
     email: user.email,
     name: user.name,
     role: user.role,
+    orgId: user.orgId,
   };
 }
 

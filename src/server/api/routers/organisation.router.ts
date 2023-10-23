@@ -3,7 +3,7 @@ import {
   createOrganisationSchema,
   updateOrganisationSchema,
 } from "~/lib/schemas/organisation.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { adminProcedure, router } from "~/server/api/trpc";
 import {
   getUserId,
   httpConflictWithZod,
@@ -21,10 +21,10 @@ export const organisationRouter = router({
   /**
    * READ
    */
-  getById: publicProcedure.input(numericId).query(async ({ input }) => {
+  getById: adminProcedure.input(numericId).query(async ({ input }) => {
     return await getByIdOrThrow(input);
   }),
-  getFiltered: publicProcedure.input(filterQuery).query(async ({ input }) => {
+  getFiltered: adminProcedure.input(filterQuery).query(async ({ input }) => {
     const organisations = await organisationService.findAll(input.page, input.limit);
 
     return { results: organisations.length, organisations };
@@ -33,14 +33,14 @@ export const organisationRouter = router({
   /**
    * WRITE
    */
-  create: protectedProcedure.input(createOrganisationSchema).mutation(async ({ input, ctx }) => {
+  create: adminProcedure.input(createOrganisationSchema).mutation(async ({ input, ctx }) => {
     await checkUniqueName(input.name);
 
     const organisation = await organisationService.create(getUserId(ctx), input);
 
     return { organisation };
   }),
-  update: protectedProcedure.input(updateOrganisationSchema).mutation(async ({ input, ctx }) => {
+  update: adminProcedure.input(updateOrganisationSchema).mutation(async ({ input, ctx }) => {
     const dbOrganisation = await getByIdOrThrow(input.id);
 
     if (!canUpdate(ctx, dbOrganisation.createdById)) throw httpForbidden();
@@ -57,7 +57,7 @@ export const organisationRouter = router({
 
     return { organisation };
   }),
-  delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
+  delete: adminProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbOrganisation = await getByIdOrThrow(input);
 
     if (!canUpdate(ctx, dbOrganisation.createdById)) throw httpForbidden();
