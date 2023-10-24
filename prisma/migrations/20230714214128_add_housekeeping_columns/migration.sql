@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Exemplar" ADD COLUMN     "createdBy" INTEGER NOT NULL DEFAULT 1,
-ADD COLUMN     "updatedBy" INTEGER NOT NULL DEFAULT 1;

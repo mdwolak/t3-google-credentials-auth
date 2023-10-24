@@ -43,8 +43,6 @@ Table User {
   provider String
   createdDate DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  orgId Int
-  organisation Organisation
 }
 
 Table VerificationToken {
@@ -69,152 +67,11 @@ Table Exemplar {
   updatedById Int [not null]
 }
 
-Table Address {
-  id Int [pk, increment]
-  line1 String [not null]
-  line2 String
-  city String [not null]
-  county String
-  postcode String [not null]
-  orgId Int [not null]
-  isRegistered Boolean [not null, default: false]
-  isDefault Boolean [not null, default: false]
-  createdAt DateTime [default: `now()`, not null]
-  createdById Int [not null]
-  updatedAt DateTime [not null]
-  updatedById Int [not null]
-  activities Activity [not null]
-  organisation Organisation
-}
-
-Table Activity {
-  id Int [pk, increment]
-  name String [unique, not null]
-  description String [not null]
-  type Int [not null, default: 0]
-  addressId Int
-  duration Int [not null, default: 0]
-  slug String [not null]
-  visible Boolean [not null, default: true]
-  status ActivityStatus [not null, default: 'Draft']
-  minAge Int
-  maxAge Int
-  position Int [not null, default: 0]
-  data Json
-  orgId Int [not null]
-  owningGroupId Int [not null, default: 0]
-  createdAt DateTime [default: `now()`, not null]
-  createdById Int [not null]
-  updatedAt DateTime [not null]
-  updatedById Int [not null]
-  address Address
-  organisation Organisation [not null]
-  schedules Schedule [not null]
-
-  indexes {
-    (orgId, name, status) [unique]
-    (owningGroupId, name) [unique]
-    (owningGroupId, slug) [unique]
-  }
-}
-
-Table Organisation {
-  id Int [pk, increment]
-  parentId Int
-  name String [not null]
-  description String
-  type OrganisationType [not null, default: 'Company']
-  visible Boolean [not null, default: true]
-  status OrganisationStatus [not null, default: 'Draft']
-  data Json
-  createdAt DateTime [default: `now()`, not null]
-  createdById Int [not null]
-  updatedAt DateTime [not null]
-  updatedById Int [not null]
-  Addresses Address [not null]
-  Activities Activity [not null]
-  User User [not null]
-
-  indexes {
-    (parentId, name) [unique]
-  }
-}
-
-Table Schedule {
-  id Int [pk, increment]
-  name String
-  startDate DateTime [not null]
-  endDate DateTime
-  activityId Int [not null]
-  createdAt DateTime [default: `now()`, not null]
-  createdById Int [not null]
-  updatedAt DateTime [not null]
-  updatedById Int [not null]
-  activity Activity [not null]
-  scheduleDays ScheduleDay [not null]
-}
-
-Table ScheduleDay {
-  id Int [pk, increment]
-  dayOfWeek Int [not null]
-  startTime DateTime [not null]
-  duration Int [not null]
-  scheduleId Int [not null]
-  createdAt DateTime [default: `now()`, not null]
-  createdById Int [not null]
-  updatedAt DateTime [not null]
-  updatedById Int [not null]
-  schedule Schedule [not null]
-
-  indexes {
-    (scheduleId, dayOfWeek) [unique]
-  }
-}
-
 Enum UserRole {
   User
   Admin
 }
 
-Enum ActivityStatus {
-  Draft
-  Planned
-  OpenToRegistrations
-  ClosedToRegistrations
-  Ongoing
-  Past
-  Cancelled
-}
-
-Enum OrganisationStatus {
-  Prospect
-  Lead
-  Draft
-  Preapproval
-  Active
-  Inactive
-  Suspended
-  Archived
-}
-
-Enum OrganisationType {
-  Nonprofit
-  SelfEmployed
-  Company
-}
-
 Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
-
-Ref: User.orgId > Organisation.id
-
-Ref: Address.orgId > Organisation.id
-
-Ref: Activity.addressId > Address.id [delete: Cascade]
-
-Ref: Activity.orgId > Organisation.id [delete: Cascade]
-
-Ref: Schedule.activityId > Activity.id [delete: Cascade]
-
-Ref: ScheduleDay.scheduleId > Schedule.id [delete: Cascade]
