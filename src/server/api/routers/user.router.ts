@@ -1,5 +1,7 @@
+import type { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { env } from "~/env/server.mjs";
 import { createUserSchema, forgotPasswordSchema } from "~/lib/schemas/user.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
@@ -9,6 +11,7 @@ import {
   httpConflictWithZod,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
+import { generateVerificationToken } from "~/server/services/auth/token.service";
 import * as userService from "~/server/services/user.service";
 
 const errorHandler = (error: unknown) => {
@@ -45,10 +48,20 @@ export const userRouter = router({
   ),
   forgotPassword: publicProcedure.input(forgotPasswordSchema).mutation(async ({ input }) => {
     const user = await userService.findUnique({ email: input.email.toLowerCase() });
-    if (!user) {
-      throw httpConflictWithZod(getZodErrorWithCustomIssue("Email not found", ["email"]));
+    // TODO: decide if we want to send a message to the user if the email is not found
+    if (user) {
+      const token = await generateVerificationToken(
+        user.id.toString(),
+        new Date(new Date().setHours(2))
+      );
+      const resetLink = `${env.NEXTAUTH_URL}/auth/forgot-password/${token}`;
+      await sendPasswordResetLink(user, resetLink);
     }
-
-    return { user };
+    return null;
   }),
 });
+
+const sendPasswordResetLink = async (user: Pick<User, "id" | "name">, resetLink: string) => {
+  //todo: send email
+  console.log(resetLink);
+};
