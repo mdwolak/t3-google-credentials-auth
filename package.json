@@ -28,6 +28,7 @@
     "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
     "date-fns": "^2.30.0",
+    "dayjs": "^1.11.10",
     "lodash.get": "^4.4.2",
     "next": "^13.5.4",
     "next-auth": "^4.15.1",

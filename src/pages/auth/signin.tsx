@@ -11,11 +11,12 @@ import { Alert, Button, Link, SEOHead } from "~/components/core";
 import { Form, InputEmail, InputPassword, useForm } from "~/components/forms";
 import FacebookIcon from "~/components/icons/facebook";
 import { ErrorCode } from "~/lib/errorCodes";
+import { email } from "~/lib/schemas/user.schema";
 import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 
 const userLoginSchema = z.object({
   csrfToken: z.string(),
-  email: z.string().min(1, "Email address is required").email("Email Address is invalid"),
+  email,
   password: z.string().min(1, "Password is required"),
 });
 export type UserLoginInput = TypeOf<typeof userLoginSchema>;
@@ -108,7 +109,7 @@ const SignIn = ({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideP
                   />
                 </div>
                 <span className="absolute -top-[2px] right-0 z-auto">
-                  <Link className="text-sm" href="/auth/signup">
+                  <Link className="text-sm" href="/auth/forgot-password">
                     Forgot password?
                   </Link>
                 </span>

@@ -1,9 +1,15 @@
 import z, { type TypeOf } from "zod";
 
+export const email = z
+  .string()
+  .trim()
+  .min(1, "Email address is required")
+  .email("Email address is invalid");
+
 export const createUserSchema = z
   .object({
     name: z.string().trim().min(1, "Name is required"),
-    email: z.string().trim().min(1, "Email address is required").email("Email Address is invalid"),
+    email,
     password: z
       .string()
       .trim()
@@ -18,3 +24,8 @@ export const createUserSchema = z
   });
 
 export type CreateUserInput = TypeOf<typeof createUserSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email,
+});
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
