@@ -4,7 +4,16 @@ import dayjs from "dayjs";
 
 import { prisma } from "~/server/db";
 
-export const generateVerificationToken = async (identifier: string, expires: Date) => {
+const generateToken = (length: number): string => {
+  const token = crypto.randomBytes(Math.ceil(length / 2)).toString("hex");
+  return token.slice(0, length);
+};
+
+const hashToken = (token: string) => {
+  return crypto.createHash("sha256").update(token).digest("hex");
+};
+
+export const generate = async (identifier: string, expires: Date) => {
   // const storedUserTokens = await prisma
   // 	.selectFrom("email_verification_token")
   // 	.selectAll()
@@ -32,41 +41,27 @@ export const generateVerificationToken = async (identifier: string, expires: Dat
   return token;
 };
 
-export const validateVerificationToken = async (token: string) => {
+export const validate = async (token: string, deleteToken = false) => {
   const hashedToken = hashToken(token);
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token: hashedToken },
+    //TODO: return null. client should throw token is invalid or has expired
+    //       expires: {
+    //   gt: new Date(),
+    // },
   });
   if (!verificationToken) {
-    throw new Error("Invalid token");
+    return null;
   }
-  //lucia advise to delete token
 
-  if (dayjs(verificationToken.expires).isBefore(dayjs())) {
-    throw new Error("Expired token");
+  if (deleteToken) {
+    await prisma.verificationToken.delete({
+      where: { token: verificationToken.token },
+    });
+
+    if (dayjs(verificationToken.expires).isBefore(dayjs())) {
+      return null;
+    }
+    return verificationToken.identifier;
   }
-  return verificationToken.identifier;
-};
-
-// export const isValidPasswordResetToken = async (token: string) => {
-//   const storedToken = await db
-//     .selectFrom("password_reset_token")
-//     .selectAll()
-//     .where("id", "=", token)
-//     .executeTakeFirst();
-//   if (!storedToken) return false;
-//   const tokenExpires = Number(storedToken.expires); // bigint => number conversion
-//   if (!isWithinExpiration(tokenExpires)) {
-//     return false;
-//   }
-//   return true;
-// };
-
-const generateToken = (length: number): string => {
-  const token = crypto.randomBytes(Math.ceil(length / 2)).toString("hex");
-  return token.slice(0, length);
-};
-
-const hashToken = (token: string) => {
-  return crypto.createHash("sha256").update(token).digest("hex");
 };

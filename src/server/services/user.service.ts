@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 import { prisma } from "~/server/db";
 
@@ -35,6 +36,7 @@ export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) =>
       // username: true,
       name: true,
       email: true,
+      emailVerified: true,
       // identityProvider: true,
       //image: true,
       password: true,
@@ -59,4 +61,11 @@ export const update = async (
   select: Prisma.UserSelect = defaultUserSelect
 ) => {
   return await prisma.user.update({ where, data, select });
+};
+
+export const hashPassword = async (password: string) => {
+  return await bcrypt.hash(password, 12);
+};
+export const verifyPassword = async (password: string, hashedPassword: string) => {
+  return await bcrypt.compare(password, hashedPassword);
 };

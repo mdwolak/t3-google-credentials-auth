@@ -88,6 +88,40 @@ export function getConstraintViolationError(dbFields: string[], options: ErrorHa
  * @see https://trpc.io/docs/server/error-handling#error-codes
  **/
 
+//HTTP 400
+export function httpBadRequest(message: string, cause?: unknown) {
+  return new TRPCError({
+    code: "BAD_REQUEST",
+    message,
+    cause,
+  });
+}
+
+//HTTP 401
+export function httpUnauthorized(): TRPCError {
+  return new TRPCError({
+    code: "UNAUTHORIZED",
+    message: "You must be logged in to access this resource",
+  });
+}
+
+//HTTP 403
+export function httpForbidden(): TRPCError {
+  return new TRPCError({
+    code: "FORBIDDEN",
+    message: "You don't have permission to access this resource",
+  });
+}
+
+//HTTP 404
+export function httpNotFound(entityName: string) {
+  return new TRPCError({
+    code: "NOT_FOUND",
+    message: `The requested ${entityName} was not found`,
+  });
+}
+
+//HTTP 409
 export function httpConflict(message: string, cause?: unknown) {
   return new TRPCError({
     code: "CONFLICT",
@@ -96,6 +130,7 @@ export function httpConflict(message: string, cause?: unknown) {
   });
 }
 
+//HTTP 409
 export function httpConflictWithZod(cause: ZodError) {
   return new TRPCError({
     code: "CONFLICT",
@@ -104,27 +139,7 @@ export function httpConflictWithZod(cause: ZodError) {
   });
 }
 
-export function httpForbidden(): TRPCError {
-  return new TRPCError({
-    code: "FORBIDDEN",
-    message: "You don't have permission to access this resource",
-  });
-}
-
-export function httpUnauthorized(): TRPCError {
-  return new TRPCError({
-    code: "UNAUTHORIZED",
-    message: "You must be logged in to access this resource",
-  });
-}
-
-export function httpNotFound(entityName: string) {
-  return new TRPCError({
-    code: "NOT_FOUND",
-    message: `The requested ${entityName} was not found`,
-  });
-}
-
+//HTTP 500
 export function httpInternalServerError(error: unknown) {
   return new TRPCError({
     code: "INTERNAL_SERVER_ERROR",

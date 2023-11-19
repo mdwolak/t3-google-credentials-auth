@@ -1,17 +1,21 @@
 import type { User } from "@prisma/client";
-import bcrypt from "bcryptjs";
 
 import { env } from "~/env/server.mjs";
-import { createUserSchema, forgotPasswordSchema } from "~/lib/schemas/user.schema";
+import {
+  createUserSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from "~/lib/schemas/user.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
   getErrorFromUnknown,
   handleRequest,
+  httpBadRequest,
   httpConflictWithZod,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
-import { generateVerificationToken } from "~/server/services/auth/token.service";
+import * as verificationTokenService from "~/server/services/auth/verificationToken.service";
 import * as userService from "~/server/services/user.service";
 
 const errorHandler = (error: unknown) => {
@@ -36,7 +40,7 @@ export const userRouter = router({
         throw httpConflictWithZod(getZodErrorWithCustomIssue("Email already taken", ["email"]));
       }
 
-      const hashedPassword = await bcrypt.hash(input.password, 12);
+      const hashedPassword = await userService.hashPassword(input.password);
       const user = await userService.create({
         email: input.email.toLocaleLowerCase(),
         name: input.name,
@@ -50,7 +54,7 @@ export const userRouter = router({
     const user = await userService.findUnique({ email: input.email.toLowerCase() });
     // TODO: decide if we want to send a message to the user if the email is not found
     if (user) {
-      const token = await generateVerificationToken(
+      const token = await verificationTokenService.generate(
         user.id.toString(),
         new Date(new Date().setHours(2))
       );
@@ -58,6 +62,29 @@ export const userRouter = router({
       await sendPasswordResetLink(user, resetLink);
     }
     return null;
+  }),
+  resetPassword: publicProcedure.input(resetPasswordSchema).mutation(async ({ input }) => {
+    const userId = await verificationTokenService.validate(input.token, true);
+
+    if (userId) {
+      const user = await userService.findUniqueSensitive({ id: Number(userId) });
+      if (user) {
+        //TODO: await auth.invalidateAllUserSessions(user.userId);
+        const hashedPassword = await userService.hashPassword(input.password);
+
+        userService.update(
+          { id: user.id },
+          {
+            password: hashedPassword,
+            //since the token comes from a reset link sent to email, we can assume that the user is the owner of the email
+            ...(!user.emailVerified ? { emailVerified: new Date() } : {}),
+          }
+        );
+        return null; //successful reset
+      }
+    }
+
+    throw httpBadRequest("Invalid or expired password reset link");
   }),
 });
 
