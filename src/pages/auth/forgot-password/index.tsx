@@ -1,3 +1,4 @@
+import type { GetServerSidePropsContext } from "next";
 import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
@@ -10,6 +11,7 @@ import {
   useForm,
 } from "~/components/forms";
 import { type ForgotPasswordInput, forgotPasswordSchema } from "~/lib/schemas/user.schema";
+import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 import { api } from "~/utils/api";
 
 const ForgotPassword = () => {
@@ -65,3 +67,18 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerAuthSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return;
+}

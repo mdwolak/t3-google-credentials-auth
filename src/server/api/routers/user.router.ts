@@ -56,7 +56,7 @@ export const userRouter = router({
     if (user) {
       const token = await verificationTokenService.generate(
         user.id.toString(),
-        new Date(new Date().setHours(2))
+        new Date(new Date().getTime() + 2 * 60 * 60 * 1000) //expires in 2 hours
       );
       const resetLink = `${env.NEXTAUTH_URL}/auth/forgot-password/${token}`;
       await sendPasswordResetLink(user, resetLink);
@@ -89,6 +89,6 @@ export const userRouter = router({
 });
 
 const sendPasswordResetLink = async (user: Pick<User, "id" | "name">, resetLink: string) => {
-  //todo: send email
+  //TODO: send email
   console.log(resetLink);
 };
