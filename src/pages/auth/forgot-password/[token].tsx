@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import Head from "next/head";
 import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
@@ -9,6 +10,7 @@ import * as verificationTokenService from "~/server/services/auth/verificationTo
 import * as userService from "~/server/services/user.service";
 import { api } from "~/utils/api";
 
+//Entry point: user clicks on password reset link in email
 const ResetPassword = ({
   isTokenValid,
   token,
@@ -46,7 +48,9 @@ const ResetPassword = ({
 
   return (
     <>
-      <SEOHead title="Password Reset" description="Reset your password" />
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
       <AuthPanel showLogo heading="Password Reset">
         {status === "enterPassword" ? (
           <>

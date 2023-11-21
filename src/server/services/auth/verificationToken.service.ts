@@ -19,6 +19,12 @@ export const generate = async (identifier: string, expires: Date) => {
   return token;
 };
 
+/*
+  The token handling must be restricitive:
+  - Only one (the latest) token per user can be valid at a time
+  - Tokens must be deleted after use
+  - No details are revealed about the token (e.g. if it exists or not, or if it has expired)
+*/
 export const validate = async (token: string, deleteToken = false) => {
   const hashedToken = hashToken(token);
   const verificationToken = await prisma.verificationToken.findUnique({

@@ -14,5 +14,6 @@ declare module "next-auth" {
     id: PrismaUser["id"];
     role: PrismaUser["role"];
     orgId: PrismaUser["orgId"];
+    emailVerified?: boolean; //present only if e-mail not verified yet
   }
 }

@@ -38,7 +38,18 @@ const ForgotPassword = () => {
       <SEOHead title="Forgot Password" description="Reset your password" />
       <AuthPanel showLogo heading="Forgot Password">
         {emailSent ? (
-          <div className="text-sm">Reset email sent. Please check your inbox.</div>
+          <>
+            <p>
+              If this email address is registered with us, then we have sent your password reset
+              instructions there.
+            </p>
+
+            <p>
+              If you don&amp;t receive the email within a few minutes, please ensure that the email
+              address you entered is correct and check your spam folder. If the issue persists,
+              please contact support.
+            </p>
+          </>
         ) : (
           <>
             <ValidationSummary errors={form.formState.errors} />
@@ -80,5 +91,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  return;
+  return { props: {} };
 }

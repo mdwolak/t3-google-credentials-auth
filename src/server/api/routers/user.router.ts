@@ -10,13 +10,17 @@ import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
   getErrorFromUnknown,
+  getUserId,
   handleRequest,
   httpBadRequest,
   httpConflictWithZod,
+  httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as verificationTokenService from "~/server/services/auth/verificationToken.service";
 import * as userService from "~/server/services/user.service";
+
+const entityName = "User";
 
 const errorHandler = (error: unknown) => {
   const errorHandlerOptions: ErrorHandlerOptions = {
@@ -86,9 +90,33 @@ export const userRouter = router({
 
     throw httpBadRequest("Invalid or expired password reset link");
   }),
+  sendVerificationEmail: protectedProcedure.mutation(async ({ ctx }) => {
+    const user = await getByIdOrThrow(getUserId(ctx));
+
+    const token = await verificationTokenService.generate(
+      user.id.toString(),
+      new Date(new Date().getTime() + 30 * 60 * 1000) //expires in 30 minutes
+    );
+    const resetLink = `${env.NEXTAUTH_URL}/auth/verify-email/${token}`;
+    await sendVerificationEmailLink(user, resetLink);
+
+    return { email: user.email };
+  }),
 });
 
 const sendPasswordResetLink = async (user: Pick<User, "id" | "name">, resetLink: string) => {
   //TODO: send email
   console.log(resetLink);
 };
+
+const sendVerificationEmailLink = async (user: Pick<User, "id" | "name">, resetLink: string) => {
+  //TODO: send email
+  console.log(resetLink);
+};
+
+async function getByIdOrThrow(id: number) {
+  const user = await userService.findUnique({ id });
+  if (!user) throw httpNotFound(entityName);
+
+  return user;
+}
