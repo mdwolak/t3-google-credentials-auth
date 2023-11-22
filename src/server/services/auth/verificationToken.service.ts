@@ -1,37 +1,48 @@
 //source https://github.com/lucia-auth/examples/blob/main/nextjs-app/email-and-password/auth/token.ts
+import { type TokenType } from "@prisma/client";
 import crypto from "crypto";
 import dayjs from "dayjs";
 
 import { prisma } from "~/server/db";
 
-export const generate = async (identifier: string, expires: Date) => {
+/*
+REMARKS:
+  - Only one (the latest) token per user can be valid at a time
+  - Tokens must be deleted after use
+*/
+
+export const generate = async (identifier: string, expires: Date, type: TokenType) => {
+  if (dayjs(expires).isBefore(dayjs())) throw new Error("Token expires in the past");
+
   //IMPROVE: ratelimit using redis
-  const token = generateToken(32);
+
+  //invalidate all previous tokens of the specified type by setting their expiry to the past
+  await prisma.verificationToken.updateMany({
+    where: { identifier, expires: { gt: new Date() }, type },
+    data: { expires: new Date() },
+  });
+
+  const token = generateToken(64);
 
   await prisma.verificationToken.create({
     data: {
       identifier,
       token: hashToken(token),
       expires,
+      type,
     },
   });
 
   return token;
 };
 
-/*
-  The token handling must be restricitive:
-  - Only one (the latest) token per user can be valid at a time
-  - Tokens must be deleted after use
-  - No details are revealed about the token (e.g. if it exists or not, or if it has expired)
-*/
 export const validate = async (token: string, deleteToken = false) => {
   const hashedToken = hashToken(token);
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token: hashedToken },
   });
   if (!verificationToken) {
-    return null;
+    return { status: "invalid" };
   }
 
   if (deleteToken)
@@ -40,9 +51,9 @@ export const validate = async (token: string, deleteToken = false) => {
     });
 
   if (dayjs(verificationToken.expires).isBefore(dayjs())) {
-    return null;
+    return { status: "expired" };
   }
-  return verificationToken.identifier;
+  return { status: "valid", identifier: verificationToken.identifier };
 };
 
 const generateToken = (length: number): string => {

@@ -60,7 +60,8 @@ export const userRouter = router({
     if (user) {
       const token = await verificationTokenService.generate(
         user.id.toString(),
-        new Date(new Date().getTime() + 2 * 60 * 60 * 1000) //expires in 2 hours
+        new Date(new Date().getTime() + 2 * 60 * 60 * 1000), //expires in 2 hours
+        "passwordReset"
       );
       const resetLink = `${env.NEXTAUTH_URL}/auth/forgot-password/${token}`;
       await sendPasswordResetLink(user, resetLink);
@@ -95,7 +96,8 @@ export const userRouter = router({
 
     const token = await verificationTokenService.generate(
       user.id.toString(),
-      new Date(new Date().getTime() + 30 * 60 * 1000) //expires in 30 minutes
+      new Date(new Date().getTime() + 30 * 60 * 1000), //expires in 30 minutes
+      "emailVerification"
     );
     const resetLink = `${env.NEXTAUTH_URL}/auth/verify-email/${token}`;
     await sendVerificationEmailLink(user, resetLink);

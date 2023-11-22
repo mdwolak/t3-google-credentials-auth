@@ -51,6 +51,7 @@ Table VerificationToken {
   identifier String [not null]
   token String [unique, not null]
   expires DateTime [not null]
+  type TokenType [not null, default: 'emailVerification']
 
   indexes {
     (identifier, token) [unique]
@@ -169,6 +170,11 @@ Table ScheduleDay {
   indexes {
     (scheduleId, dayOfWeek) [unique]
   }
+}
+
+Enum TokenType {
+  emailVerification
+  passwordReset
 }
 
 Enum UserRole {

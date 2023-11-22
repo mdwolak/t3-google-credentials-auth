@@ -69,10 +69,16 @@ model User {
 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String    @unique
   expires    DateTime
+  type       TokenType @default(emailVerification)
 
   @@unique([identifier, token])
+}
+
+enum TokenType {
+  emailVerification
+  passwordReset
 }
 
 enum UserRole {

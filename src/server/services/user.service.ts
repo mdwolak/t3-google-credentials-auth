@@ -10,6 +10,7 @@ export const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   updatedAt: true,
   role: true,
   email: true,
+  emailVerified: true,
 });
 
 export const findFirst = async (

@@ -110,9 +110,11 @@ export default ResetPassword;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token = context.params?.token as string;
 
-  const userId = await verificationTokenService.validate(token);
+  const validationResult = await verificationTokenService.validate(token);
 
-  const isTokenValid = !!userId && !!(await userService.findUnique({ id: Number(userId) }));
+  const isTokenValid =
+    validationResult.status === "valid" &&
+    !!(await userService.findUnique({ id: Number(validationResult.identifier) }));
 
   return {
     props: {
