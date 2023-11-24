@@ -1,7 +1,7 @@
-import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
-import { ApiErrorMessage, Button, Link, SEOHead, toast } from "~/components/core";
+import { ApiErrorMessage, Button, Link, SEOHead } from "~/components/core";
 import {
   Form,
   Input,
@@ -15,8 +15,6 @@ import { type CreateUserInput, createUserSchema } from "~/lib/schemas/user.schem
 import { api } from "~/utils/api";
 
 const SignUp = () => {
-  const router = useRouter();
-
   const form = useForm({
     schema: createUserSchema,
     //@ remove default values
@@ -33,8 +31,12 @@ const SignUp = () => {
     isLoading,
     error: apiError,
   } = api.user.create.useMutation({
-    onSuccess() {
-      router.push("signin");
+    async onSuccess() {
+      await signIn<"credentials">("credentials", {
+        email: form.getValues("email"),
+        password: form.getValues("password"),
+        callbackUrl: `/auth/verify-email`,
+      });
     },
     onError: getDefaultOnErrorOption(form),
   });

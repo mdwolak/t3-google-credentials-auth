@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "~/server/db";
+import { validate } from "~/server/services/auth/verificationToken.service";
 
 export const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,
@@ -63,6 +64,20 @@ export const update = async (
   select: Prisma.UserSelect = defaultUserSelect
 ) => {
   return await prisma.user.update({ where, data, select });
+};
+
+export const verifyEmail = async (token: string) => {
+  const validationResult = await validate(token, true);
+  if (validationResult.status === "valid") {
+    const user = await findUnique({ id: Number(validationResult.identifier) });
+
+    if (!user) {
+      //old link of a deleted user
+      return "invalid";
+    }
+    if (!user.emailVerified) await update({ id: user.id }, { emailVerified: new Date() });
+  }
+  return validationResult.status;
 };
 
 export const hashPassword = async (password: string) => {

@@ -36,7 +36,14 @@ export const generate = async (identifier: string, expires: Date, type: TokenTyp
   return token;
 };
 
-export const validate = async (token: string, deleteToken = false) => {
+type ValidateTokenOutput = {
+  status: "valid" | "invalid" | "expired";
+  identifier?: string;
+};
+export const validate = async (
+  token: string,
+  deleteToken = false
+): Promise<ValidateTokenOutput> => {
   const hashedToken = hashToken(token);
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token: hashedToken },

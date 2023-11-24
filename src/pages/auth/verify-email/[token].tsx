@@ -1,18 +1,22 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
 import { Button, Link } from "~/components/core";
-import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
-import * as verificationTokenService from "~/server/services/auth/verificationToken.service";
-import * as userService from "~/server/services/user.service";
+import { verifyEmail } from "~/server/services/user.service";
 
-const VerifyEmailToken = ({
-  hasSession,
-  status,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const VerifyEmailToken = ({ status }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
+  const { data: session, update } = useSession();
+
+  useEffect(() => {
+    if (status === "valid" && session && !session.user?.emailVerified) {
+      update("emailVerified");
+    }
+  });
 
   return (
     <>
@@ -21,7 +25,7 @@ const VerifyEmailToken = ({
       </Head>
       {status === "valid" ? (
         <AuthPanel showLogo heading="Your email has been verified!">
-          {hasSession ? (
+          {session ? (
             <Button onClick={() => router.push("/getting-started")}>Continue</Button>
           ) : (
             <Button onClick={() => router.push("/auth/signin")}>Sign in</Button>
@@ -36,7 +40,7 @@ const VerifyEmailToken = ({
               : "The email verification link has expired."}
           </p>
           <p>
-            {hasSession ? (
+            {session ? (
               <>
                 <Link href="/auth/verify-email">Request a new verification link</Link>.
               </>
@@ -57,19 +61,7 @@ export default VerifyEmailToken;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const token = context.params?.token as string;
 
-  const validationResult = await verificationTokenService.validate(token, true);
-  if (validationResult.status === "valid") {
-    const user = await userService.findUnique({ id: Number(validationResult.identifier) });
+  const status = await verifyEmail(token);
 
-    if (!user) {
-      //old link of a deleted user
-      return { notFound: true };
-    }
-    if (!user.emailVerified)
-      await userService.update({ id: user.id }, { emailVerified: new Date() });
-  }
-
-  const session = await getServerAuthSession(context);
-
-  return { props: { hasSession: !!session, status: validationResult.status } };
+  return { props: { status } };
 }

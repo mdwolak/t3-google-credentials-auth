@@ -22,6 +22,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  if (!token.emailVerified) {
+    return NextResponse.redirect(new URL("/auth/verify-email", req.url));
+  }
+
   if (token.role === "Admin") return NextResponse.next();
 
   const { pathname } = req.nextUrl;
@@ -36,6 +40,7 @@ export async function middleware(req: NextRequest) {
       }
     }
   }
+  //fallback: /admin with no admin role or /org with no orgId
   return new NextResponse("UNAUTHORIZED", {
     status: 403,
     statusText: "Unauthorized!",

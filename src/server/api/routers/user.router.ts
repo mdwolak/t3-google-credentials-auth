@@ -69,10 +69,12 @@ export const userRouter = router({
     return null;
   }),
   resetPassword: publicProcedure.input(resetPasswordSchema).mutation(async ({ input }) => {
-    const userId = await verificationTokenService.validate(input.token, true);
+    const validationResult = await verificationTokenService.validate(input.token, true);
 
-    if (userId) {
-      const user = await userService.findUniqueSensitive({ id: Number(userId) });
+    if (validationResult.status === "valid") {
+      const user = await userService.findUniqueSensitive({
+        id: Number(validationResult.identifier),
+      });
       if (user) {
         //TODO: await auth.invalidateAllUserSessions(user.userId);
         const hashedPassword = await userService.hashPassword(input.password);
