@@ -54,8 +54,8 @@ const providers: Provider[] = [
         name: dbUser.name,
         role: dbUser.role,
         orgId: dbUser.orgId,
-        emailVerified: !!dbUser.emailVerified,
-      } satisfies User;
+        emailVerified: dbUser.emailVerified,
+      };
 
       //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
     },
@@ -91,18 +91,12 @@ export const authOptions: NextAuthOptions = {
     //the desired session object must be recreated every time
     //the user property in the session arg is always passed with mere name, email & image (DefaultSession["user"])
     async session({ session, token }) {
-      // console.log("session", session);
-      // console.log("token", token);
-
-      //use data from JWT token to set session user
-      session.user = {
-        ...session.user,
-        id: token.id,
-        role: token.role,
-        orgId: token.orgId,
-        emailVerified: token.emailVerified,
-      };
-      return session satisfies Session;
+      return {
+        ...session,
+        user: {
+          ...token,
+        },
+      } satisfies Session;
     },
   },
   adapter: PrismaAdapter(prisma),
