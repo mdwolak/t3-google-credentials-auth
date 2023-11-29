@@ -5,6 +5,7 @@ import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
+import type { GoogleProfile } from "next-auth/providers/google";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env/server.mjs";
@@ -21,7 +22,13 @@ const providers: Provider[] = [
   GoogleProvider({
     clientId: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
-    //allowDangerousEmailAccountLinking: true //https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
+    allowDangerousEmailAccountLinking: true, //https://next-auth.js.org/configuration/providers/oauth#allowdangerousemailaccountlinking-option
+    authorization: {
+      params: {
+        prompt: "consent", //confirm which account to use
+        access_type: "offline", //request refresh_token
+      },
+    },
   }),
   CredentialsProvider({
     name: "credentials",
