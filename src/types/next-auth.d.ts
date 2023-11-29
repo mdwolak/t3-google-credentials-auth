@@ -22,8 +22,8 @@ declare module "next-auth/jwt" {
   interface JWT {
     //sent with every request; must stay compact
     id: PrismaUser["id"];
-    name: string;
-    email: PrismaUser["email"];
+    // name: string;
+    // email: PrismaUser["email"];
     role: PrismaUser["role"];
     orgId: PrismaUser["orgId"];
     emailVerified: boolean;

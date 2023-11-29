@@ -1,11 +1,10 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import type { NextAuthOptions, Session, User } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import NextAuth from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
-import type { GoogleProfile } from "next-auth/providers/google";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env/server.mjs";
@@ -77,9 +76,10 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       //user object holds information extracted from the profile and is only passed the first time this callback is called (after the user signs in)
       if (user) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { name, email, picture, ...requiredTokenProps } = token;
         return {
-          ...token,
-          id: Number(user.id),
+          ...requiredTokenProps,
           role: user.role,
           orgId: user.orgId,
           emailVerified: !!user.emailVerified,
@@ -101,7 +101,10 @@ export const authOptions: NextAuthOptions = {
       return {
         ...session,
         user: {
-          ...token,
+          id: Number(token.sub),
+          role: token.role,
+          orgId: token.orgId,
+          emailVerified: token.emailVerified,
         },
       } satisfies Session;
     },
