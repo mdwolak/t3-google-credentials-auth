@@ -12,6 +12,10 @@ const VerifyEmailToken = ({ status }: InferGetServerSidePropsType<typeof getServ
   const router = useRouter();
   const { data: session, update } = useSession();
 
+  if (session?.user?.emailVerified) {
+    router.push("/getting-started");
+  }
+
   useEffect(() => {
     if (status === "valid" && session && !session.user?.emailVerified) {
       update("emailVerified");

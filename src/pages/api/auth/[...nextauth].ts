@@ -5,7 +5,9 @@ import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
+
+import type { Prisma } from "@prisma/client";
 
 import { env } from "~/env/server.mjs";
 import { ErrorCode } from "~/lib/errorCodes";
@@ -72,27 +74,44 @@ export const authOptions: NextAuthOptions = {
   //https://next-auth.js.org/configuration/callbacks
   callbacks: {
     //the callback is called with all args (incl. account, profile, isNewUser ) when a JSON Web Token is created (when a user signs in)
-    //after that is it called when session is accessed (all args except token are then undefined, so you only pass-through the token)
-    async jwt({ token, user, trigger, session }) {
-      //user object holds information extracted from the profile and is only passed the first time this callback is called (after the user signs in)
-      if (user) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { name, email, picture, ...requiredTokenProps } = token;
-        return {
-          ...requiredTokenProps,
-          role: user.role,
-          orgId: user.orgId,
-          emailVerified: !!user.emailVerified,
-        } satisfies JWT;
-      }
-      if (trigger === "update" && session == "emailVerified") {
-        const dbUser = await userService.findUnique({ id: token.id as number });
+    async jwt({ token, user, account, trigger, session, profile }) {
+      if (!trigger) return token; //token already issued
+
+      if (trigger === "update") {
+        //useSession().update() was called
+        if (session != "emailVerified") throw new Error("Unexpected session update: " + session);
+
         return {
           ...token,
-          emailVerified: !!dbUser?.emailVerified,
+          emailVerified: true,
         };
       }
-      return token;
+
+      //trigger = "signIn" | "signUp" and user has full db record
+
+      //update User table from OAuth profile
+      let dbUser = user;
+      if (account?.provider === "google" && profile) {
+        const gProfile = profile as GoogleProfile;
+        const data: Prisma.UserUpdateInput = {};
+        //warning: if props can be updated in the app, they should not be overwritten here
+        if (!dbUser.emailVerified && gProfile.email_verified) data.emailVerified = new Date();
+        if (dbUser.image !== gProfile.picture && gProfile.picture) data.image = gProfile.picture;
+        if (dbUser.name !== gProfile.name && gProfile.name) data.name = gProfile.name;
+
+        if (Object.keys(data).length > 0) {
+          dbUser = await userService.update({ id: Number(dbUser.id) }, data);
+        }
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { name, email, picture, ...requiredTokenProps } = token;
+      return {
+        ...requiredTokenProps,
+        role: dbUser.role,
+        orgId: dbUser.orgId,
+        emailVerified: !!dbUser.emailVerified,
+      } satisfies JWT;
     },
     //the callback is called whenever session is accessed (by the client or in the API route) and ONLY if client has been authenticated
     //the desired session object must be recreated every time

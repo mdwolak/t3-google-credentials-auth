@@ -3,25 +3,33 @@ import "next-auth";
 import type { User as PrismaUser } from "@prisma/client";
 
 declare module "next-auth" {
-  /**
-   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
-   */
   interface Session {
     user?: SessionUser;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  /**
+   * Returned by CredentialsProvider.authorize(). A supertype of AdapterUser which correlates to the User prisma model.
+   */
   interface User extends Omit<PrismaUser, "password" | "provider" | "createdDate" | "updatedAt"> {
     id: PrismaUser["id"];
   }
 
-  type SessionUser = JWT; //derives fully from JWT avoiding extra db calls
+  /**
+   * Built entirely from the JWT token.
+   */
+  interface SessionUser {
+    id: PrismaUser["id"];
+    role: PrismaUser["role"];
+    orgId: PrismaUser["orgId"];
+    emailVerified: boolean;
+  }
 }
 
 declare module "next-auth/jwt" {
+  /**
+   * Sent with every request. Must stay compact.
+   */
   interface JWT {
-    //sent with every request; must stay compact
-    id: PrismaUser["id"];
     // name: string;
     // email: PrismaUser["email"];
     role: PrismaUser["role"];

@@ -7,7 +7,7 @@ import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
 import { api } from "~/utils/api";
 
 //Entry point: logged in user whose email is not verified will be redirected to this page
-const VerifyEmail = () => {
+const VerifyEmailPage = () => {
   const [status, setStatus] = useState<"SendEmail" | "EmailSent" | "ProblemsReceivingEmail">(
     "SendEmail"
   );
@@ -82,7 +82,7 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default VerifyEmailPage;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerAuthSession(context);
@@ -91,6 +91,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       redirect: {
         destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  if (session.user?.emailVerified) {
+    return {
+      redirect: {
+        destination: "/getting-started",
         permanent: false,
       },
     };

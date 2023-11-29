@@ -45,7 +45,7 @@ const ForgotPassword = () => {
             </p>
 
             <p>
-              If you don&amp;t receive the email within a few minutes, please ensure that the email
+              If you {"don't"} receive the email within a few minutes, please ensure that the email
               address you entered is correct and check your spam folder. If the issue persists,
               please contact support.
             </p>
