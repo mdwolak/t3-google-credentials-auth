@@ -7,7 +7,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 
-import type { Prisma } from "@prisma/client";
+import { AuthProviderType, type Prisma } from "@prisma/client";
 
 import { env } from "~/env/server.mjs";
 import { ErrorCode } from "~/lib/errorCodes";
@@ -98,6 +98,7 @@ export const authOptions: NextAuthOptions = {
         if (!dbUser.emailVerified && gProfile.email_verified) data.emailVerified = new Date();
         if (dbUser.image !== gProfile.picture && gProfile.picture) data.image = gProfile.picture;
         if (dbUser.name !== gProfile.name && gProfile.name) data.name = gProfile.name;
+        if (!dbUser.signupProvider) data.signupProvider = AuthProviderType.Google;
 
         if (Object.keys(data).length > 0) {
           dbUser = await userService.update({ id: Number(dbUser.id) }, data);

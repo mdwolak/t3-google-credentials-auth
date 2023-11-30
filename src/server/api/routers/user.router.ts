@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { AuthProviderType, type User } from "@prisma/client";
 
 import { env } from "~/env/server.mjs";
 import {
@@ -49,6 +49,7 @@ export const userRouter = router({
         email: input.email.toLocaleLowerCase(),
         name: input.name,
         password: hashedPassword,
+        signupProvider: AuthProviderType.Credentials,
       });
 
       return { user };
