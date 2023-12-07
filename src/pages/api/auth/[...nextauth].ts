@@ -4,7 +4,6 @@ import NextAuth from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
-import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 
 import { AuthProviderType, type Prisma } from "@prisma/client";
@@ -15,11 +14,6 @@ import { prisma } from "~/server/db";
 import * as userService from "~/server/services/user.service";
 
 const providers: Provider[] = [
-  DiscordProvider({
-    clientId: env.DISCORD_CLIENT_ID,
-    clientSecret: env.DISCORD_CLIENT_SECRET,
-  }),
-
   GoogleProvider({
     clientId: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
