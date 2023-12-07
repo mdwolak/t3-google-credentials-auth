@@ -1,6 +1,6 @@
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { env } from "~/env/server.mjs";
+import { env } from "~/env.mjs";
 import { createContext } from "~/server/api/context";
 import { appRouter } from "~/server/api/routers/_app";
 

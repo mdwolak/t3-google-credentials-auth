@@ -1,6 +1,6 @@
 import { AuthProviderType, type User } from "@prisma/client";
 
-import { env } from "~/env/server.mjs";
+import { env } from "~/env.mjs";
 import {
   createUserSchema,
   forgotPasswordSchema,
