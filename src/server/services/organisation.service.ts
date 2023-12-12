@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
+import { type OmitAudit, db, getCreateProps, getUpdateProps } from "~/server/db";
 
 export const defaultOrganisationSelect = Prisma.validator<Prisma.OrganisationSelect>()({
   id: true,
@@ -12,14 +12,14 @@ export const defaultOrganisationSelect = Prisma.validator<Prisma.OrganisationSel
 // READ
 
 export const findFirst = async (where: Partial<Prisma.OrganisationWhereInput>) => {
-  return await prisma.organisation.findFirst({
+  return await db.organisation.findFirst({
     where,
     select: defaultOrganisationSelect,
   });
 };
 
 export const findUnique = async (where: Prisma.OrganisationWhereUniqueInput) => {
-  return await prisma.organisation.findUnique({
+  return await db.organisation.findUnique({
     where,
     select: defaultOrganisationSelect,
   });
@@ -28,7 +28,7 @@ export const findUnique = async (where: Prisma.OrganisationWhereUniqueInput) => 
 export const findAll = async (page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
-  return await prisma.organisation.findMany({
+  return await db.organisation.findMany({
     select: {
       id: true,
       parentId: true,
@@ -49,7 +49,7 @@ export const findAll = async (page: number, limit: number) => {
 // WRITE
 
 export const create = async (userId: number, input: OmitAudit<Prisma.OrganisationCreateInput>) => {
-  return await prisma.organisation.create({
+  return await db.organisation.create({
     data: { ...input, ...getCreateProps(userId) },
     select: defaultOrganisationSelect,
   });
@@ -61,7 +61,7 @@ export const update = async (
   data: OmitAudit<Prisma.OrganisationUpdateInput>,
   select: Prisma.OrganisationSelect = defaultOrganisationSelect
 ) => {
-  return await prisma.organisation.update({
+  return await db.organisation.update({
     where,
     data: { ...data, ...getUpdateProps(userId) },
     select,
@@ -69,5 +69,5 @@ export const update = async (
 };
 
 export const remove = async (where: Prisma.OrganisationWhereUniqueInput) => {
-  return await prisma.organisation.delete({ where, select: defaultOrganisationSelect });
+  return await db.organisation.delete({ where, select: defaultOrganisationSelect });
 };

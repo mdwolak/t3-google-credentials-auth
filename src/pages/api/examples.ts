@@ -1,9 +1,9 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import { prisma } from "~/server/db";
+import { db } from "~/server/db";
 
 const examples = async (req: NextApiRequest, res: NextApiResponse) => {
-  const examples = await prisma.example.findMany();
+  const examples = await db.example.findMany();
   res.status(200).json(examples);
 };
 

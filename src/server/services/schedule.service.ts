@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
+import { type OmitAudit, db, getCreateProps, getUpdateProps } from "~/server/db";
 
 export const defaultScheduleSelect = Prisma.validator<Prisma.ScheduleSelect>()({
   id: true,
@@ -12,14 +12,14 @@ export const defaultScheduleSelect = Prisma.validator<Prisma.ScheduleSelect>()({
 // READ
 
 export const findFirst = async (where: Partial<Prisma.ScheduleWhereInput>) => {
-  return await prisma.schedule.findFirst({
+  return await db.schedule.findFirst({
     where,
     select: defaultScheduleSelect,
   });
 };
 
 export const findUnique = async (where: Prisma.ScheduleWhereUniqueInput) => {
-  return await prisma.schedule.findUnique({
+  return await db.schedule.findUnique({
     where,
     select: defaultScheduleSelect,
   });
@@ -38,7 +38,7 @@ export const findUnique = async (where: Prisma.ScheduleWhereUniqueInput) => {
 // });
 
 export const findByActivityId = async (activityId: number) => {
-  return await prisma.schedule.findMany({
+  return await db.schedule.findMany({
     where: { activityId },
     select: {
       id: true,
@@ -63,7 +63,7 @@ export const findByActivityId = async (activityId: number) => {
 export const findAll = async (page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
-  return await prisma.schedule.findMany({
+  return await db.schedule.findMany({
     select: {
       id: true,
       name: true,
@@ -90,7 +90,7 @@ export const findAll = async (page: number, limit: number) => {
 // WRITE
 
 export const create = async (userId: number, input: OmitAudit<Prisma.ScheduleCreateInput>) => {
-  return await prisma.schedule.create({
+  return await db.schedule.create({
     data: { ...input, ...getCreateProps(userId) },
     select: defaultScheduleSelect,
   });
@@ -102,7 +102,7 @@ export const update = async (
   data: Omit<OmitAudit<Prisma.ScheduleUpdateInput>, "activity">,
   select: Prisma.ScheduleSelect = defaultScheduleSelect
 ) => {
-  return await prisma.schedule.update({
+  return await db.schedule.update({
     where,
     data: { ...data, ...getUpdateProps(userId) },
     select,
@@ -110,5 +110,5 @@ export const update = async (
 };
 
 export const remove = async (where: Prisma.ScheduleWhereUniqueInput) => {
-  return await prisma.schedule.delete({ where, select: defaultScheduleSelect });
+  return await db.schedule.delete({ where, select: defaultScheduleSelect });
 };

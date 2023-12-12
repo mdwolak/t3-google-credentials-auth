@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
+import { type OmitAudit, db, getCreateProps, getUpdateProps } from "~/server/db";
 
 export const defaultExemplarSelect = Prisma.validator<Prisma.ExemplarSelect>()({
   id: true,
@@ -12,14 +12,14 @@ export const defaultExemplarSelect = Prisma.validator<Prisma.ExemplarSelect>()({
 // READ
 
 export const findFirst = async (where: Partial<Prisma.ExemplarWhereInput>) => {
-  return await prisma.exemplar.findFirst({
+  return await db.exemplar.findFirst({
     where,
     select: defaultExemplarSelect,
   });
 };
 
 export const findUnique = async (where: Prisma.ExemplarWhereUniqueInput) => {
-  return await prisma.exemplar.findUnique({
+  return await db.exemplar.findUnique({
     where,
     select: defaultExemplarSelect,
   });
@@ -28,7 +28,7 @@ export const findUnique = async (where: Prisma.ExemplarWhereUniqueInput) => {
 export const findAll = async (page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
-  return await prisma.exemplar.findMany({
+  return await db.exemplar.findMany({
     select: {
       id: true,
       name: true,
@@ -46,7 +46,7 @@ export const findAll = async (page: number, limit: number) => {
 // WRITE
 
 export const create = async (userId: number, input: OmitAudit<Prisma.ExemplarCreateInput>) => {
-  return await prisma.exemplar.create({
+  return await db.exemplar.create({
     data: { ...input, ...getCreateProps(userId) },
     select: defaultExemplarSelect,
   });
@@ -58,7 +58,7 @@ export const update = async (
   data: OmitAudit<Prisma.ExemplarUpdateInput>,
   select: Prisma.ExemplarSelect = defaultExemplarSelect
 ) => {
-  return await prisma.exemplar.update({
+  return await db.exemplar.update({
     where,
     data: { ...data, ...getUpdateProps(userId) },
     select,
@@ -66,5 +66,5 @@ export const update = async (
 };
 
 export const remove = async (where: Prisma.ExemplarWhereUniqueInput) => {
-  return await prisma.exemplar.delete({ where, select: defaultExemplarSelect });
+  return await db.exemplar.delete({ where, select: defaultExemplarSelect });
 };

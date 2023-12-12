@@ -10,7 +10,7 @@ import { AuthProviderType, type Prisma } from "@prisma/client";
 
 import { env } from "~/env.mjs";
 import { ErrorCode } from "~/lib/errorCodes";
-import { prisma } from "~/server/db";
+import { db } from "~/server/db";
 import * as userService from "~/server/services/user.service";
 
 const providers: Provider[] = [
@@ -123,7 +123,7 @@ export const authOptions: NextAuthOptions = {
       } satisfies Session;
     },
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(db),
   pages: {
     signIn: "/auth/signin",
     // signOut: "/auth/signout",

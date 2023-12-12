@@ -3,7 +3,7 @@ import { type TokenType } from "@prisma/client";
 import crypto from "crypto";
 import dayjs from "dayjs";
 
-import { prisma } from "~/server/db";
+import { db } from "~/server/db";
 
 /*
 REMARKS:
@@ -17,14 +17,14 @@ export const generate = async (identifier: string, expires: Date, type: TokenTyp
   //IMPROVE: ratelimit using redis
 
   //invalidate all previous tokens of the specified type by setting their expiry to the past
-  await prisma.verificationToken.updateMany({
+  await db.verificationToken.updateMany({
     where: { identifier, expires: { gt: new Date() }, type },
     data: { expires: new Date() },
   });
 
   const token = generateToken(64);
 
-  await prisma.verificationToken.create({
+  await db.verificationToken.create({
     data: {
       identifier,
       token: hashToken(token),
@@ -45,7 +45,7 @@ export const validate = async (
   deleteToken = false
 ): Promise<ValidateTokenOutput> => {
   const hashedToken = hashToken(token);
-  const verificationToken = await prisma.verificationToken.findUnique({
+  const verificationToken = await db.verificationToken.findUnique({
     where: { token: hashedToken },
   });
   if (!verificationToken) {
@@ -53,7 +53,7 @@ export const validate = async (
   }
 
   if (deleteToken)
-    await prisma.verificationToken.delete({
+    await db.verificationToken.delete({
       where: { token: verificationToken.token },
     });
 

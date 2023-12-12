@@ -8,14 +8,14 @@ declare global {
   var prismaMock: PrismaClient | undefined;
 }
 
-export const prisma =
+export const db =
   global.prismaMock ||
   new PrismaClient({
     log: env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 
 if (env.NODE_ENV !== "production") {
-  global.prismaMock = prisma;
+  global.prismaMock = db;
 }
 
 export type OmitAudit<T> = Omit<T, "createdAt" | "createdById" | "updatedAt" | "updatedById">;

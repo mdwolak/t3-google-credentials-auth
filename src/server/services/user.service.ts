@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-import { prisma } from "~/server/db";
+import { db } from "~/server/db";
 import { validate } from "~/server/services/auth/verificationToken.service";
 
 export const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
@@ -18,21 +18,21 @@ export const findFirst = async (
   where: Partial<Prisma.UserWhereInput>,
   select: Prisma.UserSelect = defaultUserSelect
 ) => {
-  return await prisma.user.findFirst({
+  return await db.user.findFirst({
     where,
     select,
   });
 };
 
 export const findUnique = async (where: Prisma.UserWhereUniqueInput) => {
-  return await prisma.user.findUnique({
+  return await db.user.findUnique({
     where,
     select: defaultUserSelect,
   });
 };
 
 export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) => {
-  return await prisma.user.findUnique({
+  return await db.user.findUnique({
     where,
     select: {
       id: true,
@@ -52,7 +52,7 @@ export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) =>
 
 export const create = async (input: Prisma.UserCreateInput) => {
   //IMPROVE: do not return sensitive data exemplar-creation
-  return await prisma.user.create({
+  return await db.user.create({
     data: input,
     select: defaultUserSelect,
   });
@@ -63,7 +63,7 @@ export const update = async (
   data: Prisma.UserUpdateInput,
   select: Prisma.UserSelect = defaultUserSelect
 ) => {
-  return await prisma.user.update({ where, data, select });
+  return await db.user.update({ where, data, select });
 };
 
 export const verifyEmail = async (token: string) => {

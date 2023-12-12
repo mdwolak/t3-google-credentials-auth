@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-import { type OmitAudit, getCreateProps, getUpdateProps, prisma } from "~/server/db";
+import { type OmitAudit, db, getCreateProps, getUpdateProps } from "~/server/db";
 
 export const defaultAddressSelect = Prisma.validator<Prisma.AddressSelect>()({
   id: true,
@@ -16,14 +16,14 @@ export const defaultAddressSelect = Prisma.validator<Prisma.AddressSelect>()({
 // READ
 
 export const findFirst = async (where: Prisma.AddressWhereInput) => {
-  return await prisma.address.findFirst({
+  return await db.address.findFirst({
     where,
     select: defaultAddressSelect,
   });
 };
 
 export const findUnique = async (where: Prisma.AddressWhereUniqueInput) => {
-  return await prisma.address.findUnique({
+  return await db.address.findUnique({
     where,
     select: defaultAddressSelect,
   });
@@ -33,7 +33,7 @@ export const findAll = async (orgId: number, page: number, limit: number) => {
   const take = limit || 10;
   const skip = (page - 1) * limit;
   const where = { orgId };
-  return await prisma.address.findMany({
+  return await db.address.findMany({
     select: {
       id: true,
       line1: true,
@@ -56,7 +56,7 @@ export const create = async (
   userId: number,
   input: OmitAudit<Prisma.AddressUncheckedCreateInput>
 ) => {
-  return await prisma.address.create({
+  return await db.address.create({
     data: { ...input, ...getCreateProps(userId) },
     select: defaultAddressSelect,
   });
@@ -68,7 +68,7 @@ export const update = async (
   data: OmitAudit<Prisma.AddressUpdateInput>,
   select: Prisma.AddressSelect = defaultAddressSelect
 ) => {
-  return await prisma.address.update({
+  return await db.address.update({
     where,
     data: { ...data, ...getUpdateProps(userId) },
     select,
@@ -76,5 +76,5 @@ export const update = async (
 };
 
 export const remove = async (where: Prisma.AddressWhereUniqueInput) => {
-  return await prisma.address.delete({ where, select: defaultAddressSelect });
+  return await db.address.delete({ where, select: defaultAddressSelect });
 };
