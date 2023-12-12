@@ -14,10 +14,10 @@ export const exampleRouter = router({
     .input(z.object({ text: z.string().nullish() }).nullish())
     .query(({ input }) => {
       return {
-        greeting: `Hello Admin"}`,
+        greeting: `Hello ${input}"}`,
       };
     }),
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
+    return ctx.db.exemplar.findMany();
   }),
 });
