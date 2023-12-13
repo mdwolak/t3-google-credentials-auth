@@ -103,6 +103,8 @@ model Exemplar {
   updatedAt   DateTime @updatedAt
   updatedById Int
 
+  orgId        Int?
+  organisation Organisation? @relation(fields: [orgId], references: [id])
   //@@unique([content, category])
 }
 
@@ -189,6 +191,7 @@ model Organisation {
   Addresses  Address[]
   Activities Activity[]
   User       User[]
+  Exemplar   Exemplar[]
 
   @@unique([parentId, name])
 }

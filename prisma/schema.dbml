@@ -68,6 +68,8 @@ Table Exemplar {
   createdById Int [not null]
   updatedAt DateTime [not null]
   updatedById Int [not null]
+  orgId Int
+  organisation Organisation
 }
 
 Table Address {
@@ -135,6 +137,7 @@ Table Organisation {
   Addresses Address [not null]
   Activities Activity [not null]
   User User [not null]
+  Exemplar Exemplar [not null]
 
   indexes {
     (parentId, name) [unique]
@@ -219,6 +222,8 @@ Ref: Account.userId > User.id [delete: Cascade]
 Ref: Session.userId > User.id [delete: Cascade]
 
 Ref: User.orgId > Organisation.id
+
+Ref: Exemplar.orgId > Organisation.id
 
 Ref: Address.orgId > Organisation.id
 

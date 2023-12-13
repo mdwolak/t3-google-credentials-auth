@@ -27,6 +27,7 @@ const CreateExemplarDialog = ({
       category: "category",
       content: "content",
       published: true,
+      orgId: 1,
     },
   });
   const { setFocus } = form;
@@ -77,11 +78,7 @@ const CreateExemplarDialog = ({
         </div>
 
         <div className={styles.actions}>
-          <Button
-            type="submit"
-            fullWidth
-            isLoading={isLoading}
-            disabled={!form.formState.isDirty || !form.formState.isValid}>
+          <Button type="submit" fullWidth isLoading={isLoading} disabled={!form.formState.isDirty}>
             Save
           </Button>
         </div>

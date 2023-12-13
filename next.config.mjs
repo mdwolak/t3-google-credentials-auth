@@ -12,14 +12,14 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/clubs/exemplars",
-        permanent: false,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/clubs/exemplars",
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 };
 export default config;
