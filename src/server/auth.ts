@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { type GetServerSidePropsContext } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
-import NextAuth from "next-auth";
+import { getServerSession } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -138,4 +139,14 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
 };
 
-export default NextAuth(authOptions);
+/**
+ * Wrapper for unstable_getServerSession https://next-auth.js.org/configuration/nextjs
+ * See example usage in trpc createContext or the restricted API route
+ */
+// export const getServerAuthSession = async (ctx: {
+//   req: GetServerSidePropsContext["req"];
+//   res: GetServerSidePropsContext["res"];
+// }) => {
+//   return await getServerSession(ctx.req, ctx.res, authOptions);
+// };
+export const getServerAuthSession = () => getServerSession(authOptions);

@@ -11,7 +11,7 @@ import {
   useForm,
 } from "~/components/forms";
 import { type ForgotPasswordInput, forgotPasswordSchema } from "~/lib/schemas/user.schema";
-import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
+import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 
 const ForgotPassword = () => {

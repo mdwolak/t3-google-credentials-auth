@@ -1,6 +1,6 @@
 import { UserRole } from "@prisma/client";
 
-import { type Context } from "~/server/api/context";
+import { type Context } from "~/server/api/trpc";
 
 export const isAdmin = (ctx: Context): boolean => {
   return ctx.session?.user?.role === UserRole.Admin;

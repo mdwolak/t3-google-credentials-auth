@@ -1,11 +1,42 @@
+import { type NextApiRequest } from "next";
+import { type Session } from "next-auth";
+
 import { UserRole } from "@prisma/client";
-import { initTRPC } from "@trpc/server";
+import { type inferAsyncReturnType, initTRPC } from "@trpc/server";
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { httpForbidden, httpUnauthorized } from "~/server/api/trpcHelper";
+import { getServerAuthSession } from "~/server/auth";
+import { db } from "~/server/db";
 
-import { type Context } from "./context";
+type CreateContextOptions = {
+  session: Session | null;
+};
+
+/** Use this helper for:
+ * - testing, so we dont have to mock Next.js' req/res
+ * - trpc's `createSSGHelpers` where we don't have req/res
+ * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
+ **/
+export const createContextInner = async (opts: CreateContextOptions) => {
+  return {
+    ...opts,
+    db,
+  };
+};
+
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await getServerAuthSession();
+
+  return await createContextInner({
+    session,
+    ...opts,
+  });
+};
+
+export type Context = inferAsyncReturnType<typeof createTRPCContext>;
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -20,7 +51,7 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-export const router = t.router;
+export const createTRPCRouter = t.router;
 
 /**
  * Reusable middlewares

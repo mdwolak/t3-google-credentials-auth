@@ -1,6 +1,6 @@
 import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import { createScheduleDaySchema, updateScheduleDaySchema } from "~/lib/schemas/scheduleDay.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import {
   getUserId,
   httpConflictWithZod,
@@ -14,7 +14,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "ScheduleDay";
 
-export const scheduleDayRouter = router({
+export const scheduleDayRouter = createTRPCRouter({
   /**
    * READ
    */

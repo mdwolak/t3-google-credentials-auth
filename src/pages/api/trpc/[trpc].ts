@@ -1,13 +1,13 @@
 import { createNextApiHandler } from "@trpc/server/adapters/next";
 
 import { env } from "~/env.mjs";
-import { createContext } from "~/server/api/context";
-import { appRouter } from "~/server/api/routers/_app";
+import { appRouter } from "~/server/api/root";
+import { createTRPCContext } from "~/server/api/trpc";
 
 // export API handler
 export default createNextApiHandler({
   router: appRouter,
-  createContext,
+  createContext: createTRPCContext,
   //Here you can handle or change errors
   // @see https://trpc.io/docs/server/error-handling#handling-errors
   onError:

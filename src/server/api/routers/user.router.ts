@@ -6,7 +6,7 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
 } from "~/lib/schemas/user.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import {
   type ErrorHandlerOptions,
   getErrorFromUnknown,
@@ -30,7 +30,7 @@ const errorHandler = (error: unknown) => {
   throw getErrorFromUnknown(error, errorHandlerOptions);
 };
 
-export const userRouter = router({
+export const userRouter = createTRPCRouter({
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.session;
   }),

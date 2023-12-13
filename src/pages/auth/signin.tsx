@@ -12,7 +12,7 @@ import { Form, InputEmail, InputPassword, useForm } from "~/components/forms";
 import FacebookIcon from "~/components/icons/facebook";
 import { ErrorCode } from "~/lib/errorCodes";
 import { email } from "~/lib/schemas/user.schema";
-import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
+import { getServerAuthSession } from "~/server/auth";
 
 const userLoginSchema = z.object({
   csrfToken: z.string(),

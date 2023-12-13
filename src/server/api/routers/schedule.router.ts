@@ -1,6 +1,6 @@
 import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import { createScheduleSchema, updateScheduleSchema } from "~/lib/schemas/schedule.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { getUserId, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import { canUpdate } from "~/server/services/permission.service";
 import * as scheduleService from "~/server/services/schedule.service";
@@ -8,7 +8,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Schedule";
 
-export const scheduleRouter = router({
+export const scheduleRouter = createTRPCRouter({
   /**
    * READ
    */

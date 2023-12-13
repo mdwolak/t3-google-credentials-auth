@@ -3,7 +3,7 @@ import {
   createOrganisationSchema,
   updateOrganisationSchema,
 } from "~/lib/schemas/organisation.schema";
-import { adminProcedure, router } from "~/server/api/trpc";
+import { adminProcedure, createTRPCRouter } from "~/server/api/trpc";
 import {
   getUserId,
   httpConflictWithZod,
@@ -17,7 +17,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Organisation";
 
-export const organisationRouter = router({
+export const organisationRouter = createTRPCRouter({
   /**
    * READ
    */

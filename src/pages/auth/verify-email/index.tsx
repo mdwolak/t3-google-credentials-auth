@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
 import { ApiErrorMessage, Button, Link, SEOHead, toast } from "~/components/core";
-import { getServerAuthSession } from "~/server/lib/getServerAuthSession";
+import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 
 //Entry point: logged in user whose email is not verified will be redirected to this page

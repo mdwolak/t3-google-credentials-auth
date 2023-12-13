@@ -1,6 +1,6 @@
 import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import { createExemplarSchema, updateExemplarSchema } from "~/lib/schemas/exemplar.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import {
   getUserId,
   httpConflictWithZod,
@@ -14,7 +14,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Exemplar";
 
-export const exemplarRouter = router({
+export const exemplarRouter = createTRPCRouter({
   /**
    * READ
    */

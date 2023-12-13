@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { ZodError } from "zod";
 
 import { camelCaseToSpacedOut } from "~/lib/common";
-import { type Context } from "~/server/api/context";
+import { type Context } from "~/server/api/trpc";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import { getConstraintViolationFields, isNotFoundError } from "~/server/db";
 

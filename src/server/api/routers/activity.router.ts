@@ -3,7 +3,7 @@ import slugify from "slugify";
 
 import { createActivitySchema, updateActivitySchema } from "~/lib/schemas/activity.schema";
 import { filterQueryWithOrg, numericId } from "~/lib/schemas/common.schema";
-import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import {
   getUserId,
   httpConflictWithZod,
@@ -17,7 +17,7 @@ import type { RouterOutputs } from "~/utils/api";
 
 const entityName = "Activity";
 
-export const activityRouter = router({
+export const activityRouter = createTRPCRouter({
   /**
    * READ
    */

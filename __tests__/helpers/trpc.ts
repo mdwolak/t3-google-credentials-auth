@@ -1,7 +1,7 @@
 import { type Session } from "next-auth";
 
-import { createContextInner } from "~/server/api/context";
-import { appRouter } from "~/server/api/routers/_app";
+import { appRouter } from "~/server/api/root";
+import { createContextInner } from "~/server/api/trpc";
 
 /** A convenience method to call tRPC queries */
 /**
