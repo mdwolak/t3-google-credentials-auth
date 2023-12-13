@@ -1,4 +1,5 @@
-function CheckIcon(props) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 20 20"

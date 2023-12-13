@@ -100,6 +100,7 @@ export const groupArrayByObjectProperty = <
     return previous;
   }, {} as Record<P, T[]>);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const groupArrayByObjectStringProperty = <T>(
   array: T[],
   predicate: (value: T, index: number, array: T[]) => string
@@ -109,6 +110,7 @@ const groupArrayByObjectStringProperty = <T>(
     return acc;
   }, {} as { [key: string]: T[] });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const groupByToMap = <T, Q>(array: T[], predicate: (value: T, index: number, array: T[]) => Q) =>
   array.reduce((map, value, index, array) => {
     const key = predicate(value, index, array);

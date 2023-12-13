@@ -4,7 +4,6 @@ import { type AppType } from "next/app";
 import Head from "next/head";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "react-hot-toast";
 
 import "~/styles/globals.css";
 import { api } from "~/utils/api";

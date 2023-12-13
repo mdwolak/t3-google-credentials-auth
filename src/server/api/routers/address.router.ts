@@ -3,7 +3,6 @@ import { filterQueryWithOrg, numericId } from "~/lib/schemas/common.schema";
 import { protectedProcedure, publicProcedure, router } from "~/server/api/trpc";
 import { getUserId, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import * as addressService from "~/server/services/address.service";
-import { defaultAddressSelect } from "~/server/services/address.service";
 import { canUpdate } from "~/server/services/permission.service";
 import type { RouterOutputs } from "~/utils/api";
 

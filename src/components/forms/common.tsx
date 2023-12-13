@@ -67,6 +67,7 @@ export const DefaultWrap: FC<FieldWrapperProps> = ({ id, label, control, error, 
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NoWrap: FC<FieldWrapperProps> = ({ id, label, control, error, asterisk }) => {
   return (
     <>

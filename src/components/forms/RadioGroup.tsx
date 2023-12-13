@@ -5,7 +5,7 @@ import { RadioGroup as HRG } from "@headlessui/react";
 import { type FieldValues, type UseControllerProps, useController } from "react-hook-form";
 
 import type { FieldWrapperProps } from "~/components/forms/common";
-import { DefaultWrap, FieldError, Label, getFieldError } from "~/components/forms/common";
+import { DefaultWrap, getFieldError } from "~/components/forms/common";
 import { classNames } from "~/lib/common";
 
 export type Option<TValue> = {

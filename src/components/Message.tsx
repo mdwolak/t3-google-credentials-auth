@@ -1,4 +1,4 @@
-import React, { type FC } from "react";
+import React from "react";
 
 type IMessageProps = {
   children: React.ReactNode;

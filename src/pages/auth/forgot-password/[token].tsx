@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
-import { ApiErrorMessage, Button, Link, SEOHead, toast } from "~/components/core";
+import { ApiErrorMessage, Button, Link, toast } from "~/components/core";
 import { Form, Input, InputPassword, ValidationSummary, useForm } from "~/components/forms";
 import { type ResetPasswordInput, resetPasswordSchema } from "~/lib/schemas/user.schema";
 import * as verificationTokenService from "~/server/services/auth/verificationToken.service";
