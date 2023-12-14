@@ -13,7 +13,7 @@ import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog"
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { getLayout } from "~/components/layouts/Layout";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 const ExemplarList = () => {
   const apiContext = api.useContext();

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { render, screen } from "@testing-library/react";
 
 import { Button } from "~/components/core";
@@ -23,7 +23,7 @@ describe("Button", () => {
 
       const icon = document.querySelector("svg") as SVGSVGElement;
       expect(button).toContainElement(icon);
-      expect(icon.classList.toString()).toMatchInlineSnapshot(`"mr-2 h-5 w-5"`);
+      expect(icon.classList.toString()).toMatchInlineSnapshot(`"mr-2 h-4 w-4"`);
     });
 
     it("icon only", () => {
@@ -35,7 +35,7 @@ describe("Button", () => {
 
       const icon = document.querySelector("svg") as SVGSVGElement;
       expect(button).toContainElement(icon);
-      expect(icon.classList.toString()).toEqual("h-5 w-5");
+      expect(icon.classList.toString()).toEqual("h-4 w-4");
     });
 
     it("loading", () => {
@@ -47,7 +47,7 @@ describe("Button", () => {
 
       const spinner = screen.getByTestId("spinner");
       expect(button).toContainElement(spinner);
-      expect(spinner).toHaveClass("animate-spin mr-2 h-5 w-5", { exact: true });
+      expect(spinner).toHaveClass("animate-spin mr-2 h-4 w-4", { exact: true });
     });
 
     it("disabled", () => {

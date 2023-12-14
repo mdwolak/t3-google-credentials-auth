@@ -19,7 +19,7 @@ const textWithOptionalIconClasses = {
   xs: "px-2 py-1 text-xs", //fits compact table, inline text, bulleted lists
   sm: "px-2.5 py-1.5 text-sm", //fits standard table
   default: "px-3 py-2 text-sm", //default action button
-  lg: "px-4 py-3 text-md", //big conspicuous button
+  lg: "px-3 py-2 text-sm", //big conspicuous button
 };
 
 const iconOnlyClasses = {

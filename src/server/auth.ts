@@ -1,5 +1,4 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { type GetServerSidePropsContext } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import type { JWT } from "next-auth/jwt";
@@ -32,38 +31,40 @@ const providers: Provider[] = [
       email: { label: "Email Address", type: "email" },
       password: { label: "Password", type: "password" },
     },
-
-    //Validates credentials and returns user object or null
-    async authorize(credentials) {
-      if (!credentials) {
-        throw new Error(ErrorCode.EmailAndPasswordAreRequired);
-      }
-
-      const dbUser = await userService.findUniqueSensitive({
-        email: credentials.email.toLowerCase(),
-      });
-
-      if (
-        !dbUser ||
-        !dbUser.password ||
-        !(await userService.verifyPassword(credentials.password, dbUser.password))
-      )
-        throw new Error(ErrorCode.InvalidEmailOrPassword);
-
-      //Return user object which will be stored in JWT token
-      return {
-        id: dbUser.id,
-        email: dbUser.email,
-        name: dbUser.name,
-        role: dbUser.role,
-        orgId: dbUser.orgId,
-        emailVerified: dbUser.emailVerified,
-      };
-
-      //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
-    },
+    authorize,
   }),
 ];
+
+//Validates credentials and returns user object or null
+export async function authorize(credentials: { email: string; password: string } | undefined) {
+  if (!credentials) {
+    throw new Error(ErrorCode.EmailAndPasswordAreRequired);
+  }
+
+  const dbUser = await userService.findUniqueSensitive({
+    email: credentials.email.toLowerCase(),
+  });
+
+  if (
+    !dbUser ||
+    !dbUser.password ||
+    !(await userService.verifyPassword(credentials.password, dbUser.password))
+  )
+    throw new Error(ErrorCode.InvalidEmailOrPassword);
+
+  //Return user object which will be stored in JWT token
+  return {
+    id: dbUser.id,
+    email: dbUser.email,
+    name: dbUser.name,
+    role: dbUser.role,
+    orgId: dbUser.orgId,
+    emailVerified: dbUser.emailVerified,
+    signupProvider: null,
+  };
+
+  //Progresses to SignIn callback. More: https://next-auth.js.org/providers/credentials#example---username--password
+}
 
 export const authOptions: NextAuthOptions = {
   //https://next-auth.js.org/configuration/callbacks
@@ -139,14 +140,4 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
 };
 
-/**
- * Wrapper for unstable_getServerSession https://next-auth.js.org/configuration/nextjs
- * See example usage in trpc createContext or the restricted API route
- */
-// export const getServerAuthSession = async (ctx: {
-//   req: GetServerSidePropsContext["req"];
-//   res: GetServerSidePropsContext["res"];
-// }) => {
-//   return await getServerSession(ctx.req, ctx.res, authOptions);
-// };
 export const getServerAuthSession = () => getServerSession(authOptions);

@@ -2,7 +2,7 @@
 
 exports[`Button Primary disabled 1`] = `
 <button
-  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   disabled=""
   type="button"
 >
@@ -12,12 +12,12 @@ exports[`Button Primary disabled 1`] = `
 
 exports[`Button Primary icon only 1`] = `
 <button
-  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 p-3.5 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 p-2 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   <svg
     aria-hidden="true"
-    class="h-5 w-5"
+    class="h-4 w-4"
     fill="none"
     stroke="currentColor"
     stroke-width="1.5"
@@ -35,12 +35,12 @@ exports[`Button Primary icon only 1`] = `
 
 exports[`Button Primary loading 1`] = `
 <button
-  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   disabled=""
   type="button"
 >
   <svg
-    class="animate-spin mr-2 h-5 w-5"
+    class="animate-spin mr-2 h-4 w-4"
     data-testid="spinner"
     fill="none"
     viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ exports[`Button Primary loading 1`] = `
 
 exports[`Button Primary text 1`] = `
 <button
-  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   Click
@@ -82,12 +82,12 @@ exports[`Button Primary text 1`] = `
 
 exports[`Button Primary text and icon 1`] = `
 <button
-  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="inline-flex items-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   <svg
     aria-hidden="true"
-    class="mr-2 h-5 w-5"
+    class="mr-2 h-4 w-4"
     fill="none"
     stroke="currentColor"
     stroke-width="1.5"
@@ -106,7 +106,7 @@ exports[`Button Primary text and icon 1`] = `
 
 exports[`secondary fullWidth 1`] = `
 <button
-  class="flex w-full justify-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="flex w-full justify-center rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   Click
@@ -115,7 +115,7 @@ exports[`secondary fullWidth 1`] = `
 
 exports[`secondary rounded 1`] = `
 <button
-  class="rounded-full font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="rounded-full font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   Click
@@ -124,7 +124,7 @@ exports[`secondary rounded 1`] = `
 
 exports[`secondary text 1`] = `
 <button
-  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-4 py-3 text-md bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
+  class="rounded-md font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 text-sm bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 enabled:hover:bg-indigo-500"
   type="button"
 >
   Click

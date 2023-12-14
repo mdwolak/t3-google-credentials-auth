@@ -16,7 +16,7 @@ test("example router", async () => {
 });
 
 test("example router", async () => {
-  prismaMock.example.findMany.mockResolvedValue([]);
+  prismaMock.exemplar.findMany.mockResolvedValue([]);
 
   const caller = await trpcRequest();
 
