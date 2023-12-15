@@ -60,7 +60,7 @@ async function CrudShowcase() {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const latestPost = await api.example.helloAdmin.query();
+  const latestPost = await api.example.hello.query();
 
   return (
     <div className="w-full max-w-xs">

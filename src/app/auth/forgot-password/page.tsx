@@ -1,8 +1,9 @@
-import type { GetServerSidePropsContext } from "next";
+"use client";
+
 import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
-import { ApiErrorMessage, Button, Link, SEOHead } from "~/components/core";
+import { ApiErrorMessage, Button, Link } from "~/components/core";
 import {
   Form,
   InputEmail,
@@ -11,10 +12,9 @@ import {
   useForm,
 } from "~/components/forms";
 import { type ForgotPasswordInput, forgotPasswordSchema } from "~/lib/schemas/user.schema";
-import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 
-const ForgotPassword = () => {
+export default function ForgotPasswordPage() {
   const form = useForm({ schema: forgotPasswordSchema });
   const [emailSent, setEmailSent] = useState(false);
 
@@ -34,8 +34,8 @@ const ForgotPassword = () => {
   };
 
   return (
+    //TODO: <SEOHead title="Forgot Password" description="Reset your password" />
     <>
-      <SEOHead title="Forgot Password" description="Reset your password" />
       <AuthPanel showLogo heading="Forgot Password">
         {emailSent ? (
           <>
@@ -75,21 +75,4 @@ const ForgotPassword = () => {
       </AuthPanel>
     </>
   );
-};
-
-export default ForgotPassword;
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(context);
-
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
 }

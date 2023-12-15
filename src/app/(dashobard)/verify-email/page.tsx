@@ -1,16 +1,20 @@
-import type { GetServerSidePropsContext } from "next";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
-import { ApiErrorMessage, Button, Link, SEOHead, toast } from "~/components/core";
-import { getServerAuthSession } from "~/server/auth";
+import { ApiErrorMessage, Button, Link, toast } from "~/components/core";
 import { api } from "~/utils/api";
 
 //Entry point: logged in user whose email is not verified will be redirected to this page
-const VerifyEmailPage = () => {
+export default function VerifyEmailPage() {
   const [status, setStatus] = useState<"SendEmail" | "EmailSent" | "ProblemsReceivingEmail">(
-    "SendEmail"
+    "SendEmail",
   );
+  const { data: session } = useSession();
+  if (session?.user?.emailVerified) redirect("/getting-started");
 
   const {
     data,
@@ -25,9 +29,9 @@ const VerifyEmailPage = () => {
   });
 
   return (
+    //TODO:      <SEOHead title="Verify Email" description="Verify your email address" />
     <>
-      <SEOHead title="Verify Email" description="Verify your email address" />
-      <AuthPanel showLogo heading="???">
+      <AuthPanel showLogo heading="Verify Email">
         <ApiErrorMessage error={apiError} visible={!!apiError} />
         <div className="text-center">
           {status === "SendEmail" ? (
@@ -80,30 +84,4 @@ const VerifyEmailPage = () => {
       </AuthPanel>
     </>
   );
-};
-
-export default VerifyEmailPage;
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerAuthSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/auth/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  if (session.user?.emailVerified) {
-    return {
-      redirect: {
-        destination: "/getting-started",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
 }

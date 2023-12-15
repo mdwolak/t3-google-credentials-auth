@@ -17,8 +17,8 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
+    <html lang="en" className="h-full bg-gray-50">
+      <body className={`font-sans ${inter.variable} desktop-transparent h-full antialiased`}>
         <TRPCReactProvider cookies={cookies().toString()}>{children}</TRPCReactProvider>
       </body>
     </html>
