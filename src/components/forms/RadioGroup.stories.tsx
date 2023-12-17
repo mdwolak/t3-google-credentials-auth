@@ -28,7 +28,30 @@ const timeOptions = Array.from({ length: 15 }, (_, i) => ({
   name: `${i + 6}`,
 }));
 
-const Template: StoryFn<RadioGroupProps<number>> = (args) => {
+const privacyOptions = [
+  {
+    value: "public",
+    name: "Public access",
+    description: "This project would be available to anyone who has the link",
+  },
+  {
+    value: "private",
+    name: "Private to Project Members",
+    description: "Only members of this project would be able to access",
+  },
+  {
+    value: "private_to_you",
+    name: "Private to you",
+    description: (
+      <span>
+        You <b>are</b> the only one able to access this project
+      </span>
+    ),
+    disabled: true,
+  },
+];
+
+const Template: StoryFn<RadioGroupProps<number | string>> = (args) => {
   const { control } = useForm();
 
   return (
@@ -50,6 +73,14 @@ export const RangeOfHours = Template.bind({});
 RangeOfHours.args = {
   label: "Select hour",
   options: timeOptions,
+  style: "SmallCards",
+  containerClass: "grid grid-cols-7 gap-2",
+};
+
+export const Privacy = Template.bind({});
+Privacy.args = {
+  label: "Select privacy",
+  options: privacyOptions,
   style: "SmallCards",
   containerClass: "grid grid-cols-7 gap-2",
 };
