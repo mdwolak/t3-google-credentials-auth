@@ -1,6 +1,6 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true //all auto-fixable ESLint errors from all plugins will be fixed on save
+    "source.fixAll.eslint": "explicit"
   },
   //"editor.formatOnSave": false,
   //use prettier in tsx, jsx
