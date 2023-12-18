@@ -30,7 +30,7 @@ export default async function VerifyEmailTokenPage({ params }: { params: { token
           <p>
             {session ? (
               <>
-                <Link href="/auth/verify-email">Request a new verification link</Link>.
+                <Link href="/verify-email">Request a new verification link</Link>.
               </>
             ) : (
               <>

@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (!token.emailVerified) {
-    return NextResponse.redirect(new URL("/auth/verify-email", req.url));
+    return NextResponse.redirect(new URL("/verify-email", req.url));
   }
 
   if (token.role === "Admin") return NextResponse.next();

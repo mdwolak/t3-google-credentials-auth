@@ -36,7 +36,7 @@ export function SignUp() {
       await signIn<"credentials">("credentials", {
         email: form.getValues("email"),
         password: form.getValues("password"),
-        callbackUrl: `/auth/verify-email`,
+        callbackUrl: `/verify-email`,
       });
     },
     onError: getDefaultOnErrorOption(form),

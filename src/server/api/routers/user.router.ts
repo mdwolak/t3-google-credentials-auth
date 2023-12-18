@@ -53,7 +53,7 @@ export const userRouter = createTRPCRouter({
       });
 
       return { user };
-    }, errorHandler)
+    }, errorHandler),
   ),
   forgotPassword: publicProcedure.input(forgotPasswordSchema).mutation(async ({ input }) => {
     const user = await userService.findUnique({ email: input.email.toLowerCase() });
@@ -62,7 +62,7 @@ export const userRouter = createTRPCRouter({
       const token = await verificationTokenService.generate(
         user.id.toString(),
         new Date(new Date().getTime() + 2 * 60 * 60 * 1000), //expires in 2 hours
-        "passwordReset"
+        "passwordReset",
       );
       const resetLink = `${env.NEXTAUTH_URL}/auth/forgot-password/${token}`;
       await sendPasswordResetLink(user, resetLink);
@@ -86,7 +86,7 @@ export const userRouter = createTRPCRouter({
             password: hashedPassword,
             //since the token comes from a reset link sent to email, we can assume that the user is the owner of the email
             ...(!user.emailVerified ? { emailVerified: new Date() } : {}),
-          }
+          },
         );
         return null; //successful reset
       }
@@ -100,9 +100,9 @@ export const userRouter = createTRPCRouter({
     const token = await verificationTokenService.generate(
       user.id.toString(),
       new Date(new Date().getTime() + 30 * 60 * 1000), //expires in 30 minutes
-      "emailVerification"
+      "emailVerification",
     );
-    const resetLink = `${env.NEXTAUTH_URL}/auth/verify-email/${token}`;
+    const resetLink = `${env.NEXTAUTH_URL}/verify-email/${token}`;
     await sendVerificationEmailLink(user, resetLink);
 
     return { email: user.email };
