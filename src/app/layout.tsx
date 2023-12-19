@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import "~/styles/globals.css";
@@ -6,7 +6,14 @@ import { TRPCReactProvider } from "~/trpc/react";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const roboto_mono = Roboto_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto-mono",
 });
 
 export const metadata = {
@@ -18,7 +25,8 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full bg-gray-50">
-      <body className={`font-sans ${inter.variable} desktop-transparent h-full antialiased`}>
+      <body
+        className={`font-sans ${inter.variable} ${roboto_mono.variable} desktop-transparent h-full antialiased`}>
         <TRPCReactProvider cookies={cookies().toString()}>{children}</TRPCReactProvider>
       </body>
     </html>
