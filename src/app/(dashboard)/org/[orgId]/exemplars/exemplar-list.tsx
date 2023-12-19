@@ -11,12 +11,11 @@ import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
 import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
-import { getLayout } from "~/components/layouts/Layout";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
 import { api } from "~/trpc/react";
 
-const ExemplarList = () => {
-  const apiContext = api.useContext();
+export function ExemplarList() {
+  const apiUtils = api.useUtils();
 
   const [openCreate, setOpenCreate] = useState(false);
   const [updateExemplar, setUpdateExemplar] = useState<ExemplarInfo | null>(null);
@@ -29,12 +28,12 @@ const ExemplarList = () => {
       onError(error) {
         toast.error(error.message);
       },
-    }
+    },
   );
 
   const { mutate: deleteExemplar } = api.exemplar.delete.useMutation({
     onSuccess() {
-      apiContext.exemplar.invalidate();
+      apiUtils.exemplar.invalidate();
       toast.success("Exemplar deleted successfully");
     },
     onError(error) {
@@ -129,6 +128,4 @@ const ExemplarList = () => {
       />
     </div>
   );
-};
-ExemplarList.getLayout = getLayout;
-export default ExemplarList;
+}

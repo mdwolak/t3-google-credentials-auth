@@ -1,15 +1,5 @@
-// Import your Client Component
-import ExemplarList from "./exemplars";
+import { ExemplarList } from "./exemplar-list";
 
-// async function getPosts() {
-//   const res = await fetch("https://...");
-//   const posts = await res.json();
-//   return posts;
-// }
-
-export default async function Page() {
-  // Fetch data directly in a Server Component
-  //const recentPosts = await getPosts();
-  // Forward fetched data to your Client Component
+export default async function ExemplarListPage() {
   return <ExemplarList />;
 }
