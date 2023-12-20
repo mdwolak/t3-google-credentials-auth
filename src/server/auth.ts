@@ -5,6 +5,8 @@ import type { JWT } from "next-auth/jwt";
 import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 
 import { AuthProviderType, type Prisma } from "@prisma/client";
 
@@ -140,4 +142,10 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === "development",
 };
 
-export const getServerAuthSession = () => getServerSession(authOptions);
+export const getSession = cache(() => getServerSession(authOptions));
+
+export const getRequiredSessionUser = async () => {
+  const session = await getSession();
+  if (!session || !session.user) return redirect("/auth/signin");
+  return session.user;
+};

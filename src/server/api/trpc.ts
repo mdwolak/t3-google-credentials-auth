@@ -1,14 +1,12 @@
-import { type NextApiRequest } from "next";
 import { type Session } from "next-auth";
 
 import { UserRole } from "@prisma/client";
 import { type inferAsyncReturnType, initTRPC } from "@trpc/server";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { httpForbidden, httpUnauthorized } from "~/server/api/trpcHelper";
-import { getServerAuthSession } from "~/server/auth";
+import { getSession } from "~/server/auth";
 import { db } from "~/server/db";
 
 type CreateContextOptions = {
@@ -28,7 +26,7 @@ export const createContextInner = async (opts: CreateContextOptions) => {
 };
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getServerAuthSession();
+  const session = await getSession();
 
   return await createContextInner({
     session,

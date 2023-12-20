@@ -4,6 +4,7 @@ import { FolderIcon } from "@heroicons/react/24/outline";
 
 import { SignInButton } from "~/components/navbars/SignInButton";
 import { classNames } from "~/lib/common";
+import { isAdmin } from "~/server/services/permission.service";
 
 interface NavbarProps {
   user?: SessionUser;
@@ -12,8 +13,7 @@ interface NavbarProps {
 export function Navbar({ user }: NavbarProps) {
   const orgId = user?.orgId;
 
-  const navigation = [
-    { name: "Organisations", href: "/org", icon: FolderIcon, current: true },
+  const menuItems: MenuItem[] = [
     { name: "Schedules", href: "schedules", icon: FolderIcon, current: false },
     ...(orgId
       ? [
@@ -39,6 +39,12 @@ export function Navbar({ user }: NavbarProps) {
       : []),
   ];
 
+  const adminItems: MenuItem[] = [
+    ...(isAdmin(user)
+      ? [{ name: "Organisations", href: "/admin/org", icon: FolderIcon, current: true }]
+      : []),
+  ];
+
   return (
     <>
       <div className="flex h-16 shrink-0 items-center">
@@ -51,32 +57,14 @@ export function Navbar({ user }: NavbarProps) {
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
-            <ul role="list" className="-mx-2 space-y-1">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <a
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? "bg-gray-50 text-indigo-600"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
-                    )}>
-                    <item.icon
-                      className={classNames(
-                        item.current
-                          ? "text-indigo-600"
-                          : "text-gray-400 group-hover:text-indigo-600",
-                        "h-6 w-6 shrink-0",
-                      )}
-                      aria-hidden="true"
-                    />
-                    {item.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <Menu menuItems={menuItems} />
           </li>
+          {adminItems.length > 0 && (
+            <li>
+              <div className="mb-2 text-xs font-semibold leading-6 text-gray-400">Admin</div>
+              <Menu menuItems={adminItems} />
+            </li>
+          )}
           {/* Adapt          */}
           <SignInButton user={user} />
           <li className="-mx-6 mt-auto">
@@ -95,5 +83,44 @@ export function Navbar({ user }: NavbarProps) {
         </ul>
       </nav>
     </>
+  );
+}
+
+interface MenuItem {
+  name: string;
+  href: string;
+  icon: React.ElementType;
+  current: boolean;
+}
+
+interface MenuProps {
+  menuItems: MenuItem[];
+}
+
+function Menu({ menuItems }: MenuProps) {
+  return (
+    <ul role="list" className="-mx-2 space-y-1">
+      {menuItems.map((item) => (
+        <li key={item.name}>
+          <a
+            href={item.href}
+            className={classNames(
+              item.current
+                ? "bg-gray-50 text-indigo-600"
+                : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
+              "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
+            )}>
+            <item.icon
+              className={classNames(
+                item.current ? "text-indigo-600" : "text-gray-400 group-hover:text-indigo-600",
+                "h-6 w-6 shrink-0",
+              )}
+              aria-hidden="true"
+            />
+            {item.name}
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

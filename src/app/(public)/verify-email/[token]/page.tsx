@@ -3,11 +3,11 @@ import { redirect } from "next/navigation";
 import { EmailVerified } from "~/app/(public)/verify-email/[token]/email-verified";
 import AuthPanel from "~/components/auth/AuthPanel";
 import { Link } from "~/components/core";
-import { getServerAuthSession } from "~/server/auth";
+import { getSession } from "~/server/auth";
 import { verifyEmail } from "~/server/services/user.service";
 
 export default async function VerifyEmailTokenPage({ params }: { params: { token: string } }) {
-  const session = await getServerAuthSession();
+  const session = await getSession();
   if (session?.user?.emailVerified) {
     redirect("/getting-started");
   }

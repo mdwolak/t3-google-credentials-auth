@@ -5,10 +5,10 @@ import { DesktopNavbar } from "~/components/navbars/DesktopNavbar";
 import { MobileNavbar } from "~/components/navbars/MobileNavbar";
 import { Navbar } from "~/components/navbars/Navbar";
 import { NextAuthProvider } from "~/components/providers/next-auth";
-import { getServerAuthSession } from "~/server/auth";
+import { getSession } from "~/server/auth";
 
 export default async function DashboardLayout({ children }: React.PropsWithChildren) {
-  const session = await getServerAuthSession();
+  const session = await getSession();
 
   if (!session) {
     redirect("/signin");
