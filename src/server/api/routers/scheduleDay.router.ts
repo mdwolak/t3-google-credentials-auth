@@ -48,7 +48,7 @@ export const scheduleDayRouter = createTRPCRouter({
   update: protectedProcedure.input(updateScheduleDaySchema).mutation(async ({ input, ctx }) => {
     const dbScheduleDay = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbScheduleDay.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbScheduleDay.createdById)) throw httpForbidden();
 
     if (input.data.dayOfWeek && input.data.dayOfWeek !== dbScheduleDay.dayOfWeek) {
       await checkUniqueness(dbScheduleDay.scheduleId, input.data.dayOfWeek);
@@ -65,7 +65,7 @@ export const scheduleDayRouter = createTRPCRouter({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbScheduleDay = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbScheduleDay.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbScheduleDay.createdById)) throw httpForbidden();
 
     await scheduleDayService.remove({ id: input });
   }),

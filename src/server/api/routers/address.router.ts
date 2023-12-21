@@ -32,7 +32,7 @@ export const addressRouter = createTRPCRouter({
   update: protectedProcedure.input(updateAddressSchema).mutation(async ({ input, ctx }) => {
     const dbAddress = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbAddress.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbAddress.createdById)) throw httpForbidden();
 
     const address = await addressService.update(getUserId(ctx), { id: input.id }, input.data);
 
@@ -41,7 +41,7 @@ export const addressRouter = createTRPCRouter({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbAddress = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbAddress.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbAddress.createdById)) throw httpForbidden();
 
     await addressService.remove({ id: input });
   }),

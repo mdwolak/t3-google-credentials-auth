@@ -2,17 +2,15 @@ import { type SessionUser } from "next-auth";
 
 import { UserRole } from "@prisma/client";
 
-import { type Context } from "~/server/api/trpc";
-
-export const isAdmin = (user?: SessionUser): boolean => {
+export const isAdmin = (user: SessionUser): boolean => {
   return user?.role === UserRole.Admin;
 };
 
-export function canUpdate(ctx: Context, permittedUserId: number): boolean {
-  if (!ctx.session) return false;
+export function canUpdate(user: SessionUser, permittedUserId: number): boolean {
+  if (!user) return false;
 
   if (!permittedUserId) throw new Error("PermittedUserId has not been provided.");
-  if (ctx.session.user?.id === permittedUserId) return true;
+  if (user.id === permittedUserId) return true;
 
-  return isAdmin(ctx.session.user);
+  return isAdmin(user);
 }

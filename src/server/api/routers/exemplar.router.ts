@@ -40,7 +40,7 @@ export const exemplarRouter = createTRPCRouter({
   update: protectedProcedure.input(updateExemplarSchema).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbExemplar.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbExemplar.createdById)) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbExemplar.name) {
       await checkUniqueName(input.data.name);
@@ -53,7 +53,7 @@ export const exemplarRouter = createTRPCRouter({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbExemplar = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbExemplar.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbExemplar.createdById)) throw httpForbidden();
 
     await exemplarService.remove({ id: input });
   }),

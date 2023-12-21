@@ -50,7 +50,7 @@ export const activityRouter = createTRPCRouter({
     let slug = "";
     const dbActivity = await getByIdOrThrow(input.id);
 
-    if (!canUpdate(ctx, dbActivity.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbActivity.createdById)) throw httpForbidden();
 
     if (input.data.name && input.data.name !== dbActivity.name) {
       await checkUniqueness(dbActivity.orgId, input.data.name, dbActivity.status);
@@ -68,7 +68,7 @@ export const activityRouter = createTRPCRouter({
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbActivity = await getByIdOrThrow(input);
 
-    if (!canUpdate(ctx, dbActivity.createdById)) throw httpForbidden();
+    if (!canUpdate(ctx.session.user, dbActivity.createdById)) throw httpForbidden();
 
     await activityService.remove({ id: input });
   }),
