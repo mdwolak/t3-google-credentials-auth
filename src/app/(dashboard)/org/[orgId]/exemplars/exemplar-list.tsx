@@ -10,7 +10,7 @@ import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
-import { api } from "~/trpc/react";
+import { api } from "~/trpc/client";
 
 import CreateExemplarDialog from "./_components/create.exemplar.dialog";
 import UpdateExemplarDialog from "./_components/update.exemplar.dialog";

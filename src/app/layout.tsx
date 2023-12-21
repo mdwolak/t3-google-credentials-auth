@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 import { APP_NAME } from "~/lib/constants";
 import "~/styles/globals.css";
-import { TRPCReactProvider } from "~/trpc/react";
+import { TRPCReactProvider } from "~/trpc/client";
 
 const inter = Inter({
   subsets: ["latin"],

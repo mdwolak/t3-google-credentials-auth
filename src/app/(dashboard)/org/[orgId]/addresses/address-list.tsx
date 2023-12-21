@@ -10,7 +10,7 @@ import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type AddressInfo } from "~/server/api/routers/address.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import CreateAddressDialog from "./_components/create.address.dialog";
 import UpdateAddressDialog from "./_components/update.address.dialog";

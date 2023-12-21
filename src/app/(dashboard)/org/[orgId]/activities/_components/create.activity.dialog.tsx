@@ -15,7 +15,7 @@ import {
 } from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
 import { type CreateActivityInput, createActivitySchema } from "~/lib/schemas/activity.schema";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateActivityDialog = ({
   handleClose,

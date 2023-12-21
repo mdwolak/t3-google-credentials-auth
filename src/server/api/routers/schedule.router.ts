@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/
 import { getUserId, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import { canUpdate } from "~/server/services/permission.service";
 import * as scheduleService from "~/server/services/schedule.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "Schedule";
 

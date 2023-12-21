@@ -17,7 +17,7 @@ import {
   createScheduleDaySchema,
 } from "~/lib/schemas/scheduleDay.schema";
 import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateScheduleDayDialog = ({
   schedule,

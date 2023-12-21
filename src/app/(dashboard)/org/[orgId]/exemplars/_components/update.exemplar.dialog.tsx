@@ -16,7 +16,7 @@ import {
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
 import { type UpdateExemplarInput, updateExemplarSchema } from "~/lib/schemas/exemplar.schema";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 type UpdateExemplarDialogProps = HandleCloseProps<
   RouterOutputs["exemplar"]["update"]["exemplar"]

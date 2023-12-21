@@ -6,12 +6,7 @@ import { useState } from "react";
 
 import AuthPanel from "~/components/auth/AuthPanel";
 import { ApiErrorMessage, Button, Link, toast } from "~/components/core";
-import { api } from "~/utils/api";
-
-export const metadata = {
-  title: "Verify Email",
-  description: "Verify your email addres",
-};
+import { api } from "~/trpc/client";
 
 //Entry point: logged in user whose email is not verified will be redirected to this page
 export default function VerifyEmailPage() {

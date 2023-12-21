@@ -12,7 +12,7 @@ import {
 } from "~/components/forms";
 import { type HandleCloseProps, dateToInputDate } from "~/lib/common";
 import { type CreateScheduleInput, createScheduleSchema } from "~/lib/schemas/schedule.schema";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateScheduleDialog = ({
   activityId,

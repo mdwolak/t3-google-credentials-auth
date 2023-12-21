@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ApiErrorMessage, Button, Link, toast } from "~/components/core";
 import { Form, Input, InputPassword, ValidationSummary, useForm } from "~/components/forms";
 import { type ResetPasswordInput, resetPasswordSchema } from "~/lib/schemas/user.schema";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 //Entry point: user clicks on password reset link in email
 type ResetPasswordProps = {

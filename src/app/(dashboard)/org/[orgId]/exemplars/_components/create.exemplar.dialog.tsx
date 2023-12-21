@@ -12,7 +12,7 @@ import {
 } from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
 import { type CreateExemplarInput, createExemplarSchema } from "~/lib/schemas/exemplar.schema";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateExemplarDialog = ({
   handleClose,

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import UpdateScheduleDialog from "./update.schedule.dialog";
 

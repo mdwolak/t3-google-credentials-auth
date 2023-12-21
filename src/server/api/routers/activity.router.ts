@@ -13,7 +13,7 @@ import {
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as activityService from "~/server/services/activity.service";
 import { canUpdate } from "~/server/services/permission.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "Activity";
 
@@ -60,7 +60,7 @@ export const activityRouter = createTRPCRouter({
     const activity = await activityService.update(
       getUserId(ctx),
       { id: input.id },
-      { ...input.data, ...(slug ? { slug } : {}) }
+      { ...input.data, ...(slug ? { slug } : {}) },
     );
 
     return { activity };
@@ -79,7 +79,7 @@ export type ActivityInfo = RouterOutputs["activity"]["getFiltered"]["activities"
 async function checkUniqueness(orgId: number, name: string, status: ActivityStatus) {
   if (await activityService.findUnique({ orgId_name_status: { orgId, name, status } }))
     throw httpConflictWithZod(
-      getZodErrorWithCustomIssue("Activity with the same name and status already exists", ["name"])
+      getZodErrorWithCustomIssue("Activity with the same name and status already exists", ["name"]),
     );
 }
 

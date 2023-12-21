@@ -13,7 +13,7 @@ import {
 } from "~/components/forms";
 import { type HandleCloseProps } from "~/lib/common";
 import { type CreateAddressInput, createAddressSchema } from "~/lib/schemas/address.schema";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateAddressDialog = ({
   handleClose,

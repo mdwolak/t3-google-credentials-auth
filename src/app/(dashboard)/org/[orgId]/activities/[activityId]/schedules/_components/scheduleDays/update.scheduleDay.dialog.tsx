@@ -26,7 +26,7 @@ import {
 } from "~/lib/schemas/scheduleDay.schema";
 import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
 import { type ScheduleDayInfo } from "~/server/api/routers/scheduleDay.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 type UpdateScheduleDayDialogProps = HandleCloseProps<
   RouterOutputs["scheduleDay"]["update"]["scheduleDay"]

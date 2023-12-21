@@ -10,7 +10,7 @@ import {
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import { canUpdate } from "~/server/services/permission.service";
 import * as scheduleDayService from "~/server/services/scheduleDay.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "ScheduleDay";
 
@@ -57,7 +57,7 @@ export const scheduleDayRouter = createTRPCRouter({
     const scheduleDay = await scheduleDayService.update(
       getUserId(ctx),
       { id: input.id },
-      input.data
+      input.data,
     );
 
     return { scheduleDay };

@@ -19,7 +19,7 @@ import {
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
 import { type UpdateActivityInput, updateActivitySchema } from "~/lib/schemas/activity.schema";
 import { type ActivityInfo } from "~/server/api/routers/activity.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 type UpdateActivityDialogProps = HandleCloseProps<
   RouterOutputs["activity"]["update"]["activity"]

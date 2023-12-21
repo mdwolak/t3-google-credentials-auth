@@ -10,7 +10,7 @@ import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type ActivityInfo } from "~/server/api/routers/activity.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import CreateActivityDialog from "./_components/create.activity.dialog";
 import UpdateActivityDialog from "./_components/update.activity.dialog";

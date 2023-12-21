@@ -15,7 +15,7 @@ import {
   type CreateOrganisationInput,
   createOrganisationSchema,
 } from "~/lib/schemas/organisation.schema";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 const CreateOrganisationDialog = ({
   handleClose,

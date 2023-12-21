@@ -14,7 +14,7 @@ import { SlideOver } from "~/components/dialogs/SlideOver";
 import { formatTime, weekDays } from "~/lib/common";
 import { type ScheduleInfo } from "~/server/api/routers/schedule.router";
 import { type ScheduleDayInfo } from "~/server/api/routers/scheduleDay.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import CreateScheduleDialog from "./_components/create.schedule.dialog";
 import UpdateScheduleDialog from "./_components/update.schedule.dialog";

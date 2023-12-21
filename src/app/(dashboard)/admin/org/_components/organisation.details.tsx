@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import UpdateOrganisationDialog from "./update.organisation.dialog";
 

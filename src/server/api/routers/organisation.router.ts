@@ -13,7 +13,7 @@ import {
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as organisationService from "~/server/services/organisation.service";
 import { canUpdate } from "~/server/services/permission.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "Organisation";
 
@@ -52,7 +52,7 @@ export const organisationRouter = createTRPCRouter({
     const organisation = await organisationService.update(
       getUserId(ctx),
       { id: input.id },
-      input.data
+      input.data,
     );
 
     return { organisation };

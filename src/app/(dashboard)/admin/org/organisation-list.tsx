@@ -10,7 +10,7 @@ import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import CreateOrganisationDialog from "./_components/create.organisation.dialog";
 import UpdateOrganisationDialog from "./_components/update.organisation.dialog";

@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/
 import { getUserId, httpForbidden, httpNotFound } from "~/server/api/trpcHelper";
 import * as addressService from "~/server/services/address.service";
 import { canUpdate } from "~/server/services/permission.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "Address";
 

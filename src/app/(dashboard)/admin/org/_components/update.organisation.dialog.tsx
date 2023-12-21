@@ -19,7 +19,7 @@ import {
   updateOrganisationSchema,
 } from "~/lib/schemas/organisation.schema";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 type UpdateOrganisationDialogProps = HandleCloseProps<
   RouterOutputs["organisation"]["update"]["organisation"]

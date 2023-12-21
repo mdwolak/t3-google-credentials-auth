@@ -16,7 +16,7 @@ import {
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
 import { type UpdateAddressInput, updateAddressSchema } from "~/lib/schemas/address.schema";
 import { type AddressInfo } from "~/server/api/routers/address.router";
-import { type RouterOutputs, api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/trpc/client";
 
 type UpdateAddressDialogProps = HandleCloseProps<RouterOutputs["address"]["update"]["address"]> & {
   address: AddressInfo;

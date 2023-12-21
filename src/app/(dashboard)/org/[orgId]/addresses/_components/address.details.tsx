@@ -6,7 +6,7 @@ import { FormattedDate } from "~/components/core";
 import { SlideOver } from "~/components/dialogs/SlideOver";
 import { truncate } from "~/lib/common";
 import { type AddressInfo } from "~/server/api/routers/address.router";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/client";
 
 import UpdateAddressDialog from "./update.address.dialog";
 

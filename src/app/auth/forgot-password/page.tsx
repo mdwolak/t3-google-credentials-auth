@@ -12,12 +12,7 @@ import {
   useForm,
 } from "~/components/forms";
 import { type ForgotPasswordInput, forgotPasswordSchema } from "~/lib/schemas/user.schema";
-import { api } from "~/utils/api";
-
-export const metadata = {
-  title: "Forgot Password",
-  description: "Reset your password",
-};
+import { api } from "~/trpc/client";
 
 export default function ForgotPasswordPage() {
   const form = useForm({ schema: forgotPasswordSchema });

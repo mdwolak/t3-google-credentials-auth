@@ -10,7 +10,7 @@ import {
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as exemplarService from "~/server/services/exemplar.service";
 import { canUpdate } from "~/server/services/permission.service";
-import type { RouterOutputs } from "~/utils/api";
+import type { RouterOutputs } from "~/trpc/client";
 
 const entityName = "Exemplar";
 
