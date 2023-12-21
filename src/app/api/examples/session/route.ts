@@ -1,10 +1,9 @@
 // This is an example of how to access a session from an API route
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 import { getSession } from "~/server/auth";
 
-const session = async (req: NextApiRequest, res: NextApiResponse) => {
+export async function GET() {
   const session = await getSession();
-  res.send(JSON.stringify(session, null, 2));
-};
-export default session;
+  return NextResponse.json(session);
+}

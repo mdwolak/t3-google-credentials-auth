@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { Toaster } from "~/components/core";
 import { getSession } from "~/server/auth";
 
 export default async function UnauthenticatedLayout({ children }: React.PropsWithChildren) {
@@ -9,5 +10,10 @@ export default async function UnauthenticatedLayout({ children }: React.PropsWit
     redirect("/");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <Toaster position="bottom-right" />
+    </>
+  );
 }

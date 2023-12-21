@@ -14,6 +14,11 @@ import {
 import { type ForgotPasswordInput, forgotPasswordSchema } from "~/lib/schemas/user.schema";
 import { api } from "~/utils/api";
 
+export const metadata = {
+  title: "Forgot Password",
+  description: "Reset your password",
+};
+
 export default function ForgotPasswordPage() {
   const form = useForm({ schema: forgotPasswordSchema });
   const [emailSent, setEmailSent] = useState(false);
@@ -34,7 +39,6 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    //TODO: <SEOHead title="Forgot Password" description="Reset your password" />
     <>
       <AuthPanel showLogo heading="Forgot Password">
         {emailSent ? (

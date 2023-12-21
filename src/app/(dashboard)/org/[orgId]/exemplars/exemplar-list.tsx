@@ -9,10 +9,11 @@ import { TCell, THeader, TableCaption } from "~/components/Table";
 import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
-import CreateExemplarDialog from "~/components/exemplars/create.exemplar.dialog";
-import UpdateExemplarDialog from "~/components/exemplars/update.exemplar.dialog";
 import { type ExemplarInfo } from "~/server/api/routers/exemplar.router";
 import { api } from "~/trpc/react";
+
+import CreateExemplarDialog from "./_components/create.exemplar.dialog";
+import UpdateExemplarDialog from "./_components/update.exemplar.dialog";
 
 export function ExemplarList() {
   const apiUtils = api.useUtils();

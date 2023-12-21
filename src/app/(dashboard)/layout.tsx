@@ -27,6 +27,7 @@ export default async function DashboardLayout({ children }: React.PropsWithChild
           <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
         <Toaster position="bottom-right" />
+        {/* <div id="main-modal"></div> */}
       </NextAuthProvider>
     </>
   );

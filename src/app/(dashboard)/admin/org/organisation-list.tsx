@@ -9,10 +9,11 @@ import { TCell, THeader, TableCaption } from "~/components/Table";
 import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
-import CreateOrganisationDialog from "~/components/org/create.organisation.dialog";
-import UpdateOrganisationDialog from "~/components/org/update.organisation.dialog";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
 import { api } from "~/utils/api";
+
+import CreateOrganisationDialog from "./_components/create.organisation.dialog";
+import UpdateOrganisationDialog from "./_components/update.organisation.dialog";
 
 export function OrganisationList() {
   const apiUtils = api.useUtils();

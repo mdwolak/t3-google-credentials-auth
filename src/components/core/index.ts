@@ -5,4 +5,3 @@ export * from "./ApiErrorMessage";
 export * from "./Button";
 export * from "./FormattedDate";
 export * from "./Link";
-export * from "./SEOHead";

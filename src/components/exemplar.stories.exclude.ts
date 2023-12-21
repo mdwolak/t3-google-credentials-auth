@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { Button } from "./Button";
+import { Button } from "./core";
 
 const meta: Meta<typeof Button> = {
   title: "Example/Button",
@@ -9,7 +9,7 @@ const meta: Meta<typeof Button> = {
 };
 
 export default meta;
-type Story = StoryObj<Button>;
+type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
   // ...
