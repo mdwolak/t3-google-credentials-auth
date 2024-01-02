@@ -9,6 +9,7 @@ import { TCell, THeader, TableCaption } from "~/components/Table";
 import { FormattedDate, Link } from "~/components/core";
 import { ConfirmDelete } from "~/components/dialogs/ConfirmDelete";
 import { SlideOver } from "~/components/dialogs/SlideOver";
+import { Menu } from "~/components/menus/Menu";
 import { type OrganisationInfo } from "~/server/api/routers/organisation.router";
 import { api } from "~/trpc/client";
 
@@ -41,6 +42,19 @@ export function OrganisationList() {
       toast.error(error.message);
     },
   });
+
+  function getMenuItems(organisation: OrganisationInfo) {
+    return [
+      {
+        label: "Edit",
+        onClick: () => setUpdateOrganisation(organisation),
+      },
+      {
+        label: "Delete",
+        onClick: () => setDeleteOrganisationId(organisation.id),
+      },
+    ];
+  }
 
   return (
     <div className="sm:px-2 lg:px-4">
@@ -88,18 +102,8 @@ export function OrganisationList() {
                   <div className="sm:hidden">{organisation.price}/mo</div>
                   <div className="hidden sm:block">{organisation.price}/month</div>
                 </TCell> */}
-                    <TCell last className="space-x-2">
-                      <Link href="#" onClick={() => setUpdateOrganisation(organisation)}>
-                        Edit<span className="sr-only">, {organisation.name}</span>
-                      </Link>
-                      <span>|</span>
-
-                      <Link
-                        href="#"
-                        variant="secondary"
-                        onClick={() => setDeleteOrganisationId(organisation.id)}>
-                        Delete<span className="sr-only">, {organisation.name}</span>
-                      </Link>
+                    <TCell className="w-12">
+                      <Menu items={getMenuItems(organisation)} srName="Organisation" />
                     </TCell>
                   </tr>
                 ))}
