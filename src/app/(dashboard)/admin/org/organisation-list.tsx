@@ -62,7 +62,7 @@ export function OrganisationList() {
         title="Organisations"
         buttonText="Add Organisation"
         onButtonClick={() => setOpenCreate(true)}>
-        Manage organisations for your account.
+        Manage organizations, their settings and members
       </TableCaption>
       <div>
         {organisations?.length === 0 ? (
@@ -74,7 +74,7 @@ export function OrganisationList() {
                 <tr>
                   <THeader first>Organisation</THeader>
                   <THeader screen="sm">Category</THeader>
-                  <THeader screen="lg">Content</THeader>
+                  <THeader screen="lg">Description</THeader>
                   <THeader screen="lg">Created</THeader>
                   {/* <THeader>Price</THeader> */}
                   <THeader last>
@@ -86,7 +86,7 @@ export function OrganisationList() {
                 {organisations?.map((organisation) => (
                   <tr key={organisation.id}>
                     <TCell first>
-                      <Link href={`/org/${organisation.id}/activities`}>
+                      <Link href={`/admin/org/${organisation.id}/profile`}>
                         {organisation.name}
                         {organisation.visible && (
                           <span className="ml-1 text-indigo-600">(visible)</span>

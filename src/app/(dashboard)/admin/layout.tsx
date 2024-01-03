@@ -10,8 +10,6 @@ export default async function AdminLayout({ children }: React.PropsWithChildren)
 
   return (
     <>
-      <div>AdminNav</div>
-
       <div>{children}</div>
     </>
   );

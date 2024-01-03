@@ -1,22 +1,36 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Tab } from "@headlessui/react";
 import classNames from "classnames";
 
-type Tab = {
+export type Tab = {
   name: string;
   href: string;
   count?: string;
   current?: boolean;
 };
 
-export function TabList({ tabs }: { tabs: Tab[] }) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+export function TabList({
+  tabs,
+  selectedIndex: index = 0,
+}: {
+  tabs: Tab[];
+  selectedIndex?: number;
+}) {
+  const [selectedIndex, setSelectedIndex] = useState(index);
+  const router = useRouter();
+
+  const handleTabChange = (index: number) => {
+    setSelectedIndex(index);
+    const tab = tabs[index] as Tab;
+    router.push(tab.href);
+  };
   return (
     <div className="border-b border-gray-200">
-      <Tab.Group selectedIndex={selectedIndex} onChange={setSelectedIndex}>
+      <Tab.Group selectedIndex={selectedIndex} onChange={handleTabChange}>
         <Tab.List className="-mb-px flex space-x-8" aria-label="Tabs" as="nav">
           {tabs.map((tab, index) => (
             <Tab
