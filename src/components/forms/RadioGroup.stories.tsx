@@ -56,7 +56,7 @@ const Template: StoryFn<RadioGroupProps<number | string>> = (args) => {
 
   return (
     <form>
-      <RadioGroup control={control} name="name" {...args} />
+      <RadioGroup control={control} name="name" {...args} defaultValue={""} />
     </form>
   );
 };

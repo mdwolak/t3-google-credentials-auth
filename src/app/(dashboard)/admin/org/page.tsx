@@ -83,7 +83,7 @@ export default function OrganisationList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {organisations?.map((organisation) => (
+                {organisations?.map((organisation, index) => (
                   <tr key={organisation.id}>
                     <TCell first>
                       <Link href={`/admin/org/${organisation.id}/profile`}>
@@ -103,7 +103,7 @@ export default function OrganisationList() {
                   <div className="hidden sm:block">{organisation.price}/month</div>
                 </TCell> */}
                     <TCell className="w-12">
-                      <Menu items={getMenuItems(organisation)} srName="Organisation" />
+                      <Menu items={getMenuItems(organisation)} srName="Organisation" key={index} />
                     </TCell>
                   </tr>
                 ))}
