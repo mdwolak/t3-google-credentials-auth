@@ -1,8 +1,8 @@
 import { usePathname } from "next/navigation";
 
-import { type Tab } from "~/components/navbars/TabList";
+import { type TabItem } from "~/components/navbars/TabList";
 
-export function useTabIndexFromUrl(tabs: Tab[]) {
+export function useTabIndexFromUrl(tabs: TabItem[]) {
   const pathname = usePathname();
   const lastSegment = pathname.split("/").pop() || "";
   const selectedIndex = tabs.findIndex((tab) => tab.href === lastSegment);

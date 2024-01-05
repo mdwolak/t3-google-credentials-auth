@@ -4,6 +4,7 @@ import { type Ref, forwardRef } from "react";
 import classNames from "classnames";
 
 import { Spinner } from "~/components/core/Spinner";
+import type { SVGComponent } from "~/types/common";
 
 const variants = {
   primary:
@@ -36,8 +37,6 @@ const iconSizes = {
   lg: "h-5 w-5",
 };
 
-type SVGComponent = React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-
 type ButtonProps = ComponentPropsWithRef<"button"> & {
   isLoading?: boolean;
   variant?: keyof typeof variants;
@@ -61,7 +60,7 @@ export const Button = forwardRef(function Button(
     rounded = false,
     ...props
   }: ButtonProps,
-  ref: Ref<HTMLButtonElement>
+  ref: Ref<HTMLButtonElement>,
 ) {
   disabled = disabled || isLoading;
   const iconClass = `${children ? "mr-2 " : ""}${iconSizes[size]}`;
@@ -77,7 +76,7 @@ export const Button = forwardRef(function Button(
         "font-medium shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-60", //font-semibold border
         children ? textWithOptionalIconClasses[size] : iconOnlyClasses[size],
         variants[variant],
-        className
+        className,
       )}
       disabled={disabled}
       {...props}>
