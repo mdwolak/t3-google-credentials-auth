@@ -24,6 +24,9 @@ const handleTabChange = (index: number) => {
   //router.push(tab.href);
 };
 
+//must be placed in a layout page
+//const defaultIndex = getTabIndexFromPath(tabs);
+
 export const TabsAsPages: Story = {
   args: {
     tabs: [

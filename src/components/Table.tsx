@@ -53,7 +53,7 @@ export const THeader = ({
         screen == "sm" && "hidden sm:table-cell",
         screen == "md" && "hidden md:table-cell",
         screen == "lg" && "hidden lg:table-cell",
-        className
+        className,
       )}
       {...props}>
       {children}
@@ -76,11 +76,11 @@ export const TCell = ({
         first
           ? "pl-4 pr-3 font-medium text-gray-900 sm:pl-0"
           : last
-          ? "pl-3 pr-4 text-right font-medium  sm:pr-0"
-          : "px-3 text-gray-500",
+            ? "pl-3 pr-4 text-right font-medium  sm:pr-0"
+            : "px-3 text-gray-500",
         screen == "sm" && "hidden sm:table-cell",
         screen == "lg" && "hidden lg:table-cell",
-        className
+        className,
       )}
       {...props}>
       {children}

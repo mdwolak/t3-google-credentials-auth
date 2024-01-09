@@ -1,8 +1,11 @@
+"use client";
+
 import { Tab } from "~/components/navbars/Tabs";
 import type { SVGComponent } from "~/types/common";
 
 export type TabItem = {
   label: string | React.ReactNode;
+  name?: string;
   href?: string;
   count?: number;
   current?: boolean;
