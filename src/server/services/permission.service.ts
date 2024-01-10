@@ -3,7 +3,7 @@ import { type SessionUser } from "next-auth";
 import { UserRole } from "@prisma/client";
 
 export const isAdmin = (user: SessionUser): boolean => {
-  return user?.role === UserRole.Admin;
+  return user.role === UserRole.Admin;
 };
 
 export function canUpdate(user: SessionUser, permittedUserId: number): boolean {

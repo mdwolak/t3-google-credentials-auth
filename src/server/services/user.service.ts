@@ -8,15 +8,17 @@ export const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   id: true,
   name: true,
   image: true,
+  createdAt: true,
   updatedAt: true,
   role: true,
   email: true,
   emailVerified: true,
+  signupProvider: true,
 });
 
 export const findFirst = async (
   where: Partial<Prisma.UserWhereInput>,
-  select: Prisma.UserSelect = defaultUserSelect
+  select: Prisma.UserSelect = defaultUserSelect,
 ) => {
   return await db.user.findFirst({
     where,
@@ -50,8 +52,17 @@ export const findUniqueSensitive = async (where: Prisma.UserWhereUniqueInput) =>
   });
 };
 
+export const findAll = async (page: number, limit: number) => {
+  const take = limit || 10;
+  const skip = (page - 1) * limit;
+  return await db.user.findMany({
+    select: defaultUserSelect,
+    skip,
+    take,
+  });
+};
+
 export const create = async (input: Prisma.UserCreateInput) => {
-  //IMPROVE: do not return sensitive data exemplar-creation
   return await db.user.create({
     data: input,
     select: defaultUserSelect,
@@ -61,9 +72,13 @@ export const create = async (input: Prisma.UserCreateInput) => {
 export const update = async (
   where: Prisma.UserWhereUniqueInput,
   data: Prisma.UserUpdateInput,
-  select: Prisma.UserSelect = defaultUserSelect
+  select: Prisma.UserSelect = defaultUserSelect,
 ) => {
   return await db.user.update({ where, data, select });
+};
+
+export const remove = async (where: Prisma.UserWhereUniqueInput) => {
+  return await db.user.delete({ where, select: defaultUserSelect });
 };
 
 export const verifyEmail = async (token: string) => {

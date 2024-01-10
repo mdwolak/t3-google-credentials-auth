@@ -30,6 +30,16 @@ export const createUserSchema = z
 
 export type CreateUserInput = TypeOf<typeof createUserSchema>;
 
+export const updateUserSchema = z.object({
+  id: z.number(),
+  data: z.object({
+    //define what fields are allowed to be updated
+    name: z.string().trim().min(1, "Name is required"),
+  }),
+});
+
+export type UpdateUserInput = TypeOf<typeof updateUserSchema>;
+
 //
 export const forgotPasswordSchema = z.object({
   email,

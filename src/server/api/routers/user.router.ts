@@ -1,10 +1,12 @@
 import { AuthProviderType, type User } from "@prisma/client";
 
 import { env } from "~/env.mjs";
+import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import {
   createUserSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  updateUserSchema,
 } from "~/lib/schemas/user.schema";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import {
@@ -14,11 +16,14 @@ import {
   handleRequest,
   httpBadRequest,
   httpConflictWithZod,
+  httpForbidden,
   httpNotFound,
 } from "~/server/api/trpcHelper";
 import { getZodErrorWithCustomIssue } from "~/server/api/zodHelper";
 import * as verificationTokenService from "~/server/services/auth/verificationToken.service";
+import { canUpdate } from "~/server/services/permission.service";
 import * as userService from "~/server/services/user.service";
+import { type RouterOutputs } from "~/trpc/shared";
 
 const entityName = "User";
 
@@ -31,13 +36,22 @@ const errorHandler = (error: unknown) => {
 };
 
 export const userRouter = createTRPCRouter({
-  getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
+  /**
+   * READ
+   */
+  getById: protectedProcedure.input(numericId).query(async ({ input }) => {
+    return await getByIdOrThrow(input);
   }),
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+  getFiltered: protectedProcedure.input(filterQuery).query(async ({ input }) => {
+    const users = await userService.findAll(input.page, input.limit);
+
+    return { results: users.length, users };
   }),
-  create: publicProcedure.input(createUserSchema).mutation(({ input }) =>
+
+  /**
+   * WRITE
+   */
+  create: protectedProcedure.input(createUserSchema).mutation(({ input }) =>
     handleRequest(async () => {
       const existingUser = await userService.findUnique({ email: input.email.toLowerCase() });
       if (existingUser) {
@@ -55,6 +69,26 @@ export const userRouter = createTRPCRouter({
       return { user };
     }, errorHandler),
   ),
+  update: protectedProcedure.input(updateUserSchema).mutation(async ({ input, ctx }) => {
+    const dbUser = await getByIdOrThrow(input.id);
+
+    if (!canUpdate(ctx.session.user, dbUser.id)) throw httpForbidden();
+
+    // if (input.data.name && input.data.name !== dbUser.name) {
+    //   await checkUniqueName(input.data.name);
+    // }
+
+    const user = await userService.update({ id: input.id }, input.data);
+
+    return { user };
+  }),
+  delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
+    const dbUser = await getByIdOrThrow(input);
+
+    if (!canUpdate(ctx.session.user, dbUser.id)) throw httpForbidden();
+
+    await userService.remove({ id: input });
+  }),
   forgotPassword: publicProcedure.input(forgotPasswordSchema).mutation(async ({ input }) => {
     const user = await userService.findUnique({ email: input.email.toLowerCase() });
     // TODO: decide if we want to send a message to the user if the email is not found
@@ -125,3 +159,5 @@ async function getByIdOrThrow(id: number) {
 
   return user;
 }
+
+export type UserInfo = RouterOutputs["user"]["getFiltered"]["users"][0];

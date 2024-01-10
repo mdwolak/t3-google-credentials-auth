@@ -40,8 +40,11 @@ export function Navbar({ user }: NavbarProps) {
   ];
 
   const adminItems: MenuItem[] = [
-    ...(isAdmin(user)
-      ? [{ name: "Organisations", href: "/admin/org", icon: FolderIcon, current: true }]
+    ...(user && isAdmin(user)
+      ? [
+          { name: "Organisations", href: "/admin/org", icon: FolderIcon, current: false },
+          { name: "Users", href: "/admin/users", icon: FolderIcon, current: false },
+        ]
       : []),
   ];
 
