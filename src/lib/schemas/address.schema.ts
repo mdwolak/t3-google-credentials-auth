@@ -1,8 +1,8 @@
 import z, { type TypeOf } from "zod";
 
 import {
+  cleanAndValidate,
   optionalStringCleaned,
-  preprocessCleanString,
   requiredString,
   requiredStringCleaned,
 } from "~/lib/schemas/common.schema";
@@ -16,8 +16,8 @@ export const createAddressSchema = z.object({
   line2: optionalStringCleaned,
   city: requiredStringCleaned,
   county: optionalStringCleaned,
-  postcode: preprocessCleanString(
-    requiredString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase()
+  postcode: cleanAndValidate(
+    requiredString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase(),
   ),
   orgId: z.number(),
 });

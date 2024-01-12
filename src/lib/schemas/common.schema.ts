@@ -4,8 +4,8 @@ export const cleanString = (value: unknown): string =>
   typeof value !== "string" ? String(value) : value.replace(/\s\s+/g, " ").trim();
 
 //cleans string before validation
-export const preprocessCleanString = (schema: ZodString) => z.preprocess(cleanString, schema);
-// usage:   postcode: preprocessCleanString(nonEmptyString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase())
+export const cleanAndValidate = (schema: ZodString) => z.preprocess(cleanString, schema);
+// usage:   postcode: cleanAndValidate(nonEmptyString.regex(ukPostcodeRegex, "Invalid UK postcode").toUpperCase())
 
 export const requiredString = z.string().trim().min(1, "This field cannot be empty"); //required
 export const requiredStringCleaned = requiredString.transform(cleanString);
@@ -32,7 +32,7 @@ type Literal = boolean | number | string;
 type Json = Literal | { [key: string]: Json } | Json[];
 const literalSchema = z.union([z.string(), z.number(), z.boolean()]);
 const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])
+  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)]),
 );
 
 export const hoursWithMinutes = z

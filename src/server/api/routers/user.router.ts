@@ -70,17 +70,30 @@ export const userRouter = createTRPCRouter({
     }, errorHandler),
   ),
   update: protectedProcedure.input(updateUserSchema).mutation(async ({ input, ctx }) => {
+    if (!canUpdate(ctx.session.user, input.id)) throw httpForbidden();
+
     const dbUser = await getByIdOrThrow(input.id);
+    const { name, email } = input.data;
 
-    if (!canUpdate(ctx.session.user, dbUser.id)) throw httpForbidden();
+    if (name !== dbUser.name || email !== dbUser.email) {
+      const emailVerified = email !== dbUser.email ? null : dbUser.emailVerified;
 
-    // if (input.data.name && input.data.name !== dbUser.name) {
-    //   await checkUniqueName(input.data.name);
-    // }
+      const user = await userService.update(
+        { id: input.id },
+        {
+          name,
+          //email, not implemented until verify new email prior to update
+          emailVerified,
+        },
+      );
 
-    const user = await userService.update({ id: input.id }, input.data);
+      //todo: send email if email changed
+      //if(!emailVerified) await sendVerificationEmailLink(user, "TODO: resetLink"
 
-    return { user };
+      return { user };
+    }
+
+    return { user: dbUser };
   }),
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbUser = await getByIdOrThrow(input);

@@ -86,7 +86,7 @@ export default function OrganisationList() {
                 {organisations?.map((organisation) => (
                   <tr key={organisation.id}>
                     <TCell first>
-                      <Link href={`/admin/org/${organisation.id}/profile`}>
+                      <Link href={`/admin/org/${organisation.id}?tab=profile`}>
                         {organisation.name}
                         {organisation.visible && (
                           <span className="ml-1 text-indigo-600">(visible)</span>

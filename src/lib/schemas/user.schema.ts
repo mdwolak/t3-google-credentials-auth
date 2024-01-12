@@ -8,6 +8,8 @@ export const email = z
   .min(1, "Email address is required")
   .email("Email address is invalid");
 
+export const name = z.string().trim().min(2, "Name is required");
+
 export const password = z
   .string()
   .trim()
@@ -18,7 +20,7 @@ export const password = z
 //
 export const createUserSchema = z
   .object({
-    name: z.string().trim().min(1, "Name is required"),
+    name,
     email,
     password,
     passwordConfirm: z.string().trim().min(1, "Please confirm your password"),
@@ -34,7 +36,8 @@ export const updateUserSchema = z.object({
   id: z.number(),
   data: z.object({
     //define what fields are allowed to be updated
-    name: z.string().trim().min(1, "Name is required"),
+    name,
+    email,
   }),
 });
 
