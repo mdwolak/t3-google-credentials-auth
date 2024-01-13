@@ -2,6 +2,7 @@ import PageHeader from "~/components/sections/PageHeader";
 import { getRequiredSessionUser } from "~/server/auth";
 import { api } from "~/trpc/server";
 
+import UpdateUserPassword from "./_components/update.user.password";
 import UpdateUserProfile from "./_components/update.user.profile";
 
 /* @see: https://tailwindui.com/components/application-ui/page-examples/settings-screens */
@@ -15,7 +16,10 @@ export default async function AccountPage() {
     <div className="flex justify-start">
       <div className="w-full max-w-3xl">
         <PageHeader title="Account" />
-        <UpdateUserProfile user={user} />
+        <div className="divide-y divide-black/5">
+          <UpdateUserProfile user={user} />
+          <UpdateUserPassword userId={user.id} />
+        </div>
       </div>
     </div>
   );

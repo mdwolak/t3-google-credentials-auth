@@ -3,61 +3,71 @@
 import { ApiErrorMessage, Button, toast } from "~/components/core";
 import {
   Form,
-  Input,
-  InputEmail,
+  InputPassword,
   ValidationSummary,
   getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
 import { TwoColumnPanel } from "~/components/sections/TwoColumnPanel";
-import { stripNullishProps } from "~/lib/common";
-import { type UpdateUserInput, updateUserSchema } from "~/lib/schemas/user.schema";
-import { type UserInfo } from "~/server/api/routers/user.router";
+import { type ChangePasswordInput, changePasswordSchema } from "~/lib/schemas/user.schema";
 import { api } from "~/trpc/client";
 
-type UpdateUserProfileProps = {
-  user: UserInfo;
-};
-const UpdateUserProfile = ({ user }: UpdateUserProfileProps) => {
-  const apiUtils = api.useUtils();
-
+const UpdateUserPassword = ({ userId }: { userId: number }) => {
   const form = useForm({
-    schema: updateUserSchema.shape.data,
-    defaultValues: stripNullishProps(user),
+    schema: changePasswordSchema.shape.data,
   });
 
   const {
     mutate: updateUser,
     isLoading,
     error: apiError,
-  } = api.user.update.useMutation({
+  } = api.user.changePassword.useMutation({
     onSuccess() {
-      apiUtils.user.invalidate();
       toast.success("User updated successfully");
       form.reset({}, { keepValues: true });
     },
     onError: getDefaultOnErrorOption(form),
   });
 
-  const handleSubmit = (data: UpdateUserInput["data"]) => {
-    updateUser({ id: user.id, data });
+  const handleSubmit = (data: ChangePasswordInput["data"]) => {
+    updateUser({ id: userId, data });
   };
 
   return (
     <>
-      <TwoColumnPanel title="Personal Information" disabled={isLoading}>
+      <TwoColumnPanel
+        title="Change password"
+        description="Update your password associated with your account."
+        disabled={isLoading}>
         <Form form={form} handleSubmit={handleSubmit} className="md:col-span-2">
           <TwoColumnPanel.Content>
             <ValidationSummary errors={form.formState.errors} />
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
-
             <div className="sm:col-span-full">
-              <Input label="Name" {...form.register("name")} required autoComplete="name" />
+              <InputPassword
+                label="Current password"
+                {...form.register("oldPassword")}
+                autoComplete="current-password"
+                required
+              />
             </div>
 
             <div className="sm:col-span-full">
-              {/* Verification code sent to new e-mail must be entered first to prevent user from losing access to the account in case of a typo. Consider also a backup e-mail.  */}
-              <InputEmail label="Email" {...form.register("email")} disabled />
+              <InputPassword
+                label="New password"
+                {...form.register("password")}
+                autoComplete="new-password"
+                required
+              />
+            </div>
+
+            <div className="sm:col-span-full">
+              <InputPassword
+                label="Confirm password"
+                {...form.register("passwordConfirm")}
+                autoComplete="new-password"
+                required
+              />
             </div>
           </TwoColumnPanel.Content>
 
@@ -75,4 +85,4 @@ const UpdateUserProfile = ({ user }: UpdateUserProfileProps) => {
   );
 };
 
-export default UpdateUserProfile;
+export default UpdateUserPassword;

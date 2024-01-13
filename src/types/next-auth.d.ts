@@ -10,7 +10,7 @@ declare module "next-auth" {
   /**
    * Returned by CredentialsProvider.authorize(). A supertype of AdapterUser which correlates to the User prisma model.
    */
-  interface User extends Omit<PrismaUser, "password" | "provider" | "createdDate" | "updatedAt"> {
+  interface User extends Omit<PrismaUser, "password" | "provider" | "createdAt" | "updatedAt"> {
     id: PrismaUser["id"];
   }
 

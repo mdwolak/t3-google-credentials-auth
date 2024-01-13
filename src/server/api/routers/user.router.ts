@@ -1,8 +1,10 @@
 import { AuthProviderType, type User } from "@prisma/client";
 
 import { env } from "~/env.mjs";
+import { ErrorCode } from "~/lib/errorCodes";
 import { filterQuery, numericId } from "~/lib/schemas/common.schema";
 import {
+  changePasswordSchema,
   createUserSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -95,6 +97,38 @@ export const userRouter = createTRPCRouter({
 
     return { user: dbUser };
   }),
+
+  changePassword: protectedProcedure
+    .input(changePasswordSchema)
+    .mutation(async ({ input, ctx }) => {
+      if (!canUpdate(ctx.session.user, input.id)) throw httpForbidden();
+
+      //validate old password
+      const dbUser = await userService.findUniqueSensitive({ id: input.id });
+
+      //TODO: what to do if there is no password? (e.g. user signed up with google)
+
+      if (
+        !dbUser ||
+        !dbUser.password ||
+        !(await userService.verifyPassword(input.data.oldPassword, dbUser.password))
+      )
+        throw new Error(ErrorCode.IncorrectPassword);
+
+      //user passed password validation
+      if (input.data.oldPassword === input.data.password)
+        throw new Error(ErrorCode.NewPasswordMatchesOld);
+
+      const hashedPassword = await userService.hashPassword(input.data.password);
+      const user = await userService.update(
+        { id: input.id },
+        {
+          password: hashedPassword,
+        },
+      );
+      return { user };
+    }),
+
   delete: protectedProcedure.input(numericId).mutation(async ({ input, ctx }) => {
     const dbUser = await getByIdOrThrow(input);
 

@@ -35,7 +35,6 @@ export type CreateUserInput = TypeOf<typeof createUserSchema>;
 export const updateUserSchema = z.object({
   id: z.number(),
   data: z.object({
-    //define what fields are allowed to be updated
     name,
     email,
   }),
@@ -43,7 +42,21 @@ export const updateUserSchema = z.object({
 
 export type UpdateUserInput = TypeOf<typeof updateUserSchema>;
 
-//
+export const changePasswordSchema = z.object({
+  id: z.number(),
+  data: z
+    .object({
+      oldPassword: z.string().trim().min(1, "Please enter your old password"),
+      password,
+      passwordConfirm: z.string().trim().min(1, "Please confirm your password"),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+      path: ["passwordConfirm"],
+      message: "Passwords do not match",
+    }),
+});
+export type ChangePasswordInput = TypeOf<typeof changePasswordSchema>;
+
 export const forgotPasswordSchema = z.object({
   email,
 });
