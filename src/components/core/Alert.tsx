@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { classNames } from "~/lib/common";
+
 const styles = {
   info: "border-blue-300 bg-blue-50 text-blue-800",
   success: "border-green-300 bg-green-50 text-green-800",
@@ -10,10 +12,13 @@ const styles = {
 export interface AlertProps {
   children: ReactNode;
   severity: "info" | "success" | "warning" | "error";
+  className?: string;
 }
-export const Alert = ({ severity, children }: AlertProps) => {
+export const Alert = ({ severity, className, children }: AlertProps) => {
   return (
-    <div className={`mb-4 flex rounded-lg border  p-4 text-sm ${styles[severity]}`} role="alert">
+    <div
+      className={classNames("mb-4 flex rounded-lg border p-4 text-sm", styles[severity], className)}
+      role="alert">
       <svg
         aria-hidden="true"
         className="mr-3 inline h-5 w-5 flex-shrink-0"

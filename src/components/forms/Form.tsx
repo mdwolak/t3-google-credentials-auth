@@ -60,7 +60,7 @@ export const Form = <T extends FieldValues>(props: FormProps<T>) => {
           form
             .handleSubmit(
               handleSubmit,
-              handleError
+              handleError,
             )(event)
             .catch((err) => {
               toast.error("An error occurred: " + err.message);
@@ -77,10 +77,12 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
   header = "Please fix the errors below before continuing.",
   errors,
   visible = true,
+  className,
 }: {
   header?: string;
   errors: FieldErrors<T>;
   visible?: boolean;
+  className?: string;
 }) => {
   if (Object.keys(errors).length > 0) {
     Object.keys(errors).forEach((fieldName) => {
@@ -90,7 +92,7 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
 
     if (visible)
       return (
-        <Alert severity="error">
+        <Alert severity="error" className={className}>
           {header}
           {/* <ul className="list-inside list-disc">
                     {Object.keys(errors).map((fieldName) => (
@@ -107,7 +109,7 @@ export const ValidationSummary = <T extends FieldValues = FieldValues>({
 export function setFormErrors<T extends FieldValues = FieldValues>(
   form: UseFormReturn<T>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  zodError: typeToFlattenedError<any, string>
+  zodError: typeToFlattenedError<any, string>,
 ) {
   //display field errors
   const fieldErrors = zodError.fieldErrors;
@@ -129,7 +131,7 @@ export function setFormErrors<T extends FieldValues = FieldValues>(
 }
 
 export const getDefaultOnErrorOption = <T extends FieldValues = FieldValues>(
-  form: UseFormReturn<T>
+  form: UseFormReturn<T>,
 ) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (error: any) => {

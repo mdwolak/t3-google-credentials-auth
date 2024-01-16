@@ -23,9 +23,9 @@ export default async function DashboardLayout({ children }: React.PropsWithChild
 
         <DesktopNavbar>{navbar}</DesktopNavbar>
 
-        <main className="py-10 lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
-        </main>
+        <div className="lg:pl-72">
+          <main>{children}</main>
+        </div>
         <Toaster position="bottom-right" />
         {/* <div id="main-modal"></div> */}
       </NextAuthProvider>

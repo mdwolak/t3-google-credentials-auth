@@ -13,13 +13,10 @@ export default async function AccountPage() {
   const user = await api.user.getById.query(userId);
 
   return (
-    <div className="flex justify-start">
-      <div className="w-full max-w-3xl">
-        <PageHeader title="Account" />
-        <div className="divide-y divide-black/5">
-          <UpdateUserProfile user={user} />
-          <UpdateUserPassword userId={user.id} />
-        </div>
+    <div className="mx-auto max-w-5xl">
+      <div className="divide-y divide-black/5">
+        <UpdateUserProfile user={user} />
+        <UpdateUserPassword userId={user.id} />
       </div>
     </div>
   );

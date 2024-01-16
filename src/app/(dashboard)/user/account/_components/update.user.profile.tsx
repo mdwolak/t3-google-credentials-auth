@@ -48,8 +48,12 @@ const UpdateUserProfile = ({ user }: UpdateUserProfileProps) => {
       <TwoColumnPanel title="Personal Information" disabled={isLoading}>
         <Form form={form} handleSubmit={handleSubmit} className="md:col-span-2">
           <TwoColumnPanel.Content>
-            <ValidationSummary errors={form.formState.errors} />
-            <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
+            <ValidationSummary errors={form.formState.errors} className="sm:col-span-full" />
+            <ApiErrorMessage
+              error={apiError}
+              visible={form.formState.isValid}
+              className="sm:col-span-full"
+            />
 
             <div className="sm:col-span-full">
               <Input label="Name" {...form.register("name")} required autoComplete="name" />
@@ -65,7 +69,8 @@ const UpdateUserProfile = ({ user }: UpdateUserProfileProps) => {
             <Button
               type="submit"
               isLoading={isLoading}
-              disabled={!form.formState.isDirty || !form.formState.isValid}>
+              disabled={!form.formState.isDirty || !form.formState.isValid}
+              className="w-32">
               Save
             </Button>
           </div>

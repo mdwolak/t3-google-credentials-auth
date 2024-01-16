@@ -8,10 +8,12 @@ export const ApiErrorMessage = ({
   error,
   visible = true,
   header = "Oops!",
+  className,
 }: {
   error: { message: string } | null;
   visible?: boolean;
   header?: string;
+  className?: string;
 }) => {
   const [expand, setExpand] = useState(false);
 
@@ -19,7 +21,7 @@ export const ApiErrorMessage = ({
     console.log(error.message);
     if (visible)
       return (
-        <Alert severity="error">
+        <Alert severity="error" className={className}>
           {header && <strong className="font-bold">{header} </strong>}
           {error.message}
           {location.hostname === "localhost" && (
