@@ -2,5 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+@layer utilities {
+  .xpx {
+    @apply px-4 lg:px-6;
+  }
+  .xpt {
+    @apply pt-4 lg:pt-6;
+  }
 }

@@ -44,7 +44,7 @@ export function AddressList({ orgId }: { orgId: number }) {
   });
 
   return (
-    <div className="sm:px-2 lg:px-4">
+    <div className="xpx xpt">
       <TableCaption
         title="Addresses"
         buttonText="Add Address"

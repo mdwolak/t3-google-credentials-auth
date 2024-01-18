@@ -44,7 +44,7 @@ export function ActivityList({ orgId }: { orgId: number }) {
   });
 
   return (
-    <div className="sm:px-2 lg:px-4">
+    <div className="xpx xpt">
       <TableCaption
         title="Activities"
         buttonText="Add Activity"

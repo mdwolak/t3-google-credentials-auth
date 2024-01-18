@@ -44,7 +44,7 @@ export default function UserList() {
   });
 
   return (
-    <div className="sm:px-2 lg:px-4">
+    <div className="xpx xpt">
       <TableCaption title="Users" buttonText="Add User" onButtonClick={() => setOpenCreate(true)}>
         Manage users for your account.
       </TableCaption>

@@ -43,7 +43,7 @@ export function ExemplarList() {
   });
 
   return (
-    <div className="sm:px-2 lg:px-4">
+    <div className="xpx xpt">
       <TableCaption
         title="Exemplars"
         buttonText="Add Exemplar"
