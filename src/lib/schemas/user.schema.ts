@@ -1,6 +1,14 @@
+import { type $Enums } from "@prisma/client";
 import z, { type TypeOf } from "zod";
 
 import { requiredString } from "./common.schema";
+
+type PrismaUserRole = $Enums.UserRole;
+
+export const UserRole: { [key in PrismaUserRole]: PrismaUserRole } = {
+  User: "User",
+  Admin: "Admin",
+} as const;
 
 export const email = z
   .string()
@@ -37,6 +45,7 @@ export const updateUserSchema = z.object({
   data: z.object({
     name,
     email,
+    role: z.nativeEnum(UserRole),
   }),
 });
 

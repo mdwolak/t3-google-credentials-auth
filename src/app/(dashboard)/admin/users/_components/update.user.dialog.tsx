@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
 
@@ -9,12 +9,13 @@ import styles from "~/components/dialogs/SlideOver.module.css";
 import {
   Form,
   Input,
+  RadioGroup,
   ValidationSummary,
   getDefaultOnErrorOption,
   useForm,
 } from "~/components/forms";
 import { type HandleCloseProps, stripNullishProps } from "~/lib/common";
-import { type UpdateUserInput, updateUserSchema } from "~/lib/schemas/user.schema";
+import { type UpdateUserInput, UserRole, updateUserSchema } from "~/lib/schemas/user.schema";
 import { type UserInfo } from "~/server/api/routers/user.router";
 import { type RouterOutputs, api } from "~/trpc/client";
 
@@ -25,6 +26,8 @@ type UpdateUserDialogProps = HandleCloseProps<RouterOutputs["user"]["update"]["u
 const UpdateUserDialog = ({ user, handleClose }: UpdateUserDialogProps) => {
   const apiUtils = api.useUtils();
   const [openDelete, setOpenDelete] = useState(false);
+
+  const userRoles = useMemo(() => Object.values(UserRole).map((o) => ({ name: o, value: o })), []);
 
   const { mutate: deleteUser } = api.user.delete.useMutation({
     onSuccess() {
@@ -74,6 +77,15 @@ const UpdateUserDialog = ({ user, handleClose }: UpdateUserDialogProps) => {
             <ApiErrorMessage error={apiError} visible={form.formState.isValid} />
 
             <Input label="Name" {...form.register("name")} required />
+            <RadioGroup
+              control={form.control}
+              label="Role"
+              options={userRoles}
+              name="role"
+              style="SmallCards"
+              containerClass="grid grid-cols-7 gap-2"
+              required
+            />
           </fieldset>
           {/* /End Content */}
         </div>

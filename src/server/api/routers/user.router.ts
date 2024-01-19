@@ -75,9 +75,9 @@ export const userRouter = createTRPCRouter({
     if (!canUpdate(ctx.session.user, input.id)) throw httpForbidden();
 
     const dbUser = await getByIdOrThrow(input.id);
-    const { name, email } = input.data;
+    const { name, email, role } = input.data;
 
-    if (name !== dbUser.name || email !== dbUser.email) {
+    if (name !== dbUser.name || email !== dbUser.email || role !== dbUser.role) {
       const emailVerified = email !== dbUser.email ? null : dbUser.emailVerified;
 
       const user = await userService.update(
@@ -86,6 +86,7 @@ export const userRouter = createTRPCRouter({
           name,
           //email, not implemented until verify new email prior to update
           emailVerified,
+          role,
         },
       );
 
