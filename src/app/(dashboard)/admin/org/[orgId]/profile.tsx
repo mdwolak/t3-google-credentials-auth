@@ -1,6 +1,4 @@
-import { type RouterOutputs, api } from "~/trpc/client";
-
-import OrganisationItem from "../_components/organisation.details";
+import { type RouterOutputs } from "~/trpc/client";
 
 export default function OrganisationProfile({
   organisation,

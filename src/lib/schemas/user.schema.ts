@@ -1,11 +1,9 @@
-import { type $Enums } from "@prisma/client";
+import { type UserRole as PrismaUserRole } from "@prisma/client";
 import z, { type TypeOf } from "zod";
 
 import { requiredString } from "./common.schema";
 
-type PrismaUserRole = $Enums.UserRole;
-
-export const UserRole: { [key in PrismaUserRole]: PrismaUserRole } = {
+export const UserRole: typeof PrismaUserRole = {
   User: "User",
   Admin: "Admin",
 } as const;
